@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ViewVarsDataSet" targetNamespace="http://tempuri.org/ViewVarsDataSet.xsd" xmlns:mstns="http://tempuri.org/ViewVarsDataSet.xsd" xmlns="http://tempuri.org/ViewVarsDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ViewVarsDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ViewVarsDataSet" msprop:Generator_UserDSName="ViewVarsDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Vars" msprop:Generator_UserTableName="Vars" msprop:Generator_RowEvArgName="VarsRowChangeEvent" msprop:Generator_TableVarName="tableVars" msprop:Generator_TablePropName="Vars" msprop:Generator_RowDeletingName="VarsRowDeleting" msprop:Generator_RowChangingName="VarsRowChanging" msprop:Generator_RowDeletedName="VarsRowDeleted" msprop:Generator_TableClassName="VarsDataTable" msprop:Generator_RowChangedName="VarsRowChanged" msprop:Generator_RowEvHandlerName="VarsRowChangeEventHandler" msprop:Generator_RowClassName="VarsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="DisplayValue" msprop:Generator_ColumnVarNameInTable="columnDisplayValue" msprop:Generator_ColumnPropNameInRow="DisplayValue" msprop:Generator_ColumnPropNameInTable="DisplayValueColumn" msprop:Generator_UserColumnName="DisplayValue" type="xs:string" minOccurs="0" />
+              <xs:element name="MaxValue" msprop:Generator_ColumnVarNameInTable="columnMaxValue" msprop:Generator_ColumnPropNameInRow="MaxValue" msprop:Generator_ColumnPropNameInTable="MaxValueColumn" msprop:Generator_UserColumnName="MaxValue" type="xs:string" minOccurs="0" />
+              <xs:element name="MinValue" msprop:Generator_ColumnVarNameInTable="columnMinValue" msprop:Generator_ColumnPropNameInRow="MinValue" msprop:Generator_ColumnPropNameInTable="MinValueColumn" msprop:Generator_UserColumnName="MinValue" type="xs:string" minOccurs="0" />
+              <xs:element name="VarSize" msprop:Generator_ColumnVarNameInTable="columnVarSize" msprop:Generator_ColumnPropNameInRow="VarSize" msprop:Generator_ColumnPropNameInTable="VarSizeColumn" msprop:Generator_UserColumnName="VarSize" type="xs:int" minOccurs="0" />
+              <xs:element name="Address" msprop:Generator_ColumnVarNameInTable="columnAddress" msprop:Generator_ColumnPropNameInRow="Address" msprop:Generator_ColumnPropNameInTable="AddressColumn" msprop:Generator_UserColumnName="Address" type="xs:string" minOccurs="0" />
+              <xs:element name="MemoryType" msprop:Generator_ColumnVarNameInTable="columnMemoryType" msprop:Generator_ColumnPropNameInRow="MemoryType" msprop:Generator_ColumnPropNameInTable="MemoryTypeColumn" msprop:Generator_UserColumnName="MemoryType" type="xs:string" minOccurs="0" />
+              <xs:element name="DisplayAddress" msprop:Generator_ColumnVarNameInTable="columnDisplayAddress" msprop:Generator_ColumnPropNameInRow="DisplayAddress" msprop:Generator_ColumnPropNameInTable="DisplayAddressColumn" msprop:Generator_UserColumnName="DisplayAddress" type="xs:string" minOccurs="0" />
+              <xs:element name="Value" msprop:Generator_ColumnVarNameInTable="columnValue" msprop:Generator_ColumnPropNameInRow="Value" msprop:Generator_ColumnPropNameInTable="ValueColumn" msprop:Generator_UserColumnName="Value" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="Real" msprop:Generator_ColumnVarNameInTable="columnReal" msprop:Generator_ColumnPropNameInRow="Real" msprop:Generator_ColumnPropNameInTable="RealColumn" msprop:Generator_UserColumnName="Real" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

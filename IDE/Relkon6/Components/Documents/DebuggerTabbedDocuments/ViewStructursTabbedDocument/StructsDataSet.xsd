@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="StructsDataSet" targetNamespace="http://tempuri.org/StructsDataSet.xsd" xmlns:mstns="http://tempuri.org/StructsDataSet.xsd" xmlns="http://tempuri.org/StructsDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="StructsDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="StructsDataSet" msprop:Generator_DataSetName="StructsDataSet" msprop:EnableTableAdapterManager="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtDisplayVars" msprop:Generator_UserTableName="dtDisplayVars" msprop:Generator_RowDeletedName="dtDisplayVarsRowDeleted" msprop:Generator_RowChangedName="dtDisplayVarsRowChanged" msprop:Generator_RowClassName="dtDisplayVarsRow" msprop:Generator_RowChangingName="dtDisplayVarsRowChanging" msprop:Generator_RowEvArgName="dtDisplayVarsRowChangeEvent" msprop:Generator_RowEvHandlerName="dtDisplayVarsRowChangeEventHandler" msprop:Generator_TableClassName="dtDisplayVarsDataTable" msprop:Generator_TableVarName="tabledtDisplayVars" msprop:Generator_RowDeletingName="dtDisplayVarsRowDeleting" msprop:Generator_TablePropName="dtDisplayVars">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="StructName" msprop:Generator_UserColumnName="StructName" msprop:Generator_ColumnVarNameInTable="columnStructName" msprop:Generator_ColumnPropNameInRow="StructName" msprop:Generator_ColumnPropNameInTable="StructNameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Value" msprop:Generator_UserColumnName="Value" msprop:Generator_ColumnVarNameInTable="columnValue" msprop:Generator_ColumnPropNameInRow="Value" msprop:Generator_ColumnPropNameInTable="ValueColumn" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="DisplayAddress" msprop:Generator_UserColumnName="DisplayAddress" msprop:Generator_ColumnVarNameInTable="columnDisplayAddress" msprop:Generator_ColumnPropNameInRow="DisplayAddress" msprop:Generator_ColumnPropNameInTable="DisplayAddressColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="DisplayValue" msprop:Generator_UserColumnName="DisplayValue" msprop:Generator_ColumnVarNameInTable="columnDisplayValue" msprop:Generator_ColumnPropNameInRow="DisplayValue" msprop:Generator_ColumnPropNameInTable="DisplayValueColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="MemoryType" msprop:Generator_UserColumnName="MemoryType" msprop:Generator_ColumnPropNameInRow="MemoryType" msprop:Generator_ColumnVarNameInTable="columnMemoryType" msprop:Generator_ColumnPropNameInTable="MemoryTypeColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Address" msprop:Generator_UserColumnName="Address" msprop:Generator_ColumnPropNameInRow="Address" msprop:Generator_ColumnVarNameInTable="columnAddress" msprop:Generator_ColumnPropNameInTable="AddressColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="Size" msprop:Generator_UserColumnName="Size" msprop:Generator_ColumnPropNameInRow="Size" msprop:Generator_ColumnVarNameInTable="columnSize" msprop:Generator_ColumnPropNameInTable="SizeColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="MaxValue" msprop:Generator_UserColumnName="MaxValue" msprop:Generator_ColumnPropNameInRow="MaxValue" msprop:Generator_ColumnVarNameInTable="columnMaxValue" msprop:Generator_ColumnPropNameInTable="MaxValueColumn" type="xs:long" minOccurs="0" />
+              <xs:element name="MinValue" msprop:Generator_UserColumnName="MinValue" msprop:Generator_ColumnPropNameInRow="MinValue" msprop:Generator_ColumnVarNameInTable="columnMinValue" msprop:Generator_ColumnPropNameInTable="MinValueColumn" type="xs:long" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dtVars" msprop:Generator_UserTableName="dtVars" msprop:Generator_RowDeletedName="dtVarsRowDeleted" msprop:Generator_RowChangedName="dtVarsRowChanged" msprop:Generator_RowClassName="dtVarsRow" msprop:Generator_RowChangingName="dtVarsRowChanging" msprop:Generator_RowEvArgName="dtVarsRowChangeEvent" msprop:Generator_RowEvHandlerName="dtVarsRowChangeEventHandler" msprop:Generator_TableClassName="dtVarsDataTable" msprop:Generator_TableVarName="tabledtVars" msprop:Generator_RowDeletingName="dtVarsRowDeleting" msprop:Generator_TablePropName="dtVars">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="StructName" msprop:Generator_UserColumnName="StructName" msprop:Generator_ColumnVarNameInTable="columnStructName" msprop:Generator_ColumnPropNameInRow="StructName" msprop:Generator_ColumnPropNameInTable="StructNameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="MemoryType" msprop:Generator_UserColumnName="MemoryType" msprop:Generator_ColumnVarNameInTable="columnMemoryType" msprop:Generator_ColumnPropNameInRow="MemoryType" msprop:Generator_ColumnPropNameInTable="MemoryTypeColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Address" msprop:Generator_UserColumnName="Address" msprop:Generator_ColumnVarNameInTable="columnAddress" msprop:Generator_ColumnPropNameInRow="Address" msprop:Generator_ColumnPropNameInTable="AddressColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="Size" msprop:Generator_UserColumnName="Size" msprop:Generator_ColumnVarNameInTable="columnSize" msprop:Generator_ColumnPropNameInRow="Size" msprop:Generator_ColumnPropNameInTable="SizeColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="HasSign" msprop:Generator_UserColumnName="HasSign" msprop:Generator_ColumnPropNameInRow="HasSign" msprop:Generator_ColumnVarNameInTable="columnHasSign" msprop:Generator_ColumnPropNameInTable="HasSignColumn" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dtStructs" msprop:Generator_UserTableName="dtStructs" msprop:Generator_RowDeletedName="dtStructsRowDeleted" msprop:Generator_RowChangedName="dtStructsRowChanged" msprop:Generator_RowClassName="dtStructsRow" msprop:Generator_RowChangingName="dtStructsRowChanging" msprop:Generator_RowEvArgName="dtStructsRowChangeEvent" msprop:Generator_RowEvHandlerName="dtStructsRowChangeEventHandler" msprop:Generator_TableClassName="dtStructsDataTable" msprop:Generator_TableVarName="tabledtStructs" msprop:Generator_RowDeletingName="dtStructsRowDeleting" msprop:Generator_TablePropName="dtStructs">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Address" msprop:Generator_UserColumnName="Address" msprop:Generator_ColumnPropNameInRow="Address" msprop:Generator_ColumnVarNameInTable="columnAddress" msprop:Generator_ColumnPropNameInTable="AddressColumn" type="xs:int" minOccurs="0" />
+              <xs:element name="Memory" msprop:Generator_UserColumnName="Memory" msprop:Generator_ColumnPropNameInRow="Memory" msprop:Generator_ColumnVarNameInTable="columnMemory" msprop:Generator_ColumnPropNameInTable="MemoryColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="Size" msprop:Generator_UserColumnName="Size" msprop:Generator_ColumnPropNameInRow="Size" msprop:Generator_ColumnVarNameInTable="columnSize" msprop:Generator_ColumnPropNameInTable="SizeColumn" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="dtVars_dtDisplayVars" msdata:parent="dtVars" msdata:child="dtDisplayVars" msdata:parentkey="Name StructName" msdata:childkey="Name StructName" msprop:Generator_UserRelationName="dtVars_dtDisplayVars" msprop:Generator_RelationVarName="relationdtVars_dtDisplayVars" msprop:Generator_UserChildTable="dtDisplayVars" msprop:Generator_UserParentTable="dtVars" msprop:Generator_ParentPropName="dtVarsRowParent" msprop:Generator_ChildPropName="GetdtDisplayVarsRows" />
+      <msdata:Relationship name="dtStructs_dtVars" msdata:parent="dtStructs" msdata:child="dtVars" msdata:parentkey="Name" msdata:childkey="StructName" msprop:Generator_UserRelationName="dtStructs_dtVars" msprop:Generator_RelationVarName="relationdtStructs_dtVars" msprop:Generator_UserChildTable="dtVars" msprop:Generator_UserParentTable="dtStructs" msprop:Generator_ParentPropName="dtStructsRow" msprop:Generator_ChildPropName="GetdtVarsRows" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

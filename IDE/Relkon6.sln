@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Relkon6", "Relkon6\Relkon6.csproj", "{DD443F19-99B8-4C92-83D6-202BE55DD96C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A99144B1-0356-46C3-88D0-D146DA0F7768} = {A99144B1-0356-46C3-88D0-D146DA0F7768}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontel.IO", "Kontel.IO\Kontel.IO.csproj", "{A99144B1-0356-46C3-88D0-D146DA0F7768}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontel.Components", "Kontel.Components\Kontel.Components.csproj", "{B506227B-8FB4-4E01-AB64-97996B5F16A9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A99144B1-0356-46C3-88D0-D146DA0F7768} = {A99144B1-0356-46C3-88D0-D146DA0F7768}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Debug|x86.Build.0 = Debug|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Release|x86.ActiveCfg = Release|Any CPU
+		{DD443F19-99B8-4C92-83D6-202BE55DD96C}.Release|x86.Build.0 = Release|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Debug|x86.Build.0 = Debug|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Release|x86.ActiveCfg = Release|Any CPU
+		{A99144B1-0356-46C3-88D0-D146DA0F7768}.Release|x86.Build.0 = Release|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Debug|x86.Build.0 = Debug|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|x86.ActiveCfg = Release|Any CPU
+		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

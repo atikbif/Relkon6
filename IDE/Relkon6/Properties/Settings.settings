@@ -1,0 +1,135 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Kontel.Relkon.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FormLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="FormSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">968, 628</Value>
+    </Setting>
+    <Setting Name="FormWindowState" Type="System.Windows.Forms.FormWindowState" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="SolutionExplorerIsOpen" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SolutionExplorerCollapsed" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SolutionExplorerFloatingSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">250, 400</Value>
+    </Setting>
+    <Setting Name="SolutionExplorerPopupSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">250</Value>
+    </Setting>
+    <Setting Name="SolutionExplorerStaticSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">250, 400</Value>
+    </Setting>
+    <Setting Name="MainToolStripPanel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Top</Value>
+    </Setting>
+    <Setting Name="MainToolStriplLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">3, 24</Value>
+    </Setting>
+    <Setting Name="PultToolStripPanel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Top</Value>
+    </Setting>
+    <Setting Name="PultToolStripLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">3, 49</Value>
+    </Setting>
+    <Setting Name="SelectedProcessorIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="ErrorsListDescriptionColumnWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">400</Value>
+    </Setting>
+    <Setting Name="ErrorsListFileColumnWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="ErrorsListLastModifySizeColumnIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="ErrorsListLineColumnWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">400</Value>
+    </Setting>
+    <Setting Name="LastOpenedSolutionDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EditorFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Courier New, 9.75pt</Value>
+    </Setting>
+    <Setting Name="MainToolStripVisible" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="PultToolStripVisible" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DefaultEditorFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Courier New, 9.75pt</Value>
+    </Setting>
+    <Setting Name="DispatcheringToolStripPanel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Top</Value>
+    </Setting>
+    <Setting Name="DispatcheringToolStripLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">3, 99</Value>
+    </Setting>
+    <Setting Name="ArchiveToolStripLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">3, 124</Value>
+    </Setting>
+    <Setting Name="DeBugger_Settings_ComPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM4</Value>
+    </Setting>
+    <Setting Name="DeBugger_Settings_BaudRate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">19200</Value>
+    </Setting>
+    <Setting Name="DeBugger_SettingsProcessesorType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">MB90F347</Value>
+    </Setting>
+    <Setting Name="DeBugger_Settings_Protocol" Type="System.String" Scope="User">
+      <Value Profile="(Default)">RC51ASCII</Value>
+    </Setting>
+    <Setting Name="DeBugger_Settings_NumberLink" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="DebuggerParametersListCollapsed" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ModulesCOMPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM1</Value>
+    </Setting>
+    <Setting Name="ModulesFormHeight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">376</Value>
+    </Setting>
+    <Setting Name="ModulesFormSplitterDistance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">240</Value>
+    </Setting>
+    <Setting Name="SearchString" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ReplaceString" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DebuggerToolStripPanel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Top</Value>
+    </Setting>
+    <Setting Name="DebuggerToolStripLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">3, 74</Value>
+    </Setting>
+    <Setting Name="DebuggerToolStripVisible" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DebuggerHex" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DebuggerParametersListSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">251, 661</Value>
+    </Setting>
+    <Setting Name="DebuggerParametersListPopupSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">251</Value>
+    </Setting>
+    <Setting Name="DebuggerParametersListStaticSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">251, 661</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

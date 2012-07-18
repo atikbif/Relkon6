@@ -1,0 +1,542 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DD443F19-99B8-4C92-83D6-202BE55DD96C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Kontel.Relkon</RootNamespace>
+    <AssemblyName>Relkon6</AssemblyName>
+    <TargetZone>Custom</TargetZone>
+    <GenerateManifests>true</GenerateManifests>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationIcon>Relkon6.ico</ApplicationIcon>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Distr\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Distr\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="QWhale.Common, Version=1.48.2775.40984, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\QWhale.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="QWhale.Editor, Version=1.48.2775.40986, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\QWhale.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="QWhale.Syntax, Version=1.48.2775.40986, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\QWhale.Syntax.dll</HintPath>
+    </Reference>
+    <Reference Include="QWhale.Syntax.Parsers, Version=1.48.2775.40987, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\QWhale.Syntax.Parsers.dll</HintPath>
+    </Reference>
+    <Reference Include="QWhale.Syntax.Schemes, Version=1.48.2775.40987, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\QWhale.Syntax.Schemes.dll</HintPath>
+    </Reference>
+    <Reference Include="SandDock, Version=3.0.3.1, Culture=neutral, PublicKeyToken=112f10482277aebf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\SandDock.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ZedGraph, Version=5.0.1.30445, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\ZedGraph.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\DebuggerTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\AnalogSensorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\AnalogSensorControl.Designer.cs">
+      <DependentUpon>AnalogSensorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\DigitalIO.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\DigitalIO.designer.cs">
+      <DependentUpon>DigitalIO.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\DisplayBlock.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\DisplayBlock.Designer.cs">
+      <DependentUpon>DisplayBlock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\ViewIOSensorsTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\ViewIOSensorsTabbedDocument.designer.cs">
+      <DependentUpon>ViewIOSensorsTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewGraphicsTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewGraphicsTabbedDocument.designer.cs">
+      <DependentUpon>ViewGraphicsTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewMemoryTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewMemoryTabbedDocument.designer.cs">
+      <DependentUpon>ViewMemoryTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewSituationsTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewSituationsTabbedDocument.Designer.cs">
+      <DependentUpon>ViewSituationsTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewStructursTabbedDocument\StructsDataSet.cs">
+      <DependentUpon>StructsDataSet.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewStructursTabbedDocument\StructsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StructsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewStructursTabbedDocument\ViewStructursTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewStructursTabbedDocument\ViewStructursTabbedDocument.designer.cs">
+      <DependentUpon>ViewStructursTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewVarsTabbedDocument\ViewVarsDataSet.cs">
+      <DependentUpon>ViewVarsDataSet.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewVarsTabbedDocument\ViewVarsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewVarsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewVarsTabbedDocument\ViewVarsTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\DebuggerTabbedDocuments\ViewVarsTabbedDocument\ViewVarsTabbedDocument.designer.cs">
+      <DependentUpon>ViewVarsTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\EditorTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\EditorTabbedDocument.Designer.cs">
+      <DependentUpon>EditorTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\FileTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\PropertiesTabbedDocuments\StandartEmbeddedVarsEditor\EmbeddedVarsDataSet.cs">
+      <DependentUpon>EmbeddedVarsDataSet.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\PropertiesTabbedDocuments\STM32F103PropertiesTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\PropertiesTabbedDocuments\STM32F103PropertiesTabbedDocument.Designer.cs">
+      <DependentUpon>STM32F103PropertiesTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\DebuggerParametersPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\DebuggerParametersPanel.Designer.cs">
+      <DependentUpon>DebuggerParametersPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\PropertiesTabbedDocuments\StandartEmbeddedVarsEditor\EmbeddedVarsDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmbeddedVarsDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\PropertiesTabbedDocuments\PropertiesTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\PropertiesTabbedDocuments\StandartEmbeddedVarsEditor\StandartEmbeddedVarsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\PropertiesTabbedDocuments\StandartEmbeddedVarsEditor\StandartEmbeddedVarsEditor.Designer.cs">
+      <DependentUpon>StandartEmbeddedVarsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Documents\RelkonTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\StandartPultTabbedDocument.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Documents\StandartPultTabbedDocument.Designer.cs">
+      <DependentUpon>StandartPultTabbedDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ErrorList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\ErrorList.Designer.cs">
+      <DependentUpon>ErrorList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\OutputList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\OutputList.Designer.cs">
+      <DependentUpon>OutputList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SolutionExplorer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\SolutionExplorer.Designer.cs">
+      <DependentUpon>SolutionExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConvertFromOldProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConvertFromOldProjectForm.Designer.cs">
+      <DependentUpon>ConvertFromOldProjectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GotoLineForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GotoLineForm.Designer.cs">
+      <DependentUpon>GotoLineForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FindReplaceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindReplaceForm.Designer.cs">
+      <DependentUpon>FindReplaceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModifiedFilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModifiedFilesForm.Designer.cs">
+      <DependentUpon>ModifiedFilesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\AnalogSensorControl.resx">
+      <DependentUpon>AnalogSensorControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\DigitalIO.resx">
+      <DependentUpon>DigitalIO.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\DisplayBlock.resx">
+      <DependentUpon>DisplayBlock.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewIOSensorsTabbedDocument\ViewIOSensorsTabbedDocument.resx">
+      <DependentUpon>ViewIOSensorsTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewGraphicsTabbedDocument.resx">
+      <DependentUpon>ViewGraphicsTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewMemoryTabbedDocument.resx">
+      <DependentUpon>ViewMemoryTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewSituationsTabbedDocument.resx">
+      <DependentUpon>ViewSituationsTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewStructursTabbedDocument\ViewStructursTabbedDocument.resx">
+      <DependentUpon>ViewStructursTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\DebuggerTabbedDocuments\ViewVarsTabbedDocument\ViewVarsTabbedDocument.resx">
+      <DependentUpon>ViewVarsTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\EditorTabbedDocument.resx">
+      <DependentUpon>EditorTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\PropertiesTabbedDocuments\STM32F103PropertiesTabbedDocument.resx">
+      <DependentUpon>STM32F103PropertiesTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\DebuggerParametersPanel.resx">
+      <DependentUpon>DebuggerParametersPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\PropertiesTabbedDocuments\PropertiesTabbedDocument.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PropertiesTabbedDocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\PropertiesTabbedDocuments\StandartEmbeddedVarsEditor\StandartEmbeddedVarsEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StandartEmbeddedVarsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\RelkonTabbedDocument.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RelkonTabbedDocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Documents\StandartPultTabbedDocument.resx">
+      <DependentUpon>StandartPultTabbedDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\ErrorList.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ErrorList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\OutputList.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>OutputList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\SolutionExplorer.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SolutionExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConvertFromOldProjectForm.resx">
+      <DependentUpon>ConvertFromOldProjectForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FindReplaceForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FindReplaceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Images\Icons\.asm\VCProject_dll_2.ico" />
+    <EmbeddedResource Include="MainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GotoLineForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>GotoLineForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModifiedFilesForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ModifiedFilesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetModulesAddressForm.resx">
+      <DependentUpon>SetModulesAddressForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UpdateControllerForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>UpdateControllerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="SetModulesAddressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SetModulesAddressForm.Designer.cs">
+      <DependentUpon>SetModulesAddressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="UpdateControllerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UpdateControllerForm.Designer.cs">
+      <DependentUpon>UpdateControllerForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CompileStrip.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <BaseApplicationManifest Include="Properties\app.manifest" />
+    <None Include="Components\Documents\PropertiesTabbedDocuments\StandartEmbeddedVarsEditor\EmbeddedVarsDataSet.xsc">
+      <DependentUpon>EmbeddedVarsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Components\Documents\PropertiesTabbedDocuments\StandartEmbeddedVarsEditor\EmbeddedVarsDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>EmbeddedVarsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Components\Documents\PropertiesTabbedDocuments\StandartEmbeddedVarsEditor\EmbeddedVarsDataSet.xss">
+      <DependentUpon>EmbeddedVarsDataSet.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\active_close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\active_max.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\active_min.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\active_off.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>Клиентский профиль .NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Components\Documents\DebuggerTabbedDocuments\ViewStructursTabbedDocument\StructsDataSet.xsc">
+      <DependentUpon>StructsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Components\Documents\DebuggerTabbedDocuments\ViewStructursTabbedDocument\StructsDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StructsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Components\Documents\DebuggerTabbedDocuments\ViewStructursTabbedDocument\StructsDataSet.xss">
+      <DependentUpon>StructsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Components\Documents\DebuggerTabbedDocuments\ViewVarsTabbedDocument\ViewVarsDataSet.xsc">
+      <DependentUpon>ViewVarsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Components\Documents\DebuggerTabbedDocuments\ViewVarsTabbedDocument\ViewVarsDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ViewVarsDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Components\Documents\DebuggerTabbedDocuments\ViewVarsTabbedDocument\ViewVarsDataSet.xss">
+      <DependentUpon>ViewVarsDataSet.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Icons\.asm\asm.ico" />
+    <None Include="Images\Icons\.cntr\cntr.ico" />
+    <None Include="Images\Icons\.rproj\ControllerProgramSolution.ico" />
+    <None Include="Images\Icons\.dbg\dbg.ico" />
+    <None Include="Images\Icons\.fbr\fbr.ico" />
+    <None Include="Images\Icons\Generic_Device.ico" />
+    <None Include="Images\Icons\.kon\kon.ico" />
+    <None Include="Images\Icons\.map\map.ico" />
+    <None Include="Images\Icons\.map\msenv_dll_6810.ico" />
+    <None Include="Images\Icons\.plt\plt.ico" />
+    <None Include="Images\Icons\Relkon\Relkon.ico" />
+    <None Include="Images\Icons\.tc65\TC65Solution.ico" />
+    <None Include="Images\Icons\Uninstall.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Relkon6.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kontel.Components\Kontel.Components.csproj">
+      <Project>{B506227B-8FB4-4E01-AB64-97996B5F16A9}</Project>
+      <Name>Kontel.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kontel.IO\Kontel.IO.csproj">
+      <Project>{A99144B1-0356-46C3-88D0-D146DA0F7768}</Project>
+      <Name>Kontel.IO</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+</Project>

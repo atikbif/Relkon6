@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B506227B-8FB4-4E01-AB64-97996B5F16A9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Kontel.Components</RootNamespace>
+    <AssemblyName>Kontel.Components</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Distr\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Distr\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Kontel.IO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="SandDock, Version=3.0.3.1, Culture=neutral, PublicKeyToken=112f10482277aebf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\SandDock.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ZedGraph, Version=5.0.1.30445, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\_data\Assemblies\ZedGraph.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\CompilationError.cs" />
+    <Compile Include="Classes\ControllerEmbeddedVar.cs" />
+    <Compile Include="Classes\ControllerEmbeddedVarCollection.cs" />
+    <Compile Include="Classes\ControllerIOVar.cs" />
+    <Compile Include="Classes\ControllerIOVarCollection.cs" />
+    <Compile Include="Classes\ControllerStructVar.cs" />
+    <Compile Include="Classes\ControllerSystemVar.cs" />
+    <Compile Include="Classes\ControllerSystemVarCollection.cs" />
+    <Compile Include="Classes\ControllerUserVar.cs" />
+    <Compile Include="Classes\ControllerVar.cs" />
+    <Compile Include="Classes\ControllerVarCollection.cs" />
+    <Compile Include="Classes\DispatcheringSolutionVar.cs" />
+    <Compile Include="CodeDom\RelkonCodeArrayDefenition.cs" />
+    <Compile Include="CodeDom\RelkonCodeDefine.cs" />
+    <Compile Include="CodeDom\RelkonCodeModel.cs" />
+    <Compile Include="CodeDom\RelkonCodeObject.cs" />
+    <Compile Include="CodeDom\RelkonCodeProcess.cs" />
+    <Compile Include="CodeDom\RelkonCodeSituation.cs" />
+    <Compile Include="CodeDom\RelkonCodeStruct.cs" />
+    <Compile Include="CodeDom\RelkonCodeVarDefenition.cs" />
+    <Compile Include="Controls\BorderPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\HexEditior.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HexEditior.designer.cs">
+      <DependentUpon>HexEditior.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HR.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ImageButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\LCDIndicator\LCDIndicator.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\LCDIndicator\LCDIndicator.Designer.cs">
+      <DependentUpon>LCDIndicator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LCDIndicator\LCDIndicatorSymbol.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\LCDIndicator\SpecialSymbolsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\LCDIndicator\SpecialSymbolsForm.Designer.cs">
+      <DependentUpon>SpecialSymbolsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Plotter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TabControl\TabControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TabControl\TabControl.Designer.cs">
+      <DependentUpon>TabControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TabControl\TabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TabControl\TabPage.Designer.cs">
+      <DependentUpon>TabPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TabControl\TabPageHeader.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TabControl\TabPageHeader.Designer.cs">
+      <DependentUpon>TabPageHeader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TreeViewEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EpsonPultEncoding.cs" />
+    <Compile Include="Forms\IEditableTabbedDocument.cs" />
+    <Compile Include="Forms\IPrintableTabbedDocument.cs" />
+    <Compile Include="Forms\ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShadowedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShadowedForm.Designer.cs">
+      <DependentUpon>ShadowedForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TabbedDocumentsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TabbedDocumentsForm.Designer.cs">
+      <DependentUpon>TabbedDocumentsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\CodeGenerator.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\IOModules\ADCModule.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\IOModules\AnalogModule.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\IOModules\DACModule.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\IOModules\DigitalModule.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\IOModules\DINModule.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\IOModules\DOUTModule.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\IOModules\IOModule.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CodeGenerators\STM32F107CodeGenerator.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\CompilationParams.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\ControllerProgramSolution.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\Debugger\DebuggerEngine.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\Debugger\DebuggerParameters.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\Process.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\ProcessorParams.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\PultParams.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\Pult\PultModel.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\Pult\PultType.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\STM32F107Solution.cs" />
+    <Compile Include="Solutions\ControllerProgramSolution\STM32F107UploadMgr.cs" />
+    <Compile Include="Solutions\Solution.cs" />
+    <Compile Include="Solutions\UploadMgr.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\HexEditior.resx">
+      <DependentUpon>HexEditior.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\LCDIndicator\LCDIndicator.resx">
+      <DependentUpon>LCDIndicator.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\LCDIndicator\SpecialSymbolsForm.resx">
+      <DependentUpon>SpecialSymbolsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TabControl\TabControl.resx">
+      <DependentUpon>TabControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShadowedForm.resx">
+      <DependentUpon>ShadowedForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TabbedDocumentsForm.resx">
+      <DependentUpon>TabbedDocumentsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ArchiveDbTemplate.mdb">
+    </EmbeddedResource>
+    <None Include="Resources\ControllerProgramTemplate.kon" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\collapsed.bmp" />
+    <None Include="Resources\copy.bmp" />
+    <None Include="Resources\cut.bmp" />
+    <None Include="Resources\delete.bmp" />
+    <None Include="Resources\expanded.bmp" />
+    <None Include="Resources\paste.bmp" />
+    <None Include="Resources\pointer.bmp" />
+    <None Include="Resources\pointerblack.bmp" />
+    <Content Include="C.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Map.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Relkon.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>Клиентский профиль .NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Установщик Windows 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+</Project>

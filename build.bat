@@ -1,9 +1,7 @@
 cls
 color 0a
 
-call "%VS100COMNTOOLS%vsvars32.bat"
-
-devenv.com ./IDE/Relkon6.sln /Rebuild Release
+%windir%\Microsoft.NET\Framework\v3.5\MSBuild.exe ./IDE/Relkon6.sln /t:Rebuild /p:Configuration=Release
 
 cd .\Firmware\STM32F107
 call .\build.bat

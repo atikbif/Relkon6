@@ -14,22 +14,22 @@
 #define     Z50     key
 #define     Z40     led
 
-#define led_1   (*(led_ptr+0))
-#define led_2   (*(led_ptr+1))
-#define led_3   (*(led_ptr+2))
-#define led_4   (*(led_ptr+3))
-#define led_5   (*(led_ptr+4))
-#define led_6   (*(led_ptr+5))
-#define led_7   (*(led_ptr+6))
-#define led_8   (*(led_ptr+7))
+#define led_1   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&led-0x20000000)*32)+0)))
+#define led_2   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&led-0x20000000)*32)+4)))
+#define led_3   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&led-0x20000000)*32)+8)))
+#define led_4   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&led-0x20000000)*32)+12)))
+#define led_5   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&led-0x20000000)*32)+16)))
+#define led_6   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&led-0x20000000)*32)+20)))
+#define led_7   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&led-0x20000000)*32)+24)))
+#define led_8   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&led-0x20000000)*32)+28)))
 
-#define key_1   ((unsigned char)(*(key_ptr+0)))
-#define key_2   ((unsigned char)(*(key_ptr+1)))
-#define key_3   ((unsigned char)(*(key_ptr+2)))
-#define key_4   ((unsigned char)(*(key_ptr+3)))
-#define key_5   ((unsigned char)(*(key_ptr+4)))
-#define key_6   ((unsigned char)(*(key_ptr+5)))
-#define key_7   ((unsigned char)(*(key_ptr+6)))
-#define key_8   ((unsigned char)(*(key_ptr+7)))
+#define key_1   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&key-0x20000000)*32)+0)))
+#define key_2   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&key-0x20000000)*32)+4)))
+#define key_3   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&key-0x20000000)*32)+8)))
+#define key_4   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&key-0x20000000)*32)+12)))
+#define key_5   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&key-0x20000000)*32)+16)))
+#define key_6   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&key-0x20000000)*32)+20)))
+#define key_7   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&key-0x20000000)*32)+24)))
+#define key_8   (*((volatile unsigned long *)((unsigned long) 0x22000000 + (((unsigned long)&key-0x20000000)*32)+28)))
 
 #endif /* PULT_DEF_H_ */

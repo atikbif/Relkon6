@@ -1,5 +1,10 @@
 PATH ..\..\Distr\arm-gcc\bin;
 
+mdkdir ..\..\Distr\firmware
+mkdir ..\..\Distr\firmware\STM32F107
+mkdir ..\..\Distr\firmware\STM32F107\obj
+mkdir ..\..\Distr\firmware\STM32F107\inc
+
 del ..\..\Distr\firmware\STM32F107\obj\*.o /Q
 del ..\..\Distr\firmware\STM32F107\inc\*.h /Q
 
@@ -16,6 +21,7 @@ copy .\FATFS\inc\*.h ..\..\Distr\firmware\STM32F107\inc
 copy .\CC3000_DRIVER\inc*.h ..\..\Distr\firmware\STM32F107\inc
 
 copy .\stm32_flash.ld ..\..\Distr\firmware\STM32F107
+copy .\Compile.bat.pattern ..\..\Distr\firmware\STM32F107
 
 arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m3 -DUSE_STDPERIPH_DRIVER -DSTM32F10X_CL -D__CCS__ -I ./ETH_DRIVER -I ./KONLITE/inc -I ./KONLITE/src -I ./FreeRTOS/include -I ./Libraries/STM32F10x_StdPeriph_Driver/inc -I ./Libraries/CMSIS/Core/CM3 -I ./Relkon/inc -I ./Relkon_PORT/inc -I ./FATFS/inc -I ./CC3000_DRIVER/inc -Os -ffunction-sections -fdata-sections -Wall -Os -mlittle-endian -fsigned-char -o ../../Distr/firmware/STM32F107/obj/stm32f10x_bkp.o .\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_bkp.c
 arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m3 -DUSE_STDPERIPH_DRIVER -DSTM32F10X_CL -D__CCS__ -I ./ETH_DRIVER -I ./KONLITE/inc -I ./KONLITE/src -I ./FreeRTOS/include -I ./Libraries/STM32F10x_StdPeriph_Driver/inc -I ./Libraries/CMSIS/Core/CM3 -I ./Relkon/inc -I ./Relkon_PORT/inc -I ./FATFS/inc -I ./CC3000_DRIVER/inc -Os -ffunction-sections -fdata-sections -Wall -Os -mlittle-endian -fsigned-char -o ../../Distr/firmware/STM32F107/obj/stm32f10x_rcc.o .\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_rcc.c

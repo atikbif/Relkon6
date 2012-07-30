@@ -6,5 +6,7 @@ color 0a
 cd .\Firmware\STM32F107
 call .\build.bat
 
-pause
+cd ..\..\Distr
+
+Relkon6.exe
 

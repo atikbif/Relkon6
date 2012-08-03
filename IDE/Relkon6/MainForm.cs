@@ -26,7 +26,7 @@ namespace Kontel.Relkon
 {
     public sealed partial class MainForm : Kontel.TabbedDocumentsForm.TabbedDocumentsForm
     {
-        private string defaultCaption = "Relkon 6.2"; // заголовок формы
+        private string defaultCaption = "IDE Relkon"; // заголовок формы
         private Solution solution = null; //хранит информацию о текущем проекте
         private FindReplaceForm findReplaceForm = null; // форма поиска и замены     
         private bool initialize = false; // становится true после полной инициализации формы

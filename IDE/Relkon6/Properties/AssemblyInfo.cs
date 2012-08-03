@@ -10,5 +10,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Relkon 6")]
 [assembly: AssemblyCopyright("Copyright © 2012 Kontel")]
 [assembly: AssemblyTrademark("Kontel Relkon")]
-[assembly: AssemblyVersion("6.2.0.0")]
-[assembly: AssemblyFileVersion("6.2.0.0")]
+[assembly: AssemblyVersion("6.3.0.0")]
+[assembly: AssemblyFileVersion("6.3.0.e650223")]

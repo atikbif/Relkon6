@@ -146,11 +146,11 @@ int main(void)
   if(_Sys.Can2_Type==0) xTaskCreate( BinCan2Task, ( signed portCHAR * ) "Canal2", configMINIMAL_STACK_SIZE, NULL, Canal_TASK_PRIORITY, NULL );
   else xTaskCreate( AsciiCan2Task, ( signed portCHAR * ) "Canal2", configMINIMAL_STACK_SIZE, NULL, Canal_TASK_PRIORITY, NULL );
   // WIFI задачи
-  if(wifi_ip[0])
+/*  if(wifi_ip[0])
   {
     xTaskCreate( WIFITask, ( signed portCHAR * ) "Wifi", configMINIMAL_STACK_SIZE, NULL, WF_TASK_PRIORITY, NULL );
     xTaskCreate( SCAN_WIFITask, ( signed portCHAR * ) "SCANWifi", configMINIMAL_STACK_SIZE, NULL, WF_TASK_PRIORITY+1, NULL );
-  }
+  }*/
   // проводной ethernet
   if(ip_addr[0]) xTaskCreate( EthTask, ( signed portCHAR * ) "Eth", configMINIMAL_STACK_SIZE, NULL, ETH_TASK_PRIORITY, NULL );
   // задача работы с sd картой

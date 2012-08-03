@@ -124,7 +124,7 @@ void udp_protocol(udp_pkt* pkt1,ip_pkt* pkt2)
 	req_udp.tx_buf = pkt1->buf.ptr; req_udp.rx_buf = pkt1->buf.ptr;
 	req_udp.mode = BIN_MODE;req_udp.can_name = CAN_UDP;
 	// проверка сетевого адреса и CRC
-	if(((pkt1->buf.ptr[0]==_Sys.Adr)||(pkt1->buf.ptr[0]==0x00))&&(GetCRC16(pkt1->buf.ptr,pkt1->buf.len)==0))
+	//if(((pkt1->buf.ptr[0]==_Sys.Adr)||(pkt1->buf.ptr[0]==0x00))&&(GetCRC16(pkt1->buf.ptr,pkt1->buf.len)==0))
 	{
 		pkt1->buf.len=0;
 		// разбор команды

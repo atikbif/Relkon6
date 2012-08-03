@@ -129,3 +129,8 @@ void write_lcd(unsigned short cnt)
 	if(pult_dis!=0x31){lcd_cnt=1;USART_SendData(UART5, TxLCDBuf[0]);}
 	else USART_SendData(UART5, canalpu_tx_buf[0]);
 }
+
+void rst_pu_toggle(void)
+{
+	if(canalpu_tx_cnt==0) GPIO_WriteBit(GPIOA, GPIO_Pin_15, Bit_RESET);
+}

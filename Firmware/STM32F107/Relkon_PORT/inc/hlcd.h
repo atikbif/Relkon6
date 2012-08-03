@@ -9,3 +9,4 @@
 
 void init_lcd_canal(void);
 void write_lcd(unsigned short cnt);
+void rst_pu_toggle(void);

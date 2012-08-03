@@ -167,6 +167,7 @@ void vApplicationTickHook( void )	// вызывается каждую миллисекунду
 {
 	_SysTmr++;tcp_tmr++;
 	if (_Sys.S4 >= S4_max) _Sys.S4 = S4_max - 1;	// ограничение номера нижней строки
+	rst_pu_toggle();	// переключение RS485 пультового канала на приём в случае отсутствия передачи данных
 	if(canalpu_rx_cnt) pu_tmr++;else pu_tmr=0;
 	if(_SysTmr==1000)								// пересчёт загрузки процессора
 	{

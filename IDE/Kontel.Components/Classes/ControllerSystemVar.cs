@@ -15,5 +15,8 @@ namespace Kontel.Relkon.Classes
         /// </summary>
         [XmlAttribute]
         public string SystemName = "";
+
+        [XmlAttribute]
+        public bool Array = false;
     }
 }

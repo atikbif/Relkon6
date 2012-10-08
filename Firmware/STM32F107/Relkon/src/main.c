@@ -33,6 +33,8 @@ unsigned long max_load=0;							// максимальная загрузка процессора с момента вк
 unsigned long cpu=0;
 volatile unsigned long adc_sum[8]={0,0,0,0,0,0,0,0};// массив для фильтрации АЦП
 extern volatile unsigned short _Sys_ADC[8];
+extern volatile short _EA[8];
+extern volatile short ext_adc;
 
 extern unsigned char ssid_name[32];					// параметры для сети WIFI
 extern unsigned char wifi_password[32];
@@ -165,6 +167,27 @@ int main(void)
 
 void vApplicationTickHook( void )	// вызывается каждую миллисекунду
 {
+	static unsigned char ext_cnt=0,anum=0;
+	switch(ext_cnt)
+	{
+		case 0:
+			_EA[anum++]=ext_adc;
+			if(anum>5) anum=0;
+			adc_write_set(anum);
+			break;
+		case 1:case 2:
+			break;
+		case 3:
+			get_ext_adc();
+			break;
+		case 4:case 5:
+			break;
+		case 6:
+			get_ext_adc();
+			break;
+	}
+	ext_cnt++;
+	if(ext_cnt>=7) ext_cnt=0;
 	_SysTmr++;tcp_tmr++;
 	if (_Sys.S4 >= S4_max) _Sys.S4 = S4_max - 1;	// ограничение номера нижней строки
 	rst_pu_toggle();	// переключение RS485 пультового канала на приём в случае отсутствия передачи данных
@@ -189,12 +212,14 @@ void vApplicationIdleHook(void)	// вызывается в промежутках ожидания задач
 static void prvFlashTask( void *pvParameters )
 {
     static unsigned long s_tmr=0;
+
     unsigned char tmp;
     init_adc();init_dac();		// инициализация ацп и цап
     update_code();				// обновление кодового слова в FRAM
     FLLastExecutionTime = xTaskGetTickCount();
     for( ;; )
 	{
+
     	// фильтр АЦП
     	if(emu_mode==0){for(tmp=0;tmp<8;tmp++) adc_sum[tmp]+=get_adc(tmp);
         if(s_tmr % 16 == 0) for(tmp=0;tmp<8;tmp++) {_Sys_ADC[tmp]=adc_sum[tmp];adc_sum[tmp]=0;}}

@@ -63,4 +63,22 @@
 #define DAC4				_Sys_DAC[3]
 #define DAH4				(_Sys_DAC[3]>>8)
 
+#define ADC201				(_EA[0]>0 ? (_EA[0]*2) : 0)
+#define ADC202				(_EA[1]>0 ? (_EA[1]*2) : 0)
+#define ADC203				(_EA[2]>0 ? (_EA[2]*2) : 0)
+#define ADC204				(_EA[3]>0 ? (_EA[3]*2) : 0)
+#define ADC205				(_EA[4]>0 ? (_EA[4]*2) : 0)
+#define ADC206				(_EA[5]>0 ? (_EA[5]*2) : 0)
+#define ADC207				(_EA[6]>0 ? (_EA[6]*2) : 0)
+#define ADC208				(_EA[7]>0 ? (_EA[7]*2) : 0)
+
+#define ADH201				(abs(_EA[0])/128)
+#define ADH202				(abs(_EA[1])/128)
+#define ADH203				(abs(_EA[2])/128)
+#define ADH204				(abs(_EA[3])/128)
+#define ADH205				(abs(_EA[4])/128)
+#define ADH206				(abs(_EA[5])/128)
+#define ADH207				(abs(_EA[6])/128)
+#define ADH208				(abs(_EA[7])/128)
+
 #endif /* INOUT_DEF_H_ */

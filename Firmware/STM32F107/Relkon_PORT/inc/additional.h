@@ -42,6 +42,7 @@ extern volatile unsigned long* key_ptr;
 extern volatile unsigned char _Sys_IN[6];
 extern volatile unsigned char _Sys_OUT[6];
 extern volatile unsigned short _Sys_ADC[8];
+extern volatile short _EA[8];
 extern volatile unsigned short _Sys_DAC[4];
 extern unsigned char   IN[32];
 extern unsigned char   OUT[32];

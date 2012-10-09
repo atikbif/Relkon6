@@ -116,7 +116,8 @@ void adc_write_set(unsigned char num)
 		case 5:i2c.addr = 0x90;i2c.tx[1] = 0xC4;break;
 	}
 	i2c.tx[2] = 0xD3;
-	if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8) && GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9))
+	if((GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8)==Bit_SET) && (GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9)==Bit_SET))
+	//if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8) && GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9))
 	{
 		I2C_ITConfig(I2C1, I2C_IT_EVT | I2C_IT_BUF, ENABLE);
 		I2C_GenerateSTART(I2C1, ENABLE);
@@ -124,7 +125,7 @@ void adc_write_set(unsigned char num)
 	else
 	{
 		i2c.err++;
-		if(i2c.err>=1000){i2c.err=0;I2C_SoftwareResetCmd(I2C1,ENABLE);ext_adc_init();}
+		if(i2c.err>=1000){i2c.err=0;ext_adc_init();}
 	}
 }
 
@@ -133,7 +134,8 @@ void get_ext_adc(void)
 	i2c.direction = RECEIVE;
 	i2c.tx[0]=0x00;
 	i2c.stat=0;
-	if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8) && GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9))
+	if((GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8)==Bit_SET) && (GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9)==Bit_SET))
+	//if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8) && GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9))
 	{
 		I2C_ITConfig(I2C1, I2C_IT_EVT | I2C_IT_BUF , ENABLE);
 		I2C_GenerateSTART(I2C1, ENABLE);
@@ -141,7 +143,7 @@ void get_ext_adc(void)
 	else
 	{
 		i2c.err++;
-		if(i2c.err>=1000){i2c.err=0;I2C_SoftwareResetCmd(I2C1,ENABLE);ext_adc_init();}
+		if(i2c.err>=1000){i2c.err=0;ext_adc_init();}
 	}
 }
 
@@ -156,6 +158,7 @@ void ext_adc_init(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 
 	I2C_DeInit(I2C1);
+	//I2C_SoftwareResetCmd(I2C1,ENABLE);
 	i2c.err=0;
 
 	NVIC_InitStructure.NVIC_IRQChannel = I2C1_EV_IRQn;
@@ -166,7 +169,15 @@ void ext_adc_init(void)
 
 	GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_8 | GPIO_Pin_9;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	if((GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8)==Bit_RESET) || (GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9)==Bit_RESET)) return;
+
+
+	GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_8 | GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;//GPIO_Mode_AF_PP;//GPIO_Mode_AF_OD;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	GPIO_PinRemapConfig(GPIO_Remap_I2C1, ENABLE);

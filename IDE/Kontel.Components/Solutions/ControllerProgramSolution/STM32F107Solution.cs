@@ -583,21 +583,6 @@ namespace Kontel.Relkon.Solutions
                     z.Address = adr;
                 }
             }
-
-
-            for (int i = 1; i < 9; i++)
-            {
-                ControllerSystemVar v = Vars.SystemVars.GetVarByName("RX_" + i);
-                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + v.SystemName + "\\b");
-                if (m.Success)
-                    v.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
-
-                v = Vars.SystemVars.GetVarByName("TX_" + i);
-                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + v.SystemName + "\\b");
-                if (m.Success)
-                    v.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
-            }
-
             //res.Add(new ControllerSystemVar() { Name = "Z30", SystemName = "Z30", Memory = MemoryType.XRAM, Size = 1 });
             //res.Add(new ControllerSystemVar() { Name = "Z31", SystemName = "Z31", Memory = MemoryType.XRAM, Size = 1 });
             //res.Add(new ControllerSystemVar() { Name = "Z32", SystemName = "Z32", Memory = MemoryType.XRAM, Size = 1 });
@@ -771,24 +756,6 @@ namespace Kontel.Relkon.Solutions
             res.Add(new ControllerSystemVar() { Name = "DATE", SystemName = "_Sys4x_Date", Memory = MemoryType.XRAM, Size = 1 });
             res.Add(new ControllerSystemVar() { Name = "MONTH", SystemName = "_Sys4x_Month", Memory = MemoryType.XRAM, Size = 1 });
             res.Add(new ControllerSystemVar() { Name = "YEAR", SystemName = "_Sys4x_Year", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerSystemVar() { Name = "TX_1", SystemName = "TX_1", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_2", SystemName = "TX_2", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_3", SystemName = "TX_3", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_4", SystemName = "TX_4", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_5", SystemName = "TX_5", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_6", SystemName = "TX_6", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_7", SystemName = "TX_7", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_8", SystemName = "TX_8", Memory = MemoryType.XRAM, Size = 64, Array = true });
-
-            res.Add(new ControllerSystemVar() { Name = "RX_1", SystemName = "RX_1", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_2", SystemName = "RX_2", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_3", SystemName = "RX_3", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_4", SystemName = "RX_4", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_5", SystemName = "RX_5", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_6", SystemName = "RX_6", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_7", SystemName = "RX_7", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_8", SystemName = "RX_8", Memory = MemoryType.XRAM, Size = 64, Array = true });
             return res;
         }
 
@@ -812,27 +779,6 @@ namespace Kontel.Relkon.Solutions
                     wxyAddress++;
                 }
             }
-            return res;
-        }
-
-        public override List<ControllerDispatcheringVar> GetDispatcheringVarsList()
-        {
-            List<ControllerDispatcheringVar> res = new List<ControllerDispatcheringVar>();
-
-            int address = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 64; j++)
-                {
-                    res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j), Size = 1, Memory = MemoryType.RAM, Address = address });
-                    if (j % 2 == 0)
-                        res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j) + "i", Size = 2, Memory = MemoryType.RAM, Address = address });                    
-                    if (j % 4 == 0)
-                        res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j) + "l", Size = 4, Memory = MemoryType.RAM, Address = address });                    
-                    address++;
-                }
-            }
-
             return res;
         }
 

@@ -613,23 +613,27 @@ namespace Kontel.Relkon.Components.Documents
         private void RebuildTree()
         {                           
             if (_solution != null)
-            {
-                this.tvVars.Nodes.Clear();
+            {              
+                try { this.tvVars.Nodes[3].Remove(); }
+                catch { }
+                try { this.tvVars.Nodes[2].Remove(); }
+                catch { }
+                try { this.tvVars.Nodes[1].Remove(); }
+                catch { }
+                try { this.tvVars.Nodes[0].Remove(); }
+                catch { }
                 this.tvVars.Nodes.Add("Системные переменные");
                 this.tvVars.Nodes.Add("Заводские установки");
                 this.tvVars.Nodes.Add("Датчики ввода-вывода");
                 this.tvVars.Nodes.Add("Пользовательские переменные");
-                this.tvVars.Nodes.Add("Переменные диспетчеризации");
                 this.tvVars.Nodes[0].ImageIndex = 0;
                 this.tvVars.Nodes[1].ImageIndex = 0;
                 this.tvVars.Nodes[2].ImageIndex = 0;
                 this.tvVars.Nodes[3].ImageIndex = 0;
-                this.tvVars.Nodes[4].ImageIndex = 0;
                 this.tvVars.Nodes[0].SelectedImageIndex = 0;
                 this.tvVars.Nodes[1].SelectedImageIndex = 0;
                 this.tvVars.Nodes[2].SelectedImageIndex = 0;
                 this.tvVars.Nodes[3].SelectedImageIndex = 0;
-                this.tvVars.Nodes[4].SelectedImageIndex = 0;
                 //Заполнения дерева переменных
                 for (int i = 0; i < _solution.Vars.SystemVars.Count; i++)
                 {//Заполнение системных переменных
@@ -667,21 +671,9 @@ namespace Kontel.Relkon.Components.Documents
                         AddVarToTree(2, _solution.Vars.IOVars[i].Name);
                     }
                 }
-
-                sort(this.tvVars.Nodes[2]);
-
-                for (int i = 0; i < _solution.Vars.DispatcheringVars.Count; i++)
-                {//Заполнение диспетчерских переменных
-                    if (_solution.Vars.DispatcheringVars[i].Address > 0)
-                    {
-                        AddVarToTree(4, _solution.Vars.DispatcheringVars[i].Name);
-                    }
-                }
-
-                sort(this.tvVars.Nodes[4]);
             }
 
-            
+            sort(this.tvVars.Nodes[2]);
 
             //Удаление запросов на опрос переменных
             Kontel.Relkon.Classes.ControllerVar m_var;

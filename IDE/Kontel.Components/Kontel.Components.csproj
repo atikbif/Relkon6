@@ -74,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\CompilationError.cs" />
-    <Compile Include="Classes\ControllerDispatcheringVar.cs" />
     <Compile Include="Classes\ControllerEmbeddedVar.cs" />
     <Compile Include="Classes\ControllerEmbeddedVarCollection.cs" />
     <Compile Include="Classes\ControllerIOVar.cs" />
@@ -85,6 +84,7 @@
     <Compile Include="Classes\ControllerUserVar.cs" />
     <Compile Include="Classes\ControllerVar.cs" />
     <Compile Include="Classes\ControllerVarCollection.cs" />
+    <Compile Include="Classes\DispatcheringSolutionVar.cs" />
     <Compile Include="CodeDom\RelkonCodeArrayDefenition.cs" />
     <Compile Include="CodeDom\RelkonCodeDefine.cs" />
     <Compile Include="CodeDom\RelkonCodeModel.cs" />

@@ -13,8 +13,8 @@ namespace Kontel.Relkon.Classes
     [XmlInclude(typeof(ControllerSystemVar)),
      XmlInclude(typeof(ControllerIOVar)),
      XmlInclude(typeof(ControllerEmbeddedVar)),
-     XmlInclude(typeof(ControllerDispatcheringVar)),
-     XmlInclude(typeof(ControllerUserVar)),    
+     XmlInclude(typeof(ControllerUserVar)),
+     XmlInclude(typeof(DispatcheringControllerVar)),
      XmlInclude(typeof(ControllerStructVar))]        
     public abstract class ControllerVar
     {

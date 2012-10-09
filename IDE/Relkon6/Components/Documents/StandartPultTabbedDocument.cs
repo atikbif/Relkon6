@@ -942,12 +942,7 @@ namespace Kontel.Relkon.Components.Documents
             foreach (ControllerVar var in Vars.EmbeddedVars)
             {
                 this.ddlVarNames.AutoCompleteCustomSource.Add(var.Name);
-            }
-            for (int i = 0; i < Vars.DispatcheringVars.Count; i++)
-            {
-                this.ddlVarNames.AutoCompleteCustomSource.Add(Vars.DispatcheringVars[i].Name);
-            }        
-            
+            }           
             for (int i = 0; i < Vars.UserVars.Count; i++)
             {                
                 if (!(Vars.UserVars[i] is ControllerStructVar) && Vars.UserVars[i].Array != true)

@@ -24,7 +24,7 @@ extern unsigned char mod_pos;
 extern ed_var ed;
 extern plc_stat _Sys;
 
-unsigned char ascii[5];
+unsigned char ascii[7];
 
 // печать беззнаковой переменной nsigned long в буфер
 unsigned char print_long_buf(unsigned long val,unsigned char* ptr)
@@ -421,12 +421,14 @@ void print_diagn(void)
 	}
 }
 
-unsigned char* conv_to_ascii(unsigned short value)
+unsigned char* conv_to_ascii(unsigned long value)
 {
-	ascii[0] = value/10000 + '0';
-	ascii[1] = (value % 10000)/1000 + '0';
+	ascii[6] = (value % 10000000)/1000000 + '0';
+	ascii[5] = (value % 1000000)/100000 + '0';
+	ascii[4] = (value % 100000)/10000 + '0';
+	ascii[3] = (value % 10000)/1000 + '0';
 	ascii[2] = (value % 1000)/100 + '0';
-	ascii[3] = (value% 100)/10 + '0';
-	ascii[4] = (value % 10) + '0';
+	ascii[1] = (value% 100)/10 + '0';
+	ascii[0] = (value % 10) + '0';
 	return ascii;
 }

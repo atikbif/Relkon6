@@ -24,6 +24,8 @@ extern unsigned char mod_pos;
 extern ed_var ed;
 extern plc_stat _Sys;
 
+unsigned char ascii[5];
+
 // печать беззнаковой переменной nsigned long в буфер
 unsigned char print_long_buf(unsigned long val,unsigned char* ptr)
 {
@@ -417,4 +419,14 @@ void print_diagn(void)
 		print_long(err_mod[mod_pos+2],4,13,3,0);
 		if(fl_dac&(1<<(mod_pos+2-0xA1))) lcd_buf[3][19]='+';else lcd_buf[3][19]='-';
 	}
+}
+
+unsigned char* conv_to_ascii(unsigned short value)
+{
+	ascii[0] = value/10000 + '0';
+	ascii[1] = (value % 10000)/1000 + '0';
+	ascii[2] = (value % 1000)/100 + '0';
+	ascii[3] = (value% 100)/10 + '0';
+	ascii[4] = (value % 10) + '0';
+	return ascii;
 }

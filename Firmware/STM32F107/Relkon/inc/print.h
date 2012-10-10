@@ -9,5 +9,6 @@ void print_diagn(void);
 unsigned char print_long_buf(unsigned long val,unsigned char* ptr);
 void print_edit(void* val,unsigned char str_num,unsigned char pos,unsigned char width,unsigned char point,unsigned char type);
 void print_edit_ee(unsigned short ind,unsigned char str_num,unsigned char pos,unsigned char width,unsigned char point,unsigned char type);
+unsigned char* conv_to_ascii(unsigned short value);
 
 #endif /* PRINT_H_ */

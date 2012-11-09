@@ -629,7 +629,8 @@ namespace Kontel.Relkon.Components.Documents
                 this.tvVars.Nodes[1].SelectedImageIndex = 0;
                 this.tvVars.Nodes[2].SelectedImageIndex = 0;
                 this.tvVars.Nodes[3].SelectedImageIndex = 0;
-                this.tvVars.Nodes[4].SelectedImageIndex = 0;
+                this.tvVars.Nodes[4].SelectedImageIndex = 0;               
+               
                 //Заполнения дерева переменных
                 for (int i = 0; i < _solution.Vars.SystemVars.Count; i++)
                 {//Заполнение системных переменных
@@ -639,7 +640,7 @@ namespace Kontel.Relkon.Components.Documents
                     }
                 }
 
-                sort(this.tvVars.Nodes[0]);
+                //sort(this.tvVars.Nodes[0]);
 
                 for (int i = 0; i < _solution.Vars.UserVars.Count; i++)
                 {//Заполнение пользовательских переменных
@@ -648,7 +649,7 @@ namespace Kontel.Relkon.Components.Documents
                         AddVarToTree(3, _solution.Vars.UserVars[i].Name);
                     }
                 }
-                sort(this.tvVars.Nodes[3]);
+                //sort(this.tvVars.Nodes[3]);
                
                 for (int i = 0; i < _solution.Vars.EmbeddedVars.Count; i++)
                 {//Заполнение заводских установок
@@ -658,7 +659,7 @@ namespace Kontel.Relkon.Components.Documents
                     }
                 }
 
-                sort(this.tvVars.Nodes[1]);
+                //sort(this.tvVars.Nodes[1]);
     
                 for (int i = 0; i < _solution.Vars.IOVars.Count; i++)
                 {//Заполнение входов/выходов
@@ -668,7 +669,7 @@ namespace Kontel.Relkon.Components.Documents
                     }
                 }
 
-                sort(this.tvVars.Nodes[2]);
+                //sort(this.tvVars.Nodes[2]);
 
                 for (int i = 0; i < _solution.Vars.DispatcheringVars.Count; i++)
                 {//Заполнение диспетчерских переменных
@@ -678,10 +679,10 @@ namespace Kontel.Relkon.Components.Documents
                     }
                 }
 
-                sort(this.tvVars.Nodes[4]);
+               // sort(this.tvVars.Nodes[4]);
             }
 
-            
+            this.tvVars.Sort();
 
             //Удаление запросов на опрос переменных
             Kontel.Relkon.Classes.ControllerVar m_var;
@@ -701,31 +702,7 @@ namespace Kontel.Relkon.Components.Documents
             }
             //Очистка таблицы опрашиваемых переменных
             this.Table.Clear();          
-        }
-
-        private void sort(TreeNode node)
-        {
-            foreach (TreeNode n in node.Nodes)
-                sort(n);
-            try
-            {
-                TreeNode temp = null;
-                List<TreeNode> childs = new List<TreeNode>();
-                while (node.Nodes.Count > 0)
-                {
-                    foreach (TreeNode n in node.Nodes)
-                        if (temp == null || n.Text[0] < temp.Text[0])
-                            temp = n;
-                    node.Nodes.Remove(temp);
-                    childs.Add(temp);
-                    temp = null;
-                }
-                node.Nodes.Clear();
-                foreach (TreeNode a in childs)
-                    node.Nodes.Add(a);
-            }
-            catch { }
-        }
+        }       
 
         /// <summary>
         /// Добавление переменной в дерево

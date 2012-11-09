@@ -332,6 +332,9 @@ namespace Kontel.Relkon.Solutions
             }
             return res;
         }
+
+        public abstract List<ControllerDispatcheringVar> GetDispatcheringVarsList();
+        
         /// <summary>
         /// Очищает список перменных, полученных из кода прогаммы
         /// </summary>
@@ -436,17 +439,16 @@ namespace Kontel.Relkon.Solutions
             res.Vars.SystemVars.AddRange(res.GetSystemVarsList());
             res.Vars.EmbeddedVars.Clear();
             res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());
+
+            res.Vars.DispatcheringVars.Clear();
+            res.Vars.DispatcheringVars.AddRange(res.GetDispatcheringVarsList());
+
             File.WriteAllBytes(res.programFileName, Kontel.Components.Properties.Resources.ControllerProgramTemplate);
             using (RelkonPultModel pm = new RelkonPultModel(res.pultParams.DefaultPultType))
             {
                 pm.Save(res.pultFileName);
             }
-            //if (Processor == ProcessorType.MB90F347 || Processor == ProcessorType.STM32F107)
-            //{
-            //    res.Files.Add(Directory + "\\" + Name + ".fbr");
-            //    res.OpenedFiles.Add(Directory + "\\" + Name + ".fbr");                
-            //    new FbdEditor().Save(res.fbdFileName);  
-            //}                      
+                        
             res.Save();
             return res;
         }
@@ -471,7 +473,9 @@ namespace Kontel.Relkon.Solutions
             res.Vars.SystemVars.Clear();
             res.Vars.SystemVars.AddRange(res.GetSystemVarsList());
             res.Vars.EmbeddedVars.Clear();
-            res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());            
+            res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());
+            res.Vars.DispatcheringVars.Clear();
+            res.Vars.DispatcheringVars.AddRange(res.GetDispatcheringVarsList());
             return res;
         }
         /// <summary>
@@ -508,25 +512,27 @@ namespace Kontel.Relkon.Solutions
             res.SolutionFileName = SolutionFileName;
             if (Path.GetDirectoryName(res.programFileName) != Path.GetDirectoryName(SolutionFileName))
                 res.ChangeFilesPath(Path.GetDirectoryName(SolutionFileName));
-            //if (res.FbdFileName == string.Empty)
-            //{
-            //    res.FbdFileName = res.DirectoryName + "\\" + res.Name + ".fbr";
-            //    res.Files.Add(res.DirectoryName + "\\" + res.Name + ".fbr");
-            //    res.OpenedFiles.Add(res.DirectoryName + "\\" + res.Name + ".fbr");
-            //    new FbdEditor().Save(res.fbdFileName);  
-            //}
+            
 
             // Создание системных переменных, в случае необходимости
-            if (res.vars.SystemVars.Count == 0)
+            if (res.vars.SystemVars.Count == 0 || (res.vars.SystemVars.GetVarByName("RX_0") == null))
             {
+                res.vars.SystemVars.Clear();
+                res.vars.EmbeddedVars.Clear();
                 res.vars.SystemVars.AddRange(res.GetSystemVarsList());
                 res.vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());              
+            }
+
+            if (res.vars.DispatcheringVars.Count == 0)
+            {
+                res.Vars.DispatcheringVars.AddRange(res.GetDispatcheringVarsList());              
             }
 
             var yearVar = res.vars.SystemVars.GetVarByName("YEAR");
 
             if (yearVar == null)
                 res.vars.SystemVars.Add(new ControllerSystemVar() { Name = "YEAR", SystemName = "_Sys4x_Year", Memory = MemoryType.XRAM, Size = 1 });
+          
 
             //if (res.vars.EmbeddedVars[0].Name == "W0")
             //{              
@@ -889,6 +895,7 @@ namespace Kontel.Relkon.Solutions
             res.Vars.SystemVars.AddRange(res.GetSystemVarsList());
             res.Vars.IOVars.AddRange(res.GetDefaultIOVarsList());
             res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());
+            res.Vars.DispatcheringVars.AddRange(res.GetDispatcheringVarsList());
             return res;
         }
         /// <summary>

@@ -12,6 +12,7 @@
 #define WR_RAM 		4
 #define WR_US		5
 #define WR_XRAM		6
+#define WR_REG		7
 
 typedef struct
 {
@@ -34,5 +35,6 @@ void can_cmd(request* r);
 char can_check(request* r);
 unsigned char get_disp_num(void);
 void set_disp_num(unsigned char id);
+void write_reg(unsigned char can_num, unsigned char net_adr,unsigned char adr_h,unsigned char adr_l,unsigned char* ptr,unsigned char cnt);
 
 #endif /* MASTER_H_ */

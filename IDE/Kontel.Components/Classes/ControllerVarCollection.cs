@@ -69,6 +69,7 @@ namespace Kontel.Relkon.Classes
         private ControllerSystemVarCollection systemVars; // системные переменные
         private ControllerIOVarCollection ioVars; // переменные датчиков ввода-вывода
         private ControllerEmbeddedVarCollection embeddedVars; //встроенные переменные (заводские установки)
+        private List<ControllerDispatcheringVar> dispatcheringVars; 
         private List<ControllerUserVar> userVars; // пользовательские переменные       
 
         public ControllerVarCollection()
@@ -76,7 +77,8 @@ namespace Kontel.Relkon.Classes
             this.systemVars = new ControllerSystemVarCollection();
             this.ioVars = new ControllerIOVarCollection();
             this.userVars = new List<ControllerUserVar>();
-            this.embeddedVars = new ControllerEmbeddedVarCollection();           
+            this.embeddedVars = new ControllerEmbeddedVarCollection();
+            this.dispatcheringVars = new List<ControllerDispatcheringVar>();
         }
         /// <summary>
         /// Возвращает список системных переменных
@@ -106,6 +108,14 @@ namespace Kontel.Relkon.Classes
             get
             {
                 return this.embeddedVars;
+            }
+        }
+
+        public List<ControllerDispatcheringVar> DispatcheringVars
+        {
+            get
+            {
+                return this.dispatcheringVars;
             }
         }
         /// <summary>
@@ -173,6 +183,12 @@ namespace Kontel.Relkon.Classes
         {
             return this.embeddedVars.GetVarByName(Name);
         }
+
+        //public ControllerDispatcheringVar GetDispatcheringVar(string Name)
+        //{
+        //    return this.dispatcheringVars.GetVarByName(Name);
+        //}
+
         /// <summary>
         /// Возвращает системную переменную по ее имени
         /// </summary>
@@ -216,6 +232,8 @@ namespace Kontel.Relkon.Classes
         {
             if (item is ControllerEmbeddedVar)
                 return this.embeddedVars.IndexOf((ControllerEmbeddedVar)item);
+            if (item is ControllerDispatcheringVar)
+                return this.dispatcheringVars.IndexOf((ControllerDispatcheringVar)item);
             if (item is ControllerSystemVar)
                 return this.systemVars.IndexOf((ControllerSystemVar)item);
             if (item is ControllerIOVar)
@@ -231,7 +249,7 @@ namespace Kontel.Relkon.Classes
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count + this.userVars.Count)
+            if (index < 0 || index >= this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count + this.dispatcheringVars.Count + this.userVars.Count)
                 throw new IndexOutOfRangeException("Индекс находится вне допустимого диапазона");
             if (index < this.systemVars.Count)
                 this.systemVars.RemoveAt(index);
@@ -239,8 +257,10 @@ namespace Kontel.Relkon.Classes
                 this.ioVars.RemoveAt(index - this.systemVars.Count);
             if (index >= (this.ioVars.Count + this.systemVars.Count) && index < (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count))
                 this.embeddedVars.RemoveAt(index - this.ioVars.Count - this.systemVars.Count);
-            if (index >= (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count))
-                this.userVars.RemoveAt(index - this.systemVars.Count - this.ioVars.Count - this.embeddedVars.Count);
+            if (index >= (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count) && index < (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count + this.userVars.Count))
+                this.RemoveAt(index - this.systemVars.Count - this.ioVars.Count - this.embeddedVars.Count);
+            if (index >= (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count + this.userVars.Count))
+                this.RemoveAt(index - this.systemVars.Count - this.ioVars.Count - this.embeddedVars.Count - this.userVars.Count);
         }
 
         public ControllerVar this[int index]
@@ -248,7 +268,7 @@ namespace Kontel.Relkon.Classes
             get
             {
                 ControllerVar res = null;
-                if (index < 0 || index >= this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count + this.userVars.Count)
+                if (index < 0 || index >= this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count + this.dispatcheringVars.Count + this.userVars.Count)
                     throw new IndexOutOfRangeException("Индекс находится вне допустимого диапазона");
                 if (index < this.systemVars.Count)
                     res =  this.systemVars[index];
@@ -256,8 +276,11 @@ namespace Kontel.Relkon.Classes
                     res = this.ioVars[index - this.systemVars.Count];
                 if (index >= (this.systemVars.Count + this.ioVars.Count) && index < (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count))
                     res = this.embeddedVars[index - this.ioVars.Count - this.systemVars.Count];
-                if (index >= (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count))
+                if (index >= (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count) && index < (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count + this.userVars.Count))
                     res = this.userVars[index - this.systemVars.Count - this.ioVars.Count - this.embeddedVars.Count];
+                if (index >= (this.systemVars.Count + this.ioVars.Count + this.embeddedVars.Count + this.userVars.Count))
+                    res = this.dispatcheringVars[index - this.systemVars.Count - this.ioVars.Count - this.embeddedVars.Count - this.userVars.Count];
+
                 return res;
             }
             set
@@ -274,6 +297,8 @@ namespace Kontel.Relkon.Classes
         {
             if (item is ControllerEmbeddedVar)
                 this.embeddedVars.Add((ControllerEmbeddedVar)item);
+            else if (item is ControllerDispatcheringVar)
+                this.dispatcheringVars.Add((ControllerDispatcheringVar)item);
             else if (item is ControllerIOVar)
                 this.ioVars.Add((ControllerIOVar)item);
             else if (item is ControllerSystemVar)
@@ -285,6 +310,7 @@ namespace Kontel.Relkon.Classes
         public void AddRange(ControllerVarCollection vars)
         {
             this.embeddedVars.AddRange(vars.embeddedVars);
+            this.dispatcheringVars.AddRange(vars.dispatcheringVars);
             this.systemVars.AddRange(vars.systemVars);
             this.ioVars.AddRange(vars.ioVars);
             this.userVars.AddRange(vars.userVars);
@@ -296,12 +322,15 @@ namespace Kontel.Relkon.Classes
             this.userVars.Clear();
             this.ioVars.Clear();
             this.embeddedVars.Clear();
+            this.dispatcheringVars.Clear();
         }
 
         public bool Contains(ControllerVar item)
         {
             if (item is ControllerEmbeddedVar)
                 return this.embeddedVars.Contains((ControllerEmbeddedVar)item);
+            if (item is ControllerDispatcheringVar)
+                return this.dispatcheringVars.Contains((ControllerDispatcheringVar)item);
             if (item is ControllerIOVar)
                 return this.ioVars.Contains((ControllerIOVar)item);
             if(item is ControllerSystemVar)
@@ -320,7 +349,7 @@ namespace Kontel.Relkon.Classes
         {
             get 
             {
-                return this.systemVars.Count + this.ioVars.Count + this.userVars.Count + this.embeddedVars.Count;
+                return this.systemVars.Count + this.ioVars.Count + this.userVars.Count + this.embeddedVars.Count + this.dispatcheringVars.Count;
             }
         }
 
@@ -336,6 +365,8 @@ namespace Kontel.Relkon.Classes
         {
             if (item is ControllerEmbeddedVar)
                 return this.embeddedVars.Remove((ControllerEmbeddedVar)item);
+            if (item is ControllerDispatcheringVar)
+                return this.dispatcheringVars.Remove((ControllerDispatcheringVar)item);
             if(item is ControllerIOVar)
                 return this.ioVars.Remove((ControllerIOVar)item);
             if(item is ControllerSystemVar)

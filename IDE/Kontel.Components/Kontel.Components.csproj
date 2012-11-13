@@ -195,7 +195,6 @@
     <Compile Include="Solutions\ControllerProgramSolution\STM32F107Solution.cs" />
     <Compile Include="Solutions\ControllerProgramSolution\STM32F107UploadMgr.cs" />
     <Compile Include="Solutions\Solution.cs" />
-    <Compile Include="Solutions\UploadMgr.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

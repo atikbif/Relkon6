@@ -1337,12 +1337,19 @@ namespace Kontel.Relkon
                     
             this.progressForm = new ProgressForm(this);
             this.progressForm.FormClosing += new FormClosingEventHandler(progressForm_FormClosing);
+
             this.solution.UploadingToDeviceCompleted += new AsyncCompletedEventHandler(solution_UploadingToDeviceCompleted);
             this.solution.UploadingToDeviceProgressChanged += new UploadMgrProgressChangedEventHandler(solution_UploadingToDeviceProgressChanged);
 
             ((STM32F107Solution)solution).UploadToDevice(onlyProgram, onlyParams, readEmbVars);
 
-            this.progressForm.ShowDialog();            
+            if (this.progressForm.IsDisposed)
+            {
+               
+            }
+
+            this.progressForm.ShowDialog();
+         
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -2086,6 +2093,7 @@ namespace Kontel.Relkon
 
         private void progressForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            this.progressForm.FormClosing -= new FormClosingEventHandler(progressForm_FormClosing);
             if (this.solution != null)
             {
                 this.solution.StopUploading();

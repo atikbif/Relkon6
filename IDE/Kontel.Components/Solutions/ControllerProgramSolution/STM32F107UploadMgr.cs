@@ -12,23 +12,112 @@ using System.Globalization;
 
 namespace Kontel.Relkon.Solutions
 {
-    public sealed class STM32F107UploadMgr : UploadMgr
+    public sealed class STM32F107UploadMgr
     {
         private delegate void WorkerEventHandler(Relkon4SerialPort port);
+
         private STM32F107Solution solution = null;        
         private bool uploadOnlyParams = false; // если true, то будут загружены только параметры проекта (без программы)
         private bool uploadOnlyProgram = false;
         private bool _readEmbVars = false;
         private bool bootLoaderMode = true;
-        private byte[] inputdata = new byte[0xFFFF];      
-    
+        private byte[] inputdata = new byte[0xFFFF];
+
+
+        private List<AsyncOperation> userStateToLifeTime = new List<AsyncOperation>();
+        private SerialPortDeviceSearcher deviceSearcher = null;
+        private SendOrPostCallback onProgressReportDelegate;
+        private SendOrPostCallback onCompletedDelegate;
+        private bool canceled = false;
+        private SerialPort485 devicePort = null;
+
+        /// <summary>
+        /// Периодически возникает в процессе загузки данных проекта в контроллер
+        /// </summary>
+        public event UploadMgrProgressChangedEventHandler ProgressChanged;
+        /// <summary>
+        /// Генерируется по завершении загрузки данных проекта в контроллер
+        /// </summary>
+        public event AsyncCompletedEventHandler UploadingCompleted;
+
         public STM32F107UploadMgr(STM32F107Solution solution)
             : base()
         {          
             this.solution = solution;
+
+            this.deviceSearcher = new SerialPortDeviceSearcher(null, null);
+            this.deviceSearcher.ProgressChanged += new ProgressChangedEventHandler(deviceSearcher_ProgressChanged);
+            this.deviceSearcher.DeviceSearchCompleted += new DeviceSearchCompletedEventHandler(deviceSearcher_DeviceSearchCompleted);
+
+            this.onCompletedDelegate = new SendOrPostCallback(this.RaiseUploadingCompletedEvent);
+            this.onProgressReportDelegate = new SendOrPostCallback(this.RaiseProgressChangeEvent);
         }
 
-        protected override void deviceSearcher_DeviceSearchCompleted(object sender, DeviceSearchCompletedEventArgs e)
+        /// <summary>
+        /// Показывает, выполняется ли процесс загрузки данных
+        /// </summary>
+        public bool IsBusy
+        {
+            get
+            {
+                return this.userStateToLifeTime.Count != 0 || this.deviceSearcher.IsBusy;
+            }
+        }
+        /// <summary>
+        /// Запускает процесс загрузки данных
+        /// </summary>
+        public void StartUploading()
+        {
+            lock (this.userStateToLifeTime)
+            {
+                if (this.userStateToLifeTime.Count != 0)
+                    throw new Exception("Процесс загрузки уже запущен");
+            }
+            this.devicePort = null;
+            this.canceled = false;
+            //this.UpdateSeacherParams();
+            this.deviceSearcher_ProgressChanged(this, new ProgressChangedEventArgs(0, null)); // чтобы при создании Message ProgressForm было непустым
+            this.deviceSearcher.StartSearch();
+        }
+        /// <summary>
+        /// Останавливает процесс загрузки данных
+        /// </summary>
+        public void StopUploading()
+        {
+            if (!this.deviceSearcher.IsBusy)
+                this.canceled = true;
+            if (this.devicePort != null)
+                lock (this.devicePort)
+                    this.devicePort.Stop();
+            else
+                this.deviceSearcher.StopSearch();
+        }
+
+        private void CompletionMethod(Exception exception, bool canceled)
+        {
+            AsyncCompletedEventArgs e = new AsyncCompletedEventArgs(exception, canceled, null);
+            this.userStateToLifeTime[0].PostOperationCompleted(this.onCompletedDelegate, e);
+        }
+
+        private void RaiseUploadingCompletedEvent(object state)
+        {
+            if (this.UploadingCompleted != null)
+                this.UploadingCompleted(this, (AsyncCompletedEventArgs)state);
+        }
+
+        private void ChangeProgressMethod(string StepName, int ProgressPercentage)
+        {
+            UploadMgrProgressChangedEventArgs e = new UploadMgrProgressChangedEventArgs(StepName, ProgressPercentage);
+            this.userStateToLifeTime[0].Post(this.onProgressReportDelegate, e);
+        }
+
+        private void RaiseProgressChangeEvent(object state)
+        {
+            if (this.ProgressChanged != null)
+                this.ProgressChanged(this, (UploadMgrProgressChangedEventArgs)state);
+        }
+
+        private void deviceSearcher_DeviceSearchCompleted(object sender, DeviceSearchCompletedEventArgs e)
         {            
             if (e.Cancelled || e.Error != null)
             {
@@ -51,7 +140,7 @@ namespace Kontel.Relkon.Solutions
             }                                               
         }
 
-        protected override void deviceSearcher_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        private void deviceSearcher_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             this.RaiseProgressChangeEvent(new UploadMgrProgressChangedEventArgs("Поиск контроллера...", e.ProgressPercentage));
         }
@@ -495,5 +584,41 @@ namespace Kontel.Relkon.Solutions
                 res.Add((byte)this.solution.Vars.GetEmbeddedVar("EE" + i).Value);         
             return res.ToArray();
         }      
+    }
+
+    /// <summary>
+    /// Описывает событие UploadMgr.LoadToDeviceProgressChanged
+    /// </summary>
+    public delegate void UploadMgrProgressChangedEventHandler(object sender, UploadMgrProgressChangedEventArgs e);
+
+    /// <summary>
+    /// Аргумент события UploadMgr.ProgressChanged
+    /// </summary>
+    public class UploadMgrProgressChangedEventArgs : ProgressChangedEventArgs
+    {
+        private string stepName = ""; // имя текущего шага загрузки
+
+        public UploadMgrProgressChangedEventArgs(string StepName, int ProgressPercentage)
+            : base(ProgressPercentage, null)
+        {
+            this.stepName = StepName;
+        }
+        /// <summary>
+        /// Возвращает имя текущего шага загрузки
+        /// </summary>
+        public string StepName
+        {
+            get
+            {
+                return this.stepName;
+            }
+        }
+    }
+    /// <summary>
+    /// Исключение, возникающее, которое будет генерироваться тогда, когда надо будет остановить процесс загрузки
+    /// </summary>
+    public class StopUploadinException : Exception
+    {
+
     }
 }

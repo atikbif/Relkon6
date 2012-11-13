@@ -11,9 +11,15 @@
 #include "canal.h"
 #include "hcanal.h"
 #include "hinout.h"
+#include "main.h"
 
 extern volatile unsigned short rx_mod_cnt;
 extern volatile unsigned char obj_name[20];
+extern unsigned char mstr1,mstr2;
+extern plc_stat _Sys;
+static const unsigned char ascii_code[16]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+
+static unsigned short bin_to_ascii(unsigned char* ptr,unsigned short lng,unsigned char mode);
 
 char test_user(unsigned char* ptr,unsigned char cnt)
 {
@@ -177,6 +183,34 @@ void can_cmd(request* r)
 				case 3:write_module(6+tmp);break;
 			}
 			break;
+		case WR_REG:
+			if((r->amount >= 128)||(r->amount == 0)) break;
+			tx_buf[0]=r->plc_addr;
+			tx_buf[1]=0x10;
+			tx_buf[2]=r->mem_addr >> 8;
+			tx_buf[3]=r->mem_addr & 0xFF;
+			tx_buf[4]=0;
+			tx_buf[5]=r->amount;
+			tx_buf[6]=r->amount*2;
+			for(tmp=0;tmp<r->amount;tmp++)
+			{
+				tx_buf[7+tmp*2]=r->tx[tmp*2+1];
+				tx_buf[8+tmp*2]=r->tx[tmp*2];
+			}
+			tx_buf[7+r->amount*2]=getLRC(tx_buf,7+r->amount*2);
+			switch(r->canal)
+			{
+				case 1:
+					mstr2=0x10;
+					write_canal2(bin_to_ascii(tx_buf,8+r->amount*2,_MODBUS));
+					break;
+				case 2:
+					mstr1=0x10;
+					write_canal(bin_to_ascii(tx_buf,8+r->amount*2,_MODBUS));
+					break;
+			}
+
+			break;
 		case RD_RAM:
 			tx_buf[0]=r->plc_addr;
 			tx_buf[1]=0xD4;
@@ -299,3 +333,47 @@ unsigned char get_disp_num(void)
 	n = (obj_name[0]-'0')*100 + (obj_name[1]-'0')*10 + obj_name[2];
 	return n;
 }
+
+void write_reg(unsigned char can_num, unsigned char net_adr,unsigned char adr_h,unsigned char adr_l,unsigned char* ptr,unsigned char cnt)
+{
+	unsigned char* tx_buf;
+	unsigned short tmp;
+    if((cnt>=128)||(cnt==0)) return;
+    tx_buf = get_can_tx_ptr(can_num);
+	tx_buf[0]=net_adr;
+	tx_buf[1]=0x10;
+	tx_buf[2]=adr_h;
+	tx_buf[3]=adr_l;
+	tx_buf[4]=0;
+	tx_buf[5]=cnt;
+	tx_buf[6]=cnt*2;
+	for(tmp=0;tmp<cnt;tmp++)
+	{
+		tx_buf[7+tmp*2]=ptr[tmp*2+1];
+		tx_buf[8+tmp*2]=ptr[tmp*2];
+	}
+	tx_buf[7+cnt*2]=getLRC(tx_buf,7+cnt*2);
+	if(can_num==1)
+	{
+		mstr2=0x10;
+		if(_Sys.Can2_Type==0) write_canal2(8+cnt*2);
+		else write_canal2(bin_to_ascii(tx_buf,8+cnt*2,_MODBUS));
+	}
+	else
+	{
+		mstr1=0x10;
+		if(_Sys.Can1_Type==0) write_canal(8+cnt*2);
+		else write_canal(bin_to_ascii(tx_buf,8+cnt*2,_MODBUS));
+	}
+}
+
+static unsigned short bin_to_ascii(unsigned char* ptr,unsigned short lng,unsigned char mode)
+{
+    unsigned short  tmp;
+    tmp=lng;
+    while(lng){ptr[((lng-1)<<1)+1]=ascii_code[ptr[lng-1]>>4];ptr[((lng-1)<<1)+2]=ascii_code[ptr[lng-1]&0x0F];lng--;}
+    if(mode==_RELKON){ptr[0]='!';ptr[((tmp-1)<<1)+3]=0x0D;return ((tmp<<1)+2);}
+    ptr[0]=':';ptr[((tmp-1)<<1)+3]=0x0D;ptr[((tmp-1)<<1)+4]=0x0A;
+    return ((tmp<<1)+3);
+}
+

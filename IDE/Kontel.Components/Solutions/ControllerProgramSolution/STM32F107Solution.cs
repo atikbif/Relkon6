@@ -154,7 +154,7 @@ namespace Kontel.Relkon.Solutions
 
         internal STM32F107Solution()
         {
-            this.uploadMgr = new STM32F107UploadMgr(this);
+            this.uploadMgr = new UploadMgr(this);
             this.uploadMgr.ProgressChanged += new UploadMgrProgressChangedEventHandler(mgr_ProgressChanged);
             this.uploadMgr.UploadingCompleted += new AsyncCompletedEventHandler(mgr_UploadingCompleted);
         }
@@ -933,12 +933,12 @@ namespace Kontel.Relkon.Solutions
 
         public override void UploadToDevice()
         {
-            ((STM32F107UploadMgr)this.uploadMgr).StartUploading(true, true, false);
+            ((UploadMgr)this.uploadMgr).StartUploading(true, true, false);
         }
 
         public override void UploadToDevice(bool onlyProgram, bool onlyParams, bool readEmbVars)
         {
-            ((STM32F107UploadMgr)this.uploadMgr).StartUploading(onlyProgram, onlyParams, readEmbVars);            
+            ((UploadMgr)this.uploadMgr).StartUploading(onlyProgram, onlyParams, readEmbVars);            
         }
 
         

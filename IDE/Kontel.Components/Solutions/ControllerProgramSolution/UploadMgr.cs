@@ -12,7 +12,7 @@ using System.Globalization;
 
 namespace Kontel.Relkon.Solutions
 {
-    public sealed class STM32F107UploadMgr
+    public sealed class UploadMgr
     {
         private delegate void WorkerEventHandler(Relkon4SerialPort port);
 
@@ -40,7 +40,7 @@ namespace Kontel.Relkon.Solutions
         /// </summary>
         public event AsyncCompletedEventHandler UploadingCompleted;
 
-        public STM32F107UploadMgr(STM32F107Solution solution)
+        public UploadMgr(STM32F107Solution solution)
             : base()
         {          
             this.solution = solution;

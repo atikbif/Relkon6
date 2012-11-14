@@ -78,7 +78,7 @@ namespace Kontel.Relkon.Solutions
         private Guid solutionID = Guid.NewGuid(); // уникальный идентификатор проекта
         protected List<string> notRemovedExtensios; // расширения файлов, которые нельзя перемещать при перемещении проекта
         protected string fileName = ""; // имя файла проекта
-        protected STM32F107UploadMgr uploadMgr = null;
+        protected UploadMgr uploadMgr = null;
 
         /// <summary>
         /// Периодичски возникает в процессе загузки данных проекта в контроллер

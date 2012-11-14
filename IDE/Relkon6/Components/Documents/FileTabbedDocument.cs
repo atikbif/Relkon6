@@ -18,7 +18,7 @@ namespace Kontel.Relkon.Components.Documents
         protected bool saveRequired = true; // если false, то документ не будет сохранен
         protected string fileHash = ""; // слепок содержимого документа
 
-        public FileTabbedDocument(Solution Solution, string FileName)
+        public FileTabbedDocument(ControllerProgramSolution Solution, string FileName)
             : base(Solution)
         {
             this.FileName = FileName;

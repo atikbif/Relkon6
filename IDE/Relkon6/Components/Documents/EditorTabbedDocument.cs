@@ -33,7 +33,7 @@ namespace Kontel.Relkon.Components.Documents
         private float linesPerPage = 0; // число строк на странице
         private string[] printingLines; // массив строк для печати
 
-        public EditorTabbedDocument(Solution Solution, string FileName, SetPositionStringDelegate SetPositionFunction)
+        public EditorTabbedDocument(ControllerProgramSolution Solution, string FileName, SetPositionStringDelegate SetPositionFunction)
             : base(Solution, FileName)
         {
             InitializeComponent();

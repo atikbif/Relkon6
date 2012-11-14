@@ -194,7 +194,6 @@
     <Compile Include="Solutions\ControllerProgramSolution\Pult\PultType.cs" />
     <Compile Include="Solutions\ControllerProgramSolution\STM32F107Solution.cs" />
     <Compile Include="Solutions\ControllerProgramSolution\STM32F107UploadMgr.cs" />
-    <Compile Include="Solutions\Solution.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

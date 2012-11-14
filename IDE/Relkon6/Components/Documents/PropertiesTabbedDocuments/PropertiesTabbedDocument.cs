@@ -14,7 +14,7 @@ namespace Kontel.Relkon.Components.Documents
     {
         private bool successSave = false; // показывает, было ли сохранение успешным
 
-          public PropertiesTabbedDocument(Solution Solution)
+        public PropertiesTabbedDocument(ControllerProgramSolution Solution)
             : base(Solution)
         {
             this.Padding = new System.Windows.Forms.Padding(5);

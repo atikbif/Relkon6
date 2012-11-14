@@ -27,7 +27,7 @@ namespace Kontel.Relkon
     public sealed partial class MainForm : Kontel.TabbedDocumentsForm.TabbedDocumentsForm
     {
         private string defaultCaption = "IDE Relkon"; // заголовок формы
-        private Solution solution = null; //хранит информацию о текущем проекте
+        private ControllerProgramSolution solution = null; //хранит информацию о текущем проекте
         private FindReplaceForm findReplaceForm = null; // форма поиска и замены     
         private bool initialize = false; // становитс€ true после полной инициализации формы
         private bool convertRequired = false; // показывает, требуетс€ ли преобразование печати
@@ -443,7 +443,7 @@ namespace Kontel.Relkon
         /// јкивирует / дезактивирует специфичные дл€ указанного проекта
         /// элементы панели инструментов и главного меню
         /// </summary>
-        private void SetSolutionItemsEnabledState(Solution solution, bool state)
+        private void SetSolutionItemsEnabledState(ControllerProgramSolution solution, bool state)
         {
             ToolStripItem[] items = null;
             if (solution is ControllerProgramSolution)
@@ -638,7 +638,7 @@ namespace Kontel.Relkon
         /// </summary>
         private void LoadSolution(string SolutionFileName)
         {
-            Solution sln = null;
+            ControllerProgramSolution sln = null;
             switch(Path.GetExtension(SolutionFileName))
             {
                 case ".rp6":
@@ -652,7 +652,7 @@ namespace Kontel.Relkon
         /// <summary>
         /// «аггружает указанный проект
         /// </summary>
-        private void LoadSolution(Solution solution)
+        private void LoadSolution(ControllerProgramSolution solution)
         {
             if (this.solution != null && !this.CloseSolution())
                 return;
@@ -753,7 +753,7 @@ namespace Kontel.Relkon
             this.SaveFileDialog.FileName = this.solution.IsNewSolution ? (System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\project" + this.solution.Extension) : this.solution.SolutionFileName;
             if (this.SaveFileDialog.ShowDialog() != DialogResult.OK)
                 return false;
-            Solution sln = this.solution;
+            ControllerProgramSolution sln = this.solution;
             try
             {
                 foreach (TabbedDocument doc in this.Documents)
@@ -1065,7 +1065,7 @@ namespace Kontel.Relkon
         /// <summary>
         /// ќткрывает окно свойств проекта
         /// </summary>
-        private void OpenSolutionPropertiesDocument(Solution Solution)
+        private void OpenSolutionPropertiesDocument(ControllerProgramSolution Solution)
         {
             PropertiesTabbedDocument doc = this.PropertiesDocumentOpen(Solution);
             if (doc == null)
@@ -1083,7 +1083,7 @@ namespace Kontel.Relkon
         /// <summary>
         /// ≈сли окно свойств проекта уже открыто, то возвращает ссылку на него, иначе - null
         /// </summary>
-        public PropertiesTabbedDocument PropertiesDocumentOpen(Solution Solution)
+        public PropertiesTabbedDocument PropertiesDocumentOpen(ControllerProgramSolution Solution)
         {
             foreach (RelkonTabbedDocument doc in this.Documents)
             {
@@ -1096,7 +1096,7 @@ namespace Kontel.Relkon
         /// <summary>
         /// ѕерезагружает страницу свойств проекта, если она открыта
         /// </summary>
-        internal void ReloadSolutionPropertiesDocument(Solution Solution)
+        internal void ReloadSolutionPropertiesDocument(ControllerProgramSolution Solution)
         {
             RelkonTabbedDocument doc = this.PropertiesDocumentOpen(Solution);
             if (doc != null)
@@ -1107,7 +1107,7 @@ namespace Kontel.Relkon
         /// <summary>
         /// —охран€ет проект и все его открытые файлы
         /// </summary>
-        private void SaveSolution(Solution solution)
+        private void SaveSolution(ControllerProgramSolution solution)
         {
             try
             {
@@ -1316,7 +1316,7 @@ namespace Kontel.Relkon
         /// <summary>
         /// «агружает данные указанного проекта
         /// </summary>
-        public void UploadToDevice(Solution solution, bool onlyProgram, bool onlyParams, bool readEmbVars)
+        public void UploadToDevice(ControllerProgramSolution solution, bool onlyProgram, bool onlyParams, bool readEmbVars)
         {
             foreach (RelkonTabbedDocument doc in this.DocumentManager.GetDockControls(DockSituation.Document))
             {
@@ -2078,8 +2078,8 @@ namespace Kontel.Relkon
                 Utils.ErrorMessage(e.Error.Message);
             if (this.progressForm != null)
                 this.progressForm.Close();
-            ((Solution)sender).UploadingToDeviceCompleted -= new AsyncCompletedEventHandler(solution_UploadingToDeviceCompleted);
-            ((Solution)sender).UploadingToDeviceProgressChanged -= new UploadMgrProgressChangedEventHandler(solution_UploadingToDeviceProgressChanged);
+            ((ControllerProgramSolution)sender).UploadingToDeviceCompleted -= new AsyncCompletedEventHandler(solution_UploadingToDeviceCompleted);
+            ((ControllerProgramSolution)sender).UploadingToDeviceProgressChanged -= new UploadMgrProgressChangedEventHandler(solution_UploadingToDeviceProgressChanged);
 
             foreach (RelkonTabbedDocument doc in this.DocumentManager.GetDockControls(DockSituation.Document))
             {

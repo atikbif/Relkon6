@@ -66,7 +66,7 @@ namespace Kontel.Relkon.Components
         /// <summary>
         /// Добавляет проект к списку проектов
         /// </summary>
-        public void AddSolutionNode(Solution Solution) 
+        public void AddSolutionNode(ControllerProgramSolution Solution) 
         {
             TreeNode node = null;
             if (Solution is ControllerProgramSolution)
@@ -407,10 +407,10 @@ namespace Kontel.Relkon.Components
     public class FileTreeNode : TreeNode
     {
         private string fileName = ""; // имя файла, который отображает узел (без пути доступа)
-        private Solution solution = null;
+        private ControllerProgramSolution solution = null;
         /// <param name="FileName">Имя файла, который отображает узел (с путем доступа)</param>
         /// <param name="Solution">Проект, к которому относится файл</param>
-        public FileTreeNode(string FileName, Solution Solution)
+        public FileTreeNode(string FileName, ControllerProgramSolution Solution)
         {
             string ImageKey = this.GetImageKey(FileName);
             if (!File.Exists(FileName))
@@ -433,7 +433,7 @@ namespace Kontel.Relkon.Components
             }
             set
             {
-                if (!Solution.IsValidIdentifier(value))
+                if (!ControllerProgramSolution.IsValidIdentifier(value))
                 {
                     throw new Exception("Идентификаторы и имена файлов не могут:\r\n" +
                                         "- содержать любые из следующих символов: / ? : & \\ * \" < > | # %\r\n" +
@@ -449,7 +449,7 @@ namespace Kontel.Relkon.Components
         /// <summary>
         /// Возвращает проект, к которому относится файл, отображаемый узлом
         /// </summary>
-        public Solution Solution
+        public ControllerProgramSolution Solution
         {
             get
             {
@@ -503,9 +503,9 @@ namespace Kontel.Relkon.Components
     /// </summary>
     public class PropertiesTreeNode : TreeNode
     {
-        private Solution solution = null;
+        private ControllerProgramSolution solution = null;
 
-        public PropertiesTreeNode(Solution Solution)
+        public PropertiesTreeNode(ControllerProgramSolution Solution)
         {
             this.ImageKey = "ProjectProperities.bmp";
             this.SelectedImageKey = "ProjectProperities.bmp";
@@ -515,7 +515,7 @@ namespace Kontel.Relkon.Components
         /// <summary>
         /// Возвращает проект, свойства которого представляет узел
         /// </summary>
-        public Solution Solution
+        public ControllerProgramSolution Solution
         {
             get
             {
@@ -554,9 +554,9 @@ namespace Kontel.Relkon.Components
     /// </summary>
     public abstract class SolutionTreeNode : TreeNode
     {
-        protected Solution solution; // отображаемый узлом проект
+        protected ControllerProgramSolution solution; // отображаемый узлом проект
 
-        public SolutionTreeNode(Solution Solution)
+        public SolutionTreeNode(ControllerProgramSolution Solution)
         {
             this.solution = Solution;
             this.ToolTipText = Solution.SolutionFileName;
@@ -565,7 +565,7 @@ namespace Kontel.Relkon.Components
         /// <summary>
         /// Возвращает проект, отображаемый узлом
         /// </summary>
-        public Solution Solution
+        public ControllerProgramSolution Solution
         {
             get
             {

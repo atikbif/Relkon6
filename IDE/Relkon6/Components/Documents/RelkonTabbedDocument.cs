@@ -11,11 +11,11 @@ namespace Kontel.Relkon.Components.Documents
     /// </summary>
     public class RelkonTabbedDocument: UserTabbedDocument
     {
-        private Solution solution; // проект, к которому относится документ; если документ не принадлежт ни одному проекту, то null 
+        private ControllerProgramSolution solution; // проект, к которому относится документ; если документ не принадлежт ни одному проекту, то null 
         private bool documentModified = false; // показывает, был ли документ изменен (нужно ли добавлять '*' в конце TabText
         protected bool initialized = false; // показывает, закончилась ли инициализация докуменита
 
-        public RelkonTabbedDocument(Solution solution)
+        public RelkonTabbedDocument(ControllerProgramSolution solution)
         {
             this.solution = solution;
         }
@@ -27,7 +27,7 @@ namespace Kontel.Relkon.Components.Documents
         /// <summary>
         /// Возвращает проект, связанный с документом
         /// </summary>
-        public Solution Solution
+        public ControllerProgramSolution Solution
         {
             get
             {

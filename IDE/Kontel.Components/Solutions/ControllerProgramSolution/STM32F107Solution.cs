@@ -198,26 +198,7 @@ namespace Kontel.Relkon.Solutions
                 this.uarts[i] = new Uart();
         }
 
-        protected override int TypeSize(string Type)
-        {
-            switch (Type)
-            {
-                case "char":
-                    return 1;
-                case "short":
-                    return 2;
-                case "int":
-                    return 4;
-                case "long":
-                    return 4;
-                case "float":
-                    return 4;
-                case "double":
-                    return 8;
-                default:
-                    return 0;
-            }
-        }
+       
 
         protected override void CreatePostcompileMessages()
         {
@@ -244,15 +225,12 @@ namespace Kontel.Relkon.Solutions
             }
         }
 
-        public override bool IsValidPultVarMask(string Mask)
-        {
-            return Regex.IsMatch(Mask, @"^\d{1,7}([,\.]\d{1,7})?$");
-        }
+       
 
         public override void Compile()
         {
-            try
-            {
+            //try
+            //{
                 this.PrepareToCompile();
 
                 STM32F107CodeGenerator codeGenerator = new STM32F107CodeGenerator(this);
@@ -265,14 +243,12 @@ namespace Kontel.Relkon.Solutions
                 if (this.CompilationParams.HasErrors)
                     return;
 
-                this.LoadVarsAddressesFromFlashMap(this.Vars);
-                this.ConvertAllLCDPanelProjects(); // перенести для MB90F347
-
-            }
-            catch (Exception ex)
-            {
-                this.CompilationParams.Errors.Add(new CompilationError(ex.Message, "", -1, false));
-            }
+                this.LoadVarsAddressesFromFlashMap(this.Vars);               
+            //}
+            //catch (Exception ex)
+            //{
+            //    this.CompilationParams.Errors.Add(new CompilationError(ex.Message, "", -1, false));
+            //}
         }
 
         /// <summary>
@@ -338,30 +314,7 @@ namespace Kontel.Relkon.Solutions
                 this.WriteErrorMessageToErrorStream(this.CompilationParams.CompilationErrorsWriter, e.Data);
         }
 
-        protected override void CreateErrorsList()
-        {
-            string ErrorString = File.ReadAllText(this.CompilationParams.CompilationErrorsFileName, Encoding.Default);
-            string pattern = @":(\d+):\d+: error:([^\r\n]+)";
-            MatchCollection mc = Regex.Matches(ErrorString, pattern, RegexOptions.IgnoreCase);
-            for (int i = 0; i < mc.Count; i++)
-            {
-                CompilationError error = new CompilationError();
-                error.Warning = false;
-                error.Description = mc[i].Groups[2].Value;
-                int ln = this.GetProgramLineNumber(int.Parse(mc[i].Groups[1].Value));
-                if (ln == -1)
-                {
-                    error.LineNumber = int.Parse(mc[i].Groups[1].Value);
-                    error.FileName = this.DirectoryName + "\\fc_u.c";
-                }
-                else
-                {
-                    error.LineNumber = ln;
-                    error.FileName = this.ProgramFileName;
-                }
-                this.CompilationParams.Errors.Add(error);
-            }
-        }
+        
 
         public override void LoadVarsAddressesFromFlashMap(Kontel.Relkon.Classes.ControllerVarCollection Vars)
         {
@@ -377,15 +330,21 @@ namespace Kontel.Relkon.Solutions
                 for (int i = 0; i < 4; i++)
                 {
                     ControllerIOVar var = Vars.IOVars.GetVarByName("IN" + i);
-                    var.Address = adress;
-                    adress += var.Size;
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
                 }
 
                 for (int i = 4; i < 6; i++)
                 {
                     ControllerIOVar var = Vars.IOVars.GetVarByName("DIN" + i);
-                    var.Address = adress;
-                    adress += var.Size;
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
                 }
 
             }
@@ -397,15 +356,21 @@ namespace Kontel.Relkon.Solutions
                 for (int i = 0; i < 4; i++)
                 {
                     ControllerIOVar var = Vars.IOVars.GetVarByName("OUT" + i);
-                    var.Address = adress;
-                    adress += var.Size;
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
                 }
 
                 for (int i = 4; i < 6; i++)
                 {
                     ControllerIOVar var = Vars.IOVars.GetVarByName("DOUT" + i);
-                    var.Address = adress;
-                    adress += var.Size;
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
                 }
             }
 
@@ -416,11 +381,14 @@ namespace Kontel.Relkon.Solutions
 
                 for (int i = 1; i < 9; i++)
                 {
-                    ControllerIOVar var = Vars.IOVars.GetVarByName("ADH" + i);                    
-                    var.Address = adress;
-                    var = Vars.IOVars.GetVarByName("ADC" + i);
-                    var.Address = adress;
-                    adress += var.Size;
+                    ControllerIOVar var = Vars.IOVars.GetVarByName("ADH" + i);
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        var = Vars.IOVars.GetVarByName("ADC" + i);
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
                 }
             }
 
@@ -597,51 +565,7 @@ namespace Kontel.Relkon.Solutions
                 if (m.Success)
                     v.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
             }
-
-            //res.Add(new ControllerSystemVar() { Name = "Z30", SystemName = "Z30", Memory = MemoryType.XRAM, Size = 1 });
-            //res.Add(new ControllerSystemVar() { Name = "Z31", SystemName = "Z31", Memory = MemoryType.XRAM, Size = 1 });
-            //res.Add(new ControllerSystemVar() { Name = "Z32", SystemName = "Z32", Memory = MemoryType.XRAM, Size = 1 });
-            //res.Add(new ControllerSystemVar() { Name = "Z33", SystemName = "Z33", Memory = MemoryType.XRAM, Size = 1 });
-         
-
-
-            //foreach (ControllerIOVar var in Vars.IOVars)
-            //{
-            //    if (Regex.IsMatch(var.Name, @"\b(?:(?:ADH)|(?:DAH))\d+\b"))
-            //        continue;
-            //    Match m = Regex.Match(map, "\\b" + (var.ExternalModule ? "" : "_") + var.SystemName + @"\s+(?:(?:Var)|(?:Addr))\.\s+g\s0x([0-9A-F]+)");
-            //    if (m.Success)
-            //    {
-            //        var.Address = Convert.ToInt32(m.Groups[1].Value, 16);
-            //        Match ioMatch = Regex.Match(var.Name, @"\b((?:ADC)|(?:DAC))(\d+)\b");
-            //        if (ioMatch.Success)
-            //        {
-            //            ControllerIOVar hVar = Vars.GetIOVar(ioMatch.Groups[1].Value.Remove(2) + "H" + ioMatch.Groups[2].Value);
-            //            if (hVar != null)
-            //                hVar.Address = var.Address + 1;
-            //            else
-            //                this.CompilationParams.Errors.Add(new CompilationError("Не удалость установить адрес переменной " + ioMatch.Groups[1].Value.Remove(2) + "H", this.ProgramFileName, -1, true));
-            //        }
-            //    }
-            //    else
-            //        this.CompilationParams.Errors.Add(new CompilationError("Не удалость установить адрес переменной " + var.Name, this.ProgramFileName, -1, true));
-            //}
-
-            //// Установка адресов пользовательских переменных
-            //int dateAddress = -1;
-            //int timeAddress = -1;
-            //if (Vars.GetUserVar("date_Date") != null)
-            //{
-            //    string s = Regex.Match(map, "\\b" + @"date\s+(?:(?:Var)|(?:Addr))\.\s+g\s0x([0-9A-F]+)").Groups[1].Value;
-            //    if (s != "")
-            //        dateAddress = Convert.ToInt32(s, 16);
-            //}
-            //if (Vars.GetUserVar("time_Second") != null)
-            //{
-            //    string s = Regex.Match(map, "\\b" + @"time\s+(?:(?:Var)|(?:Addr))\.\s+g\s0x([0-9A-F]+)").Groups[1].Value;
-            //    if (s != "")
-            //        timeAddress = Convert.ToInt32(s, 16);
-            //}
+          
 
             LoadEmbeddedVarsFromFlashMap(map);
             LoadProcessAddressesFromFlashMap(map);
@@ -668,173 +592,15 @@ namespace Kontel.Relkon.Solutions
         }
 
         public void LoadProcessAddressesFromFlashMap(string Map)
-        {
-            //Определение списка процессов
-            this.Processes.Clear();
-
-            //MatchCollection mc = Regex.Matches(Map, "\\b" + @"_Sys4x_p(\d+)\s+(?:(?:Var)|(?:Addr))\.\s+g\s0x([0-9A-F]+)");
-            //foreach (Match m in mc)
-            //{
-            //    ProjectProcess p = new ProjectProcess("PROCESS " + m.Groups[1].Value, AppliedMath.HexToDec(m.Groups[2].Value));
-            //    MatchCollection mcps = Regex.Matches(Map, "\\b" + @"_Sys4x_sit_p" + (m.Groups[1].Value) + @"_(\d+)\s+(?:(?:Func)|(?:Addr))\.\s+g\s0x([0-9A-F]+)");
-            //    foreach (Match m1 in mcps)
-            //    {
-            //        p.Situations.Add(new ProjectSituation("SIT" + m1.Groups[1].Value, AppliedMath.HexToDec(m1.Groups[2].Value)));
-            //    }
-            //    Match m2 = Regex.Match(Map, "\\b" + @"empty\s+(?:(?:Func)|(?:Addr))\.\s+g\s0x([0-9A-F]+)");
-            //    p.Situations.Add(new ProjectSituation("Остановлен", AppliedMath.HexToDec(m2.Groups[1].Value)));
-            //    this.Processes.Add(p);
-            //}
-
-            
+        {            
+            this.Processes.Clear();                     
             MatchCollection mc = Regex.Matches(Map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys4x_p(\d+)\b");
             foreach (Match m in mc)
             {
-                ProjectProcess p = new ProjectProcess("PROCESS " + m.Groups[2].Value, Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16));
-                //MatchCollection mcps = Regex.Matches(Map, "\\b" + @"_Sys4x_sit_p" + (m.Groups[1].Value) + @"_(\d+)\s+(?:(?:Func)|(?:Addr))\.\s+g\s0x([0-9A-F]+)");
-                //foreach (Match m1 in mcps)
-                //{
-                //    p.Situations.Add(new ProjectSituation("SIT" + m1.Groups[1].Value, AppliedMath.HexToDec(m1.Groups[2].Value)));
-                //}
-                //Match m2 = Regex.Match(Map, "\\b" + @"empty\s+(?:(?:Func)|(?:Addr))\.\s+g\s0x([0-9A-F]+)");
-                //p.Situations.Add(new ProjectSituation("Остановлен", AppliedMath.HexToDec(m2.Groups[1].Value)));
+                ProjectProcess p = new ProjectProcess("PROCESS " + m.Groups[2].Value, Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16));                
                 this.Processes.Add(p);
             }
-        }
-
-        public override List<Kontel.Relkon.Classes.ControllerIOVar> GetDefaultIOVarsList()
-        {
-            List<ControllerIOVar> res = new List<ControllerIOVar>();
-            // Цифровые входа
-            res.Add(new ControllerIOVar() { Name = "IN0", SystemName = "_Sys_IN[0]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "IN1", SystemName = "_Sys_IN[1]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "IN2", SystemName = "_Sys_IN[2]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "IN3", SystemName = "_Sys_IN[3]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "DIN4", SystemName = "_Sys_IN[4]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "DIN5", SystemName = "_Sys_IN[5]", Memory = MemoryType.XRAM, Size = 1 });
-            // Цифровые выхода
-            res.Add(new ControllerIOVar() { Name = "OUT0", SystemName = "_Sys_OUT[0]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "OUT1", SystemName = "_Sys_OUT[1]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "OUT2", SystemName = "_Sys_OUT[2]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "OUT3", SystemName = "_Sys_OUT[3]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "DOUT4", SystemName = "_Sys_OUT[4]", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerIOVar() { Name = "DOUT5", SystemName = "_Sys_OUT[5]", Memory = MemoryType.XRAM, Size = 1 });
-            // Аналоговые входа
-            res.Add(new ControllerIOVar() { Name = "ADC1", SystemName = "_Sys_ADC[0]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "ADH1", SystemName = "ADH1", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerIOVar() { Name = "ADC2", SystemName = "_Sys_ADC[1]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "ADH2", SystemName = "ADH2", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerIOVar() { Name = "ADC3", SystemName = "_Sys_ADC[2]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "ADH3", SystemName = "ADH3", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerIOVar() { Name = "ADC4", SystemName = "_Sys_ADC[3]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "ADH4", SystemName = "ADH4", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerIOVar() { Name = "ADC5", SystemName = "_Sys_ADC[4]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "ADH5", SystemName = "ADH5", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerIOVar() { Name = "ADC6", SystemName = "_Sys_ADC[5]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "ADH6", SystemName = "ADH6", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerIOVar() { Name = "ADC7", SystemName = "_Sys_ADC[6]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "ADH7", SystemName = "ADH7", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerIOVar() { Name = "ADC8", SystemName = "_Sys_ADC[7]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "ADH8", SystemName = "ADH8", Memory = MemoryType.XRAM, Size = 1 });        
-
-
-            res.Add(new ControllerIOVar() { Name = "DAC1", SystemName = "_Sys_DAC[0]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "DAH1", SystemName = "DAH1", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerIOVar() { Name = "DAC2", SystemName = "_Sys_DAC[1]", Memory = MemoryType.XRAM, Size = 2 });
-            res.Add(new ControllerIOVar() { Name = "DAH2", SystemName = "DAH2", Memory = MemoryType.XRAM, Size = 1 });
-      
-
-
-            return res;
-        }
-
-        public override List<Kontel.Relkon.Classes.ControllerSystemVar> GetSystemVarsList()
-        {
-            List<ControllerSystemVar> res = new List<ControllerSystemVar>();
-            res.Add(new ControllerSystemVar() { Name = "Z30", SystemName = "Z30", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z31", SystemName = "Z31", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z32", SystemName = "Z32", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z33", SystemName = "Z33", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z40", SystemName = "led", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z50", SystemName = "key", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "HOUR", SystemName = "_Sys4x_Hour", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "MIN", SystemName = "_Sys4x_Minute", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "SEC", SystemName = "_Sys4x_Second", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "DATE", SystemName = "_Sys4x_Date", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "MONTH", SystemName = "_Sys4x_Month", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "YEAR", SystemName = "_Sys4x_Year", Memory = MemoryType.XRAM, Size = 1 });
-
-            res.Add(new ControllerSystemVar() { Name = "TX_1", SystemName = "TX_1", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_2", SystemName = "TX_2", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_3", SystemName = "TX_3", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_4", SystemName = "TX_4", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_5", SystemName = "TX_5", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_6", SystemName = "TX_6", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_7", SystemName = "TX_7", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "TX_8", SystemName = "TX_8", Memory = MemoryType.XRAM, Size = 64, Array = true });
-
-            res.Add(new ControllerSystemVar() { Name = "RX_1", SystemName = "RX_1", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_2", SystemName = "RX_2", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_3", SystemName = "RX_3", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_4", SystemName = "RX_4", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_5", SystemName = "RX_5", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_6", SystemName = "RX_6", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_7", SystemName = "RX_7", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            res.Add(new ControllerSystemVar() { Name = "RX_8", SystemName = "RX_8", Memory = MemoryType.XRAM, Size = 64, Array = true });
-            return res;
-        }
-
-        public override List<ControllerEmbeddedVar> GetEmbeddedVarsList()
-        {
-            List<ControllerEmbeddedVar> res = new List<ControllerEmbeddedVar>();
-            int wxyAddress = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 256; j++)
-                {
-                    res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 256 + j), Size = 1, Memory = MemoryType.XRAM, Value = 255, Address = wxyAddress });
-                    if (j % 2 == 0)
-                    {
-                        res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 256 + j) + "i", Size = 2, Memory = MemoryType.XRAM, Value = 0xFFFF, Address = wxyAddress });
-                    }
-                    if (j % 4 == 0)
-                    {
-                        res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 256 + j) + "l", Size = 4, Memory = MemoryType.XRAM, Value = 0xFFFFFFFF, Address = wxyAddress });
-                    }
-                    wxyAddress++;
-                }
-            }
-            return res;
-        }
-
-        public override List<ControllerDispatcheringVar> GetDispatcheringVarsList()
-        {
-            List<ControllerDispatcheringVar> res = new List<ControllerDispatcheringVar>();
-
-            int address = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 64; j++)
-                {
-                    res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j), Size = 1, Memory = MemoryType.RAM, Address = address });
-                    if (j % 2 == 0)
-                        res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j) + "i", Size = 2, Memory = MemoryType.RAM, Address = address });                    
-                    if (j % 4 == 0)
-                        res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j) + "l", Size = 4, Memory = MemoryType.RAM, Address = address });                    
-                    address++;
-                }
-            }
-
-            return res;
-        }
+        }                            
 
         internal override void FillUserVarsFromCodeModel(Kontel.Relkon.CodeDom.RelkonCodeModel CodeModel)
         {
@@ -864,34 +630,7 @@ namespace Kontel.Relkon.Solutions
                     var.Address = OldVar.Address;
             }
         }
-
-        protected override void PrepareToCompile()
-        {
-            this.CompilationParams.ErrorsFileNotCreated = false;
-            this.CompilationParams.WaitForCompilationErrors = false;
-            this.CompilationParams.Errors.Clear();
-            this.CompilationParams.CompilationCreatedFilesNames.Clear();
-            this.CompilationParams.PostcompileMessages.Clear();
-
-            this.codeModel = RelkonCodeModel.ParseFromFile(this.ProgramFileName, true);
-
-            foreach (RelkonCodeProcess pr in this.codeModel.Processes)
-            {
-                foreach (RelkonCodeSituation sit in pr.Situations)
-                {
-                    if (sit.Period != 1 &&
-                        sit.Period != 5 &&
-                        sit.Period != 10 &&
-                        sit.Period != 100 &&
-                        sit.Period != 1000)
-                    {
-                        this.CompilationParams.Errors.Add(new CompilationError("Ситуация с периодом " + sit.Period + " не допустима. Возможные периоды для ситуаций 1, 5, 10 и 100 мс", "", sit.LineNumber, false));
-                    }
-                }
-            }
-
-            this.FillUserVarsFromCodeModel(this.codeModel);
-        }
+    
 
         private void TranslateProgram(STM32F107CodeGenerator CodeGenerator)
         {
@@ -899,8 +638,7 @@ namespace Kontel.Relkon.Solutions
             CodeGenerator.GeneratePultCode();
             this.CompilationParams.Errors.AddRange(CodeGenerator.Errors);
             if (!CodeGenerator.HasErrors)
-                this.RaisedOutputDataReceivedEvent(this.ProgramFileName + ", " + this.PultFileName + " -> " + this.DirectoryName + "\\fc_u.c, " + this.DirectoryName + "\\modules.h");
-            //this.SystemCycle = CodeGenerator.DispetcherPeriod;
+                this.RaisedOutputDataReceivedEvent(this.ProgramFileName + ", " + this.PultFileName + " -> " + this.DirectoryName + "\\fc_u.c, " + this.DirectoryName + "\\modules.h");           
         }
 
         /// <summary>
@@ -929,18 +667,6 @@ namespace Kontel.Relkon.Solutions
             {
                 this.CreatePostcompileMessages();
             }
-        }
-
-        public override void UploadToDevice()
-        {
-            ((UploadMgr)this.uploadMgr).StartUploading(true, true, false);
-        }
-
-        public override void UploadToDevice(bool onlyProgram, bool onlyParams, bool readEmbVars)
-        {
-            ((UploadMgr)this.uploadMgr).StartUploading(onlyProgram, onlyParams, readEmbVars);            
-        }
-
-        
+        }               
     }
 }

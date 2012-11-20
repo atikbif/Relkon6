@@ -220,6 +220,8 @@ namespace Kontel.Relkon.Solutions
             this.Processes = new List<ProjectProcess>();
             this.CreateNotRemovedExtensionsList();
             this.Version = ControllerProgramSolution.CurrentVersion;
+
+         
         }
         /// <summary>
         /// Список процессов проекта
@@ -327,23 +329,18 @@ namespace Kontel.Relkon.Solutions
                 }
             }
         }
+
         /// <summary>
-        /// Возвращает или устанавливает имя файла пультов
+        /// Показывает, происходит ли в данный момент процесс загрузки
         /// </summary>
-        //public string FbdFileName
-        //{
-        //    get
-        //    {
-        //        return this.fbdFileName;
-        //    }
-        //    set
-        //    {
-        //        if (value != this.fbdFileName)
-        //        {
-        //            this.fbdFileName = value;
-        //        }
-        //    }
-        //}
+        public bool IsBusy
+        {
+            get
+            {
+                return this.uploadMgr.IsBusy;
+            }
+        }
+     
         /// <summary>
         /// Возвращает или устанавливает имя файла настроек отладчика
         /// </summary>
@@ -438,7 +435,26 @@ namespace Kontel.Relkon.Solutions
         /// Возвращает размер переменной указанного типа (в байтах)
         /// </summary>
         /// <param name="Type">Имя типа (char, int и т.д.)</param>
-        protected abstract int TypeSize(string Type);
+        protected int TypeSize(string Type)
+        {
+            switch (Type)
+            {
+                case "char":
+                    return 1;
+                case "short":
+                    return 2;
+                case "int":
+                    return 4;
+                case "long":
+                    return 4;
+                case "float":
+                    return 4;
+                case "double":
+                    return 8;
+                default:
+                    return 0;
+            }
+        }
         /// <summary>
         /// Заполняет список информационных сообщений по результатам компиляции
         /// </summary>
@@ -447,23 +463,78 @@ namespace Kontel.Relkon.Solutions
         /// Проверяет, является ли маска вывода переменной 
         /// валидной для данного типа процесора
         /// </summary>
-        public abstract bool IsValidPultVarMask(string Mask);
+        public bool IsValidPultVarMask(string Mask)
+        {
+            return Regex.IsMatch(Mask, @"^\d{1,7}([,\.]\d{1,7})?$");
+        }
         /// <summary>
         /// Компилирует проект
         /// </summary>
         public abstract void Compile();
-        /// <summary>
-        /// Создает список ошибок компиляции
-        /// </summary>
-        protected abstract void CreateErrorsList();
+       
         /// <summary>
         /// Заполняет адреса переменных из файла Flash.map
         /// </summary>
         public abstract void LoadVarsAddressesFromFlashMap(ControllerVarCollection Vars);
+
+        public List<ControllerIOVar> GetDefaultIOVarsList()
+        {
+            List<ControllerIOVar> res = new List<ControllerIOVar>();
+
+            // Цифровые входа
+            for (int i = 0; i < 6; i++)
+            {
+                res.Add(new ControllerIOVar() { Name = "IN" + i, SystemName = "_Sys_IN[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
+                res.Add(new ControllerIOVar() { Name = "OUT" + i, SystemName = "_Sys_OUT[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
+            }
+
+            for (int i = 1; i < 9; i++)
+            {
+                res.Add(new ControllerIOVar() { Name = "ADC" + i, SystemName = "_Sys_ADC[" + (i - 1).ToString() + "]", Memory = MemoryType.XRAM, Size = 2 });
+                res.Add(new ControllerIOVar() { Name = "ADH" + i, SystemName = "ADH" + i, Memory = MemoryType.XRAM, Size = 1 });
+            }
+                    
+            res.Add(new ControllerIOVar() { Name = "DAC1", SystemName = "_Sys_DAC[0]", Memory = MemoryType.XRAM, Size = 2 });
+            res.Add(new ControllerIOVar() { Name = "DAH1", SystemName = "DAH1", Memory = MemoryType.XRAM, Size = 1 });
+
+            res.Add(new ControllerIOVar() { Name = "DAC2", SystemName = "_Sys_DAC[1]", Memory = MemoryType.XRAM, Size = 2 });
+            res.Add(new ControllerIOVar() { Name = "DAH2", SystemName = "DAH2", Memory = MemoryType.XRAM, Size = 1 });
+
+            return res;
+        }
+
+        /// <summary>
+        /// Создает список системных переменных процессора
+        /// </summary>
+        public List<Kontel.Relkon.Classes.ControllerSystemVar> GetSystemVarsList()
+        {
+            List<ControllerSystemVar> res = new List<ControllerSystemVar>();
+            res.Add(new ControllerSystemVar() { Name = "Z30", SystemName = "Z30", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z31", SystemName = "Z31", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z32", SystemName = "Z32", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z33", SystemName = "Z33", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z40", SystemName = "led", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z50", SystemName = "key", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "HOUR", SystemName = "_Sys4x_Hour", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "MIN", SystemName = "_Sys4x_Minute", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "SEC", SystemName = "_Sys4x_Second", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "DATE", SystemName = "_Sys4x_Date", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "MONTH", SystemName = "_Sys4x_Month", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "YEAR", SystemName = "_Sys4x_Year", Memory = MemoryType.XRAM, Size = 1 });
+
+            for (int i = 1; i < 9; i++)
+            {
+                res.Add(new ControllerSystemVar() { Name = "TX_" + i, SystemName = "TX_" + i, Memory = MemoryType.XRAM, Size = 64, Array = true });
+                res.Add(new ControllerSystemVar() { Name = "RX_" + i, SystemName = "RX_" + i, Memory = MemoryType.XRAM, Size = 64, Array = true });
+            }
+
+            return res;
+        }
+
         /// <summary>
         /// Выполняет подготовительные действия после компиляции
         /// </summary>
-        protected virtual void PrepareToCompile()
+        protected void PrepareToCompile()
         {
             this.CompilationParams.ErrorsFileNotCreated = false;
             this.CompilationParams.WaitForCompilationErrors = false;
@@ -472,41 +543,49 @@ namespace Kontel.Relkon.Solutions
             this.CompilationParams.PostcompileMessages.Clear();
             this.UpdateCodeModel();
         }
-        /// <summary>
-        /// Возвращает список стандартных переменных ввода-вывода
-        /// </summary>
-        public abstract List<ControllerIOVar> GetDefaultIOVarsList();
-        /// <summary>
-        /// Создает список системных переменных процессора
-        /// </summary>
-        public abstract List<ControllerSystemVar> GetSystemVarsList();
+
         /// <summary>
         /// Создает список заводских (встроенных) переменных процессора
         /// </summary>
-        public virtual List<ControllerEmbeddedVar> GetEmbeddedVarsList()
+        public List<ControllerEmbeddedVar> GetEmbeddedVarsList()
         {
             List<ControllerEmbeddedVar> res = new List<ControllerEmbeddedVar>();
             int wxyAddress = 0;
             for (int i = 0; i < 4; i++)
-            {               
-                for (int j = 0; j < 64; j++)
-                {                    
-                    res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 64 + j), Size = this.TypeSize("char"), Memory = MemoryType.XRAM, Value = 255, Address = wxyAddress });
-                    if (j % 2 == 0)
-                    {
-                        res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 64 + j) + "i", Size = this.TypeSize("int"), Memory = MemoryType.XRAM, Value = 0xFFFF, Address = wxyAddress });
-                    }
-                    if (j % 4 == 0)
-                    {                        
-                        res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 64 + j) + "l", Size = this.TypeSize("long"), Memory = MemoryType.XRAM, Value = 0xFFFFFFFF, Address = wxyAddress });
-                    }
+            {
+                for (int j = 0; j < 256; j++)
+                {
+                    res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 256 + j), Size = 1, Memory = MemoryType.XRAM, Value = 255, Address = wxyAddress });
+                    if (j % 2 == 0)                    
+                        res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 256 + j) + "i", Size = 2, Memory = MemoryType.XRAM, Value = 0xFFFF, Address = wxyAddress });                    
+                    if (j % 4 == 0)                    
+                        res.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 256 + j) + "l", Size = 4, Memory = MemoryType.XRAM, Value = 0xFFFFFFFF, Address = wxyAddress });                    
                     wxyAddress++;
                 }
             }
             return res;
         }
 
-        public abstract List<ControllerDispatcheringVar> GetDispatcheringVarsList();
+        public List<ControllerDispatcheringVar> GetDispatcheringVarsList()
+        {
+            List<ControllerDispatcheringVar> res = new List<ControllerDispatcheringVar>();
+
+            int address = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 64; j++)
+                {
+                    res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j), Size = 1, Memory = MemoryType.RAM, Address = address });
+                    if (j % 2 == 0)
+                        res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j) + "i", Size = 2, Memory = MemoryType.RAM, Address = address });
+                    if (j % 4 == 0)
+                        res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j) + "l", Size = 4, Memory = MemoryType.RAM, Address = address });
+                    address++;
+                }
+            }
+
+            return res;
+        }
         
         /// <summary>
         /// Очищает список перменных, полученных из кода прогаммы
@@ -584,6 +663,32 @@ namespace Kontel.Relkon.Solutions
             }            
         }
         #endregion
+
+
+        protected void CreateErrorsList()
+        {
+            string ErrorString = File.ReadAllText(this.CompilationParams.CompilationErrorsFileName, Encoding.Default);
+            string pattern = @":(\d+):\d+: error:([^\r\n]+)";
+            MatchCollection mc = Regex.Matches(ErrorString, pattern, RegexOptions.IgnoreCase);
+            for (int i = 0; i < mc.Count; i++)
+            {
+                CompilationError error = new CompilationError();
+                error.Warning = false;
+                error.Description = mc[i].Groups[2].Value;
+                int ln = this.GetProgramLineNumber(int.Parse(mc[i].Groups[1].Value));
+                if (ln == -1)
+                {
+                    error.LineNumber = int.Parse(mc[i].Groups[1].Value);
+                    error.FileName = this.DirectoryName + "\\fc_u.c";
+                }
+                else
+                {
+                    error.LineNumber = ln;
+                    error.FileName = this.ProgramFileName;
+                }
+                this.CompilationParams.Errors.Add(error);
+            }
+        }
 
         #region Static methods
         /// <summary>
@@ -1245,18 +1350,7 @@ namespace Kontel.Relkon.Solutions
                 Utils.ErrorMessage("Ошибка создания резервной копии проекта: " + Utils.FirstLetterToLower(ex.Message));
             }
         }
-        /// <summary>
-        /// Подставляет адреса переменных во все проекты для LCD-панелей
-        /// </summary>
-        public void ConvertAllLCDPanelProjects()
-        {
-            foreach (string FileName in this.Files)
-            {
-                if (Path.GetExtension(FileName) != ".epj")
-                    continue;
-                this.ConvertLCDPanelProject(FileName, this.vars);
-            }
-        }
+       
         /// <summary>
         /// Подставляет адреса переменных в проект для LCD-панели
         /// </summary>
@@ -1466,9 +1560,7 @@ namespace Kontel.Relkon.Solutions
                 }
             }
         }
-
-        public virtual void UploadToDevice(bool onlyProgram, bool onlyParams, bool readEmbVars)
-        { }
+      
 
         public RelkonCodeVarDefenition GetRelkonCodeVarDefenitionByName(string name)
         {
@@ -1525,10 +1617,7 @@ namespace Kontel.Relkon.Solutions
         {
             return (this.files.Contains(FileName) ? this : null);
         }
-        /// <summary>
-        /// Программирует контроллер, используя внутренние средства релкона
-        /// </summary>
-        public abstract void UploadToDevice();
+        /// <summary>      
      
 
 
@@ -1539,15 +1628,16 @@ namespace Kontel.Relkon.Solutions
         {
             this.uploadMgr.StopUploading();
         }
-        /// <summary>
-        /// Показывает, происходит ли в данный момент процесс загрузки
-        /// </summary>
-        public bool IsBusy
+        
+
+        public void UploadToDevice()
         {
-            get
-            {
-                return this.uploadMgr.IsBusy;
-            }
+            this.uploadMgr.StartUploading(true, true, false);
+        }
+
+        public void UploadToDevice(bool onlyProgram, bool onlyParams, bool readEmbVars)
+        {
+            this.uploadMgr.StartUploading(onlyProgram, onlyParams, readEmbVars);
         }
 
         protected void mgr_UploadingCompleted(object sender, AsyncCompletedEventArgs e)

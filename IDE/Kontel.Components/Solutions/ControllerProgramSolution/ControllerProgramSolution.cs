@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Xml.XPath;
 using Kontel;
 using System.ComponentModel;
+using System.Diagnostics;
 
 
 namespace Kontel.Relkon
@@ -47,6 +48,16 @@ namespace Kontel.Relkon.Solutions
     [XmlInclude(typeof(STM32F107Solution))]
     public abstract class ControllerProgramSolution
     {
+        public sealed class Uart
+        {
+            [XmlAttribute]
+            public ProtocolType Protocol = ProtocolType.RC51BIN; // протокол передачи данных
+            [XmlAttribute]
+            public int BaudRate = 19200; // скорость передачи данных  
+
+            public Uart() { }
+        }
+
         private static string CurrentVersion = "6.0.0"; // версия структуры проекта
         private string programFileName = ""; // имя файла программы
         private string pultFileName = ""; // имя файла пультов
@@ -59,6 +70,16 @@ namespace Kontel.Relkon.Solutions
         internal RelkonCodeModel codeModel; // ОО представление кода программы
         private List<string> searchList = new List<string>(); // список строк для поиска
         private List<string> replaceList = new List<string>(); // список строк для замены
+
+        protected Uart[] uarts = new Uart[2]; // настройки портов процессора 
+        private byte[] ipAdress = { 0, 0, 0, 0 };
+        private byte[] ipMask = { 255, 255, 255, 255 };
+        private byte[] ipGateway = { 0, 0, 0, 0 };
+        private string macAdress = "000000000000";
+        private bool pultEnable = true;
+        private bool _SDEnable = false;
+
+        private string label = "";
         
         
 
@@ -88,6 +109,125 @@ namespace Kontel.Relkon.Solutions
         /// Генерируется по завершении загрузки данных проекта в контроллер
         /// </summary>
         public event AsyncCompletedEventHandler UploadingToDeviceCompleted;
+
+
+
+        [XmlIgnore]
+        public static string SDKDirectory = ""; // каталог SDK процессора
+        [XmlIgnore]
+        public static string CompilerDirectory = "";
+
+        public Uart[] Uarts
+        {
+            get
+            {
+                return this.uarts;
+            }
+            set
+            {
+                this.uarts = value;
+            }
+        }
+
+        public byte[] ControllerIPAdress
+        {
+            get
+            {
+                return this.ipAdress;
+            }
+            set
+            {
+                this.ipAdress = value;
+            }
+        }
+
+        public byte[] ControllerIPMask
+        {
+            get
+            {
+                return this.ipMask;
+            }
+            set
+            {
+                this.ipMask = value;
+            }
+        }
+
+        public byte[] ControllerIPGateway
+        {
+            get
+            {
+                return this.ipGateway;
+            }
+            set
+            {
+                this.ipGateway = value;
+            }
+        }
+
+        public string ControllerMACAdress
+        {
+            get
+            {
+                return this.macAdress;
+            }
+            set
+            {
+                this.macAdress = value;
+            }
+        }
+
+        public string Label
+        {
+            get
+            {
+                return this.label;
+            }
+            set
+            {
+                this.label = value;
+            }
+        }
+
+        public bool PultEnable
+        {
+            get
+            {
+                return this.pultEnable;
+            }
+            set
+            {
+                this.pultEnable = value;
+            }
+        }
+
+        public bool SDEnable
+        {
+            get
+            {
+                return _SDEnable;
+            }
+            set
+            {
+                _SDEnable = value;
+            }
+        }
+
+
+        private SerialPort485 _lastWorkedPort = null;
+
+        [XmlIgnore]
+        public SerialPort485 LastWorkedPort
+        {
+            get
+            {
+                return _lastWorkedPort;
+            }
+            set
+            {
+                _lastWorkedPort = value;
+            }
+        }
 
         /// <summary>
         /// Версия Relkon, в которой создан проект
@@ -213,16 +353,7 @@ namespace Kontel.Relkon.Solutions
                 return this.openedFiles;
             }
         }
-
-        public ControllerProgramSolution()
-        {
-            this.IntitalizeParams();
-            this.Processes = new List<ProjectProcess>();
-            this.CreateNotRemovedExtensionsList();
-            this.Version = ControllerProgramSolution.CurrentVersion;
-
-         
-        }
+       
         /// <summary>
         /// Список процессов проекта
         /// </summary>
@@ -407,6 +538,20 @@ namespace Kontel.Relkon.Solutions
                 return "Проекты Relkon (.rp6)|*.rp6";
             }
         }
+
+
+        public ControllerProgramSolution()
+        {
+            this.IntitalizeParams();
+            this.Processes = new List<ProjectProcess>();
+            this.CreateNotRemovedExtensionsList();
+            this.Version = ControllerProgramSolution.CurrentVersion;
+
+            this.uploadMgr = new UploadMgr(this);
+            this.uploadMgr.ProgressChanged += new UploadMgrProgressChangedEventHandler(mgr_ProgressChanged);
+            this.uploadMgr.UploadingCompleted += new AsyncCompletedEventHandler(mgr_UploadingCompleted);
+        }
+
         /// <summary>
         /// Создает список расширений файлов, которые не должны перемещаться при пересохранении проекта в другой папке
         /// </summary>
@@ -415,13 +560,25 @@ namespace Kontel.Relkon.Solutions
             this.notRemovedExtensios = new List<string>();
             this.notRemovedExtensios.Add(".epj");
         }
-
-        #region Abstract and virtual methods
+        
         /// <summary>
         /// Загружает параметры контроллера из другого проекта
         /// </summary>
         /// <param name="solution"></param>
-        public abstract void LoadControllerParamsFromAnotherSolution(ControllerProgramSolution solution);
+        public void LoadControllerParamsFromAnotherSolution(ControllerProgramSolution solution)
+        {
+            if (!(solution is STM32F107Solution))
+                throw new Exception("Проект должнен быть типа STM32F107Solution");
+            STM32F107Solution sln = solution as STM32F107Solution;
+            for (int i = 0; i < this.uarts.Length; i++)
+            {
+                this.uarts[i].BaudRate = sln.uarts[i].BaudRate;
+                this.uarts[i].Protocol = sln.uarts[i].Protocol;
+            }
+            this.ControllerAddress = sln.ControllerAddress;
+            this.SearchedControllerAddress = sln.SearchedControllerAddress;
+            this.ipAdress = sln.ControllerIPAdress;
+        }
         /// <summary>
         /// Создает точную копию экземпляра класса
         /// </summary>
@@ -430,7 +587,22 @@ namespace Kontel.Relkon.Solutions
         /// <summary>
         /// Инициализирует параметры процессора, компиляции
         /// </summary>
-        protected abstract void IntitalizeParams();
+        protected void IntitalizeParams()
+        {
+            this.ProcessorParams.InverseByteOrder = true;
+            this.ProcessorParams.Type = ProcessorType.STM32F107;
+            this.CompilationParams.SDKDirectory = STM32F107Solution.SDKDirectory;
+            this.CompilationParams.CompilerDirectory = STM32F107Solution.CompilerDirectory;
+
+            this.CompilationParams.CompilationErrrosFilePath = "fc_u.err";
+            //this.CompilationParams.LinkingErrorsFilePath = "\\link.err";
+            this.PultParams.AvailablePultTypes = new Kontel.Relkon.Solutions.PultType[] { PultType.Pult4x20, PultType.Pult2x12 };
+            this.PultParams.DefaultPultType = PultType.Pult4x20;
+            this.PultParams.MaxVarMaskDigitsCountAfterComma = 7;
+            this.PultParams.MaxVarMaskLength = 15;
+            for (int i = 0; i < this.uarts.Length; i++)
+                this.uarts[i] = new Uart();
+        }
         /// <summary>
         /// Возвращает размер переменной указанного типа (в байтах)
         /// </summary>
@@ -458,7 +630,30 @@ namespace Kontel.Relkon.Solutions
         /// <summary>
         /// Заполняет список информационных сообщений по результатам компиляции
         /// </summary>
-        protected abstract void CreatePostcompileMessages();
+        protected void CreatePostcompileMessages()
+        {
+            // Добавлние периодов опроса модулей ВВ
+            if (this.codeModel.IOModules.Count > 0)
+            {
+                List<int> addresses = new List<int>();
+                foreach (int address in this.codeModel.IOModules.Keys)
+                {
+                    addresses.Add(address);
+                }
+                addresses.Sort();
+                this.CompilationParams.PostcompileMessages.Add("Периоды опроса внешних модулей ввода-вывода:");
+                foreach (int address in addresses)
+                {
+                    IOModule module = (IOModule)this.codeModel.IOModules[address];
+                    string ts = "";
+                    foreach (ModuleVarDescription description in module.VarNames)
+                    {
+                        ts += description.DisplayName + ",";
+                    }
+                    this.CompilationParams.PostcompileMessages.Add(ts.Remove(ts.Length - 1) + ": " + module.RealPeriod + " мс");
+                }
+            }
+        }
         /// <summary>
         /// Проверяет, является ли маска вывода переменной 
         /// валидной для данного типа процесора
@@ -470,12 +665,419 @@ namespace Kontel.Relkon.Solutions
         /// <summary>
         /// Компилирует проект
         /// </summary>
-        public abstract void Compile();
+        public void Compile()
+        {
+            try
+            {
+                this.PrepareToCompile();
+
+                STM32F107CodeGenerator codeGenerator = new STM32F107CodeGenerator(this);
+                this.TranslateProgram(codeGenerator);
+                if (this.CompilationParams.HasErrors)
+                    return;
+
+                this.CompilationParams.CompilationCreatedFilesNames.Add(this.DirectoryName + "\\fc_u.c");
+                this.CompileProgram();
+                if (this.CompilationParams.HasErrors)
+                    return;
+
+                this.LoadVarsAddressesFromFlashMap(this.Vars);
+            }
+            catch (Exception ex)
+            {
+                this.CompilationParams.Errors.Add(new CompilationError(ex.Message, "", -1, false));
+            }
+        }
+
+        /// <summary>
+        /// Создает командный файл для компиляции программы
+        /// </summary>
+        private void CreateCompilerCommandFile()
+        {
+            string s = File.ReadAllText(this.CompilationParams.SDKDirectory + "\\Compile.bat.pattern", Encoding.Default);
+            File.WriteAllText(this.CompilationParams.SDKDirectory + "\\Compile.bat", String.Format(s, this.CompilationParams.SDKDirectory, this.DirectoryName, this.Name, this.CompilationParams.CompilerDirectory), Encoding.GetEncoding(866));
+        }
+
+        /// <summary>
+        /// Запускает компилятор
+        /// </summary>
+        private void RunCompiler()
+        {
+            Process p1 = new Process();
+            p1.StartInfo.FileName = this.CompilationParams.SDKDirectory + "\\Compile.bat";
+            p1.StartInfo.WorkingDirectory = this.CompilationParams.CompilerDirectory;
+            p1.StartInfo.RedirectStandardOutput = true;
+            p1.StartInfo.RedirectStandardError = true;
+            p1.StartInfo.CreateNoWindow = true;
+            p1.StartInfo.StandardOutputEncoding = Encoding.GetEncoding(866);
+            p1.StartInfo.StandardErrorEncoding = Encoding.GetEncoding(866);
+            p1.StartInfo.RedirectStandardError = true;
+            p1.StartInfo.UseShellExecute = false;
+            p1.ErrorDataReceived += new DataReceivedEventHandler(Compiler_ErrorDataReceived);
+            p1.OutputDataReceived += new DataReceivedEventHandler(Compiler_OutputDataReceived);
+            p1.Start();
+            p1.BeginOutputReadLine();
+            p1.BeginErrorReadLine();
+            p1.WaitForExit();
+        }
+
+
+        /// <summary>
+        /// Получение данных от компиляора в процессе компиляци программы
+        /// </summary>
+        private void Compiler_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                if ((!this.CompilationParams.WaitForCompilationErrors) || this.CompilationParams.ErrorsFileNotCreated)
+                {
+                    if (e.Data.Contains("arm-none-eabi-gcc.exe"))
+                        this.CompilationParams.WaitForCompilationErrors = true;
+                    this.RaisedOutputDataReceivedEvent(e.Data);
+                }
+                else if (this.CompilationParams.WaitForCompilationErrors)
+                {
+                    if (e.Data.Contains("arm-none-eabi-objcopy.exe"))
+                    {
+                        this.CompilationParams.WaitForCompilationErrors = false;
+                        this.RaisedOutputDataReceivedEvent(e.Data);
+                    }
+                }
+            }
+        }
+
+        private void Compiler_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+                this.WriteErrorMessageToErrorStream(this.CompilationParams.CompilationErrorsWriter, e.Data);
+        }
+
+
+        private void TranslateProgram(STM32F107CodeGenerator CodeGenerator)
+        {
+            CodeGenerator.GenerateProgramCode();
+            CodeGenerator.GeneratePultCode();
+            this.CompilationParams.Errors.AddRange(CodeGenerator.Errors);
+            if (!CodeGenerator.HasErrors)
+                this.RaisedOutputDataReceivedEvent(this.ProgramFileName + ", " + this.PultFileName + " -> " + this.DirectoryName + "\\fc_u.c, " + this.DirectoryName + "\\modules.h");
+        }
+
+        /// <summary>
+        /// Компилирует программу
+        /// </summary>
+        private void CompileProgram()
+        {
+            try
+            {
+                this.CompilationParams.CreateErrorWriter();
+            }
+            catch (Exception ex)
+            {
+                this.RaisedOutputDataReceivedEvent("Ошибка создания потоков для записи ошибок: " + Utils.FirstLetterToLower(ex.Message));
+            }
+            this.CreateCompilerCommandFile();
+            this.RunCompiler();
+            this.CompilationParams.CloseErrorWriter();
+            if (File.Exists(this.CompilationParams.CompilationErrorsFileName))
+                this.CreateErrorsList();
+            if (this.CompilationParams.HasErrors)
+                return;
+            if (!File.Exists(this.DirectoryName + "\\" + this.Name + ".bin"))
+                this.CompilationParams.Errors.Add(new CompilationError("Файл " + this.Name + ".bin не создан", "", -1, false));
+            if (File.Exists(this.DirectoryName + "\\Flash.map"))
+            {
+                this.CreatePostcompileMessages();
+            }
+        }  
        
         /// <summary>
         /// Заполняет адреса переменных из файла Flash.map
         /// </summary>
-        public abstract void LoadVarsAddressesFromFlashMap(ControllerVarCollection Vars);
+        public void LoadVarsAddressesFromFlashMap(Kontel.Relkon.Classes.ControllerVarCollection Vars)
+        {
+            string map = File.ReadAllText(this.DirectoryName + "\\Flash.map", Encoding.Default);
+
+            // Установка адресов переменных ввода-вывода (в том числе и внешних одулей ВВ)
+
+            Match m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys_IN");
+            if (m.Success)
+            {
+                string group = m.Groups[1].Value;
+                int adress = Convert.ToInt32(group.Substring(4, 4), 16);
+                for (int i = 0; i < 4; i++)
+                {
+                    ControllerIOVar var = Vars.IOVars.GetVarByName("IN" + i);
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
+                }
+
+                for (int i = 4; i < 6; i++)
+                {
+                    ControllerIOVar var = Vars.IOVars.GetVarByName("DIN" + i);
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
+                }
+
+            }
+
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys_OUT");
+            if (m.Success)
+            {
+                int adress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+                for (int i = 0; i < 4; i++)
+                {
+                    ControllerIOVar var = Vars.IOVars.GetVarByName("OUT" + i);
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
+                }
+
+                for (int i = 4; i < 6; i++)
+                {
+                    ControllerIOVar var = Vars.IOVars.GetVarByName("DOUT" + i);
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
+                }
+            }
+
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys_ADC");
+            if (m.Success)
+            {
+                int adress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+                for (int i = 1; i < 9; i++)
+                {
+                    ControllerIOVar var = Vars.IOVars.GetVarByName("ADH" + i);
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        var = Vars.IOVars.GetVarByName("ADC" + i);
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
+                }
+            }
+
+            int groupSize = 32 * 4;
+
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_ADC");
+            int adcStructureAdress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+            foreach (ControllerIOVar var in Vars.IOVars)
+            {
+                if (var.Name.Contains("ADC") && var.ExternalModule)
+                {
+                    int index = 0;
+                    if (int.TryParse(var.Name.Substring(3), out index))
+                    {
+                        int p = index - 9;
+                        int k = (int)(p / 4);
+                        int groupNum = p - k * 4;
+                        int adress = groupNum * groupSize + k * 4 + adcStructureAdress;
+                        var.Address = adress;
+                        ControllerIOVar v = Vars.IOVars.GetVarByName("ADH" + index);
+                        if (v != null)
+                            v.Address = adress;
+                    }
+                }
+            }
+
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_DAC");
+            int dacStructureAdress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+            foreach (ControllerIOVar var in Vars.IOVars)
+            {
+                if (var.Name.Contains("DAC") && var.ExternalModule)
+                {
+                    int index = 0;
+                    if (int.TryParse(var.Name.Substring(3), out index))
+                    {
+                        int p = index - 5;
+                        int k = (int)(p / 2);
+                        int groupNum = p - (k * 2);
+                        int adress = groupNum * groupSize + k * 4 + dacStructureAdress;
+                        var.Address = adress;
+                        ControllerIOVar v = Vars.IOVars.GetVarByName("DAH" + index);
+                        if (v != null)
+                            v.Address = adress;
+                    }
+                }
+            }
+
+
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys_DAC");
+            if (m.Success)
+            {
+                int adress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+                for (int i = 1; i < 5; i++)
+                {
+                    ControllerIOVar var = Vars.IOVars.GetVarByName("DAH" + i);
+                    if (var != null)
+                    {
+                        var.Address = adress;
+                        var = Vars.IOVars.GetVarByName("DAC" + i);
+                        var.Address = adress;
+                        adress += var.Size;
+                    }
+                }
+            }
+
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+IN");
+            if (m.Success)
+            {
+                int adress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+                foreach (ControllerIOVar var in Vars.IOVars)
+                {
+                    if (var.Name.Contains("IN") && var.ExternalModule)
+                    {
+
+                        m = Regex.Match(var.Name, @"IN(\d+)");
+                        if (m.Groups[1].Success)
+                            var.Address = (int.Parse(m.Groups[1].Value) - 4) + adress;
+                    }
+                }
+            }
+
+
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+OUT");
+            if (m.Success)
+            {
+                int adress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+                foreach (ControllerIOVar var in Vars.IOVars)
+                {
+                    if (var.Name.Contains("OUT") && var.ExternalModule)
+                    {
+
+                        m = Regex.Match(var.Name, @"OUT(\d+)");
+                        if (m.Groups[1].Success)
+                            var.Address = (int.Parse(m.Groups[1].Value) - 4) + adress;
+                    }
+                }
+            }
+
+            foreach (ControllerUserVar var in Vars.UserVars)
+            {
+                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + var.Name + "\\b");
+                if (m.Success)
+                    var.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+                else
+                    this.CompilationParams.Errors.Add(new CompilationError("Не удалость установить адрес переменной " + var.Name, this.ProgramFileName, -1, true));
+            }
+
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+times");
+            int adr = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+            ControllerSystemVar iov = Vars.SystemVars.GetVarByName("SEC");
+            iov.Address = adr;
+            adr += iov.Size;
+            iov = Vars.SystemVars.GetVarByName("MIN");
+            iov.Address = adr;
+            adr += iov.Size;
+            iov = Vars.SystemVars.GetVarByName("HOUR");
+            iov.Address = adr;
+            adr += iov.Size;
+            iov = Vars.SystemVars.GetVarByName("DATE");
+            iov.Address = adr;
+            adr += iov.Size;
+            iov = Vars.SystemVars.GetVarByName("MONTH");
+            iov.Address = adr;
+            adr += iov.Size;
+            iov = Vars.SystemVars.GetVarByName("YEAR");
+            iov.Address = adr;
+
+
+            ControllerSystemVar z = Vars.SystemVars.GetVarByName("Z40");
+            if (z != null)
+            {
+                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + z.SystemName + "\\b");
+                if (m.Groups[1].Success)
+                    z.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+                z = Vars.SystemVars.GetVarByName("Z50");
+                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + z.SystemName + "\\b");
+                if (m.Groups[1].Success)
+                    z.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+
+                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys\b");
+                if (m.Groups[1].Success)
+                {
+                    adr = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16) + 1024 + 256 + 5;
+                    z = Vars.SystemVars.GetVarByName("Z30");
+                    z.Address = adr;
+                    adr += z.Size;
+                    z = Vars.SystemVars.GetVarByName("Z31");
+                    z.Address = adr;
+                    adr += z.Size;
+                    z = Vars.SystemVars.GetVarByName("Z32");
+                    z.Address = adr;
+                    adr += z.Size;
+                    z = Vars.SystemVars.GetVarByName("Z33");
+                    z.Address = adr;
+                }
+            }
+
+
+            for (int i = 1; i < 9; i++)
+            {
+                ControllerSystemVar v = Vars.SystemVars.GetVarByName("RX_" + i);
+                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + v.SystemName + "\\b");
+                if (m.Success)
+                    v.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+                v = Vars.SystemVars.GetVarByName("TX_" + i);
+                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + v.SystemName + "\\b");
+                if (m.Success)
+                    v.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+            }
+
+
+            LoadEmbeddedVarsFromFlashMap(map);
+            LoadProcessAddressesFromFlashMap(map);
+        }
+
+        public void LoadEmbeddedVarsFromFlashMap(string Map)
+        {
+            Match m = Regex.Match(Map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys\b");
+            if (m.Success)
+            {
+                int adress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+                for (int i = 0; i < 1024; i++)
+                {
+                    Vars.EmbeddedVars.GetVarByName("EE" + i).Address = adress;
+                    if (i % 2 == 0)
+                        Vars.EmbeddedVars.GetVarByName("EE" + i + "i").Address = adress;
+                    if (i % 4 == 0)
+                        Vars.EmbeddedVars.GetVarByName("EE" + i + "l").Address = adress;
+                    adress++;
+                }
+            }
+            else
+                this.CompilationParams.Errors.Add(new CompilationError("Не удалость установить адреса заводских уставок", this.ProgramFileName, -1, true));
+        }
+
+        public void LoadProcessAddressesFromFlashMap(string Map)
+        {
+            this.Processes.Clear();
+            MatchCollection mc = Regex.Matches(Map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys4x_p(\d+)\b");
+            foreach (Match m in mc)
+            {
+                ProjectProcess p = new ProjectProcess("PROCESS " + m.Groups[2].Value, Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16));
+                this.Processes.Add(p);
+            }
+        }   
 
         public List<ControllerIOVar> GetDefaultIOVarsList()
         {
@@ -590,7 +1192,7 @@ namespace Kontel.Relkon.Solutions
         /// <summary>
         /// Очищает список перменных, полученных из кода прогаммы
         /// </summary>
-        internal virtual void FillUserVarsFromCodeModel(RelkonCodeModel CodeModel)
+        internal void FillUserVarsFromCodeModel(RelkonCodeModel CodeModel)
         {
             List<ControllerUserVar> OldVars = new List<ControllerUserVar>(this.vars.UserVars);
             this.vars.UserVars.Clear();            
@@ -660,10 +1262,35 @@ namespace Kontel.Relkon.Solutions
                 ControllerUserVar nv = OldVars.Find(new Predicate<ControllerUserVar>(delegate(ControllerUserVar UserVar) { return UserVar.Name == ctrStructVar.Name; }));
                 if (nv != null)
                     ctrStructVar.Address = nv.Address;
-            }            
-        }
-        #endregion
+            }
 
+
+            List<ControllerIOVar> _OldVars = new List<ControllerIOVar>(this.Vars.IOVars);
+            this.Vars.IOVars.Clear();
+            this.Vars.IOVars.AddRange(this.GetDefaultIOVarsList());
+            foreach (IOModule module in CodeModel.IOModules.Values)
+            {
+                foreach (ModuleVarDescription description in module.VarNames)
+                {
+                    this.Vars.IOVars.Add(new ControllerIOVar() { Name = description.DisplayName, Memory = MemoryType.XRAM, ExternalModule = true, SystemName = description.SystemName, Size = (module is DigitalModule ? 1 : 2) });
+                }
+                if (module is AnalogModule)
+                {
+                    foreach (ModuleVarDescription description in ((AnalogModule)module).SingleByteVarNames)
+                    {
+                        ControllerIOVar var = _OldVars.Find(new Predicate<ControllerIOVar>(delegate(ControllerIOVar v) { return v.Name == description.DisplayName; }));
+                        this.Vars.IOVars.Add(new ControllerIOVar() { Name = description.DisplayName, Memory = MemoryType.XRAM, ExternalModule = true, SystemName = description.SystemName, Size = 1 });
+                    }
+                }
+            }
+            foreach (ControllerIOVar OldVar in _OldVars)
+            {
+                ControllerIOVar var = this.Vars.GetIOVar(OldVar.Name);
+                if (var != null)
+                    var.Address = OldVar.Address;
+            }
+        }
+       
 
         protected void CreateErrorsList()
         {
@@ -809,118 +1436,11 @@ namespace Kontel.Relkon.Solutions
             var yearVar = res.vars.SystemVars.GetVarByName("YEAR");
 
             if (yearVar == null)
-                res.vars.SystemVars.Add(new ControllerSystemVar() { Name = "YEAR", SystemName = "_Sys4x_Year", Memory = MemoryType.XRAM, Size = 1 });
-          
-
-            //if (res.vars.EmbeddedVars[0].Name == "W0")
-            //{              
-            //    string file = File.ReadAllText(res.ProgramFileName, Encoding.Default);
-            //    string pult = File.ReadAllText(res.PultFileName, Encoding.Default);
-
-            //    ControllerEmbeddedVar var = null;
-                       
-            //    for (int i = 0; i < 16; i++)
-            //    {
-            //        var = res.vars.EmbeddedVars.GetVarByName("W" + i);
-            //        if (var != null)
-            //        {
-            //            var.Name = "EE" + (i + 64).ToString();
-            //            file = Regex.Replace(file, @"\b" + "W" + i + @"\b", "EE" + (i + 64).ToString());
-            //            pult = Regex.Replace(pult, @"\b" + "W" + i + @"\b", "EE" + (i + 64).ToString());
-            //        }
-
-            //        var = res.vars.EmbeddedVars.GetVarByName("X" + i);
-            //        if (var != null)
-            //        {                        
-            //            var.Name = "EE" + (i + 80).ToString();
-            //            file = Regex.Replace(file, @"\b" + "X" + i + @"\b", "EE" + (i + 80).ToString());
-            //            pult = Regex.Replace(pult, @"\b" + "X" + i + @"\b", "EE" + (i + 80).ToString());
-            //        }
-
-            //        var = res.vars.EmbeddedVars.GetVarByName("Y" + i);
-            //        if (var != null)
-            //        {
-            //            var.Name = "EE" + (i + 96).ToString();
-            //            file = Regex.Replace(file, @"\b" + "Y" + i + @"\b", "EE" + (i + 96).ToString());
-            //            pult = Regex.Replace(pult, @"\b" + "Y" + i + @"\b", "EE" + (i + 96).ToString());
-            //        }
-
-            //        var = res.vars.EmbeddedVars.GetVarByName("Z" + i);
-            //        if (var != null)
-            //        {
-            //            var.Name = "EE" + (i + 112).ToString();
-            //            file = Regex.Replace(file, @"\b" + "Z" + i + @"\b", "EE" + (i + 112).ToString());
-            //            pult = Regex.Replace(pult, @"\b" + "Z" + i + @"\b", "EE" + (i + 112).ToString());
-            //        }
-
-            //    }
-
-            //    for (int i = 0; i < 16; i = i + 2)
-            //    {
-            //        res.vars.EmbeddedVars.GetVarByName("W" + i + "i").Name = "EE" + (i + 32).ToString() + "i";
-            //        file = Regex.Replace(file, @"\b" + "W" + i + "i" + @"\b", "EE" + (i + 32).ToString() + "i");
-            //        pult = Regex.Replace(pult, @"\b" + "W" + i + "i" + @"\b", "EE" + (i + 32).ToString() + "i");                    
-
-            //        res.vars.EmbeddedVars.GetVarByName("X" + i + "i").Name = "EE" + (i + 40).ToString() + "i";
-            //        file = Regex.Replace(file, @"\b" + "X" + i + "i" + @"\b", "EE" + (i + 40).ToString() + "i");
-            //        pult = Regex.Replace(pult, @"\b" + "X" + i + "i" + @"\b", "EE" + (i + 40).ToString() + "i");
-
-            //        res.vars.EmbeddedVars.GetVarByName("Y" + i + "i").Name = "EE" + (i + 48).ToString() + "i";
-            //        file = Regex.Replace(file, @"\b" + "Y" + i + "i" + @"\b", "EE" + (i + 48).ToString() + "i");
-            //        pult = Regex.Replace(pult, @"\b" + "Y" + i + "i" + @"\b", "EE" + (i + 48).ToString() + "i");  
-
-            //        res.vars.EmbeddedVars.GetVarByName("Z" + i + "i").Name = "EE" + (i + 56).ToString() + "i";
-            //        file = Regex.Replace(file, @"\b" + "Z" + i + "i" + @"\b", "EE" + (i + 56).ToString() + "i");
-            //        pult = Regex.Replace(pult, @"\b" + "Z" + i + "i" + @"\b", "EE" + (i + 56).ToString() + "i"); 
-            //    }
-            //    for (int i = 0; i < 16; i = i + 4)
-            //    {
-            //        res.vars.EmbeddedVars.GetVarByName("W" + i + "l").Name = "EE" + (i + 16).ToString() + "l";
-            //        file = Regex.Replace(file, @"\b" + "W" + i + "l" + @"\b", "EE" + (i + 16).ToString() + "l");
-            //        pult = Regex.Replace(pult, @"\b" + "W" + i + "l" + @"\b", "EE" + (i + 16).ToString() + "l"); 
-
-            //        res.vars.EmbeddedVars.GetVarByName("X" + i + "l").Name = "EE" + (i + 20).ToString() + "l";
-            //        file = Regex.Replace(file, @"\b" + "X" + i + "l" + @"\b", "EE" + (i + 20).ToString() + "l");
-            //        pult = Regex.Replace(pult, @"\b" + "W" + i + "l" + @"\b", "EE" + (i + 16).ToString() + "l"); 
-
-            //        res.vars.EmbeddedVars.GetVarByName("Y" + i + "l").Name = "EE" + (i + 24).ToString() + "l";
-            //        file = Regex.Replace(file, @"\b" + "Y" + i + "l" + @"\b", "EE" + (i + 24).ToString() + "l");
-            //        pult = Regex.Replace(pult, @"\b" + "W" + i + "l" + @"\b", "EE" + (i + 16).ToString() + "l"); 
-                   
-            //        res.vars.EmbeddedVars.GetVarByName("Z" + i + "l").Name = "EE" + (i + 28).ToString() + "l";
-            //        file = Regex.Replace(file, @"\b" + "Z" + i + "l" + @"\b", "EE" + (i + 28).ToString() + "l");
-            //        pult = Regex.Replace(pult, @"\b" + "W" + i + "l" + @"\b", "EE" + (i + 16).ToString() + "l"); 
-
-            //    }
-
-            //    File.WriteAllText(res.ProgramFileName, file, Encoding.Default);
-            //    File.WriteAllText(res.PultFileName, pult,  Encoding.Unicode);
-
-            //    int wxyAddress = 0;
-            //    for (int i = 0; i < 4; i++)
-            //    {
-            //        for (int j = 0; j < 64; j++)
-            //        {
-            //            if (res.vars.EmbeddedVars.GetVarByName("EE" + (i * 64 + j).ToString()) == null)
-            //                res.vars.EmbeddedVars.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 64 + j).ToString(), Size = 1, Memory = MemoryType.XRAM, Value = 255, Address = wxyAddress });
-
-            //            if (j % 2 == 0 && res.vars.EmbeddedVars.GetVarByName("EE" + (i * 64 + j).ToString() + "i") == null)                            
-            //                res.vars.EmbeddedVars.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 64 + j) + "i", Size = 2, Memory = MemoryType.XRAM, Value = 0xFFFF, Address = wxyAddress });
-
-            //            if (j % 4 == 0 && res.vars.EmbeddedVars.GetVarByName("EE" + (i * 64 + j).ToString() + "l") == null)                            
-            //                res.vars.EmbeddedVars.Add(new ControllerEmbeddedVar() { Name = "EE" + (i * 64 + j) + "l", Size = 4, Memory = MemoryType.XRAM, Value = 0xFFFFFFFF, Address = wxyAddress });                            
-            //            wxyAddress++;
-            //        }
-            //    }
-            //}
-
+                res.vars.SystemVars.Add(new ControllerSystemVar() { Name = "YEAR", SystemName = "_Sys4x_Year", Memory = MemoryType.XRAM, Size = 1 });          
 
             if(is50)
                 res.ComputeMultibyteEmbeddedVarsValues();
-            //if (res is MB90F347Solution)
-            //{
-            //    ((MB90F347Solution)res).Uarts[2].BufferSize = 0x80;
-            //}
+           
             return res;
         }
         /// <summary>
@@ -940,14 +1460,7 @@ namespace Kontel.Relkon.Solutions
                 res.SearchedControllerAddress = SearchedControllerAddress;
             res.fileName = SolutionFileName;
             res.ID = Guid.NewGuid();
-            //if (res is AT89C51ED2Solution)
-            //{
-            //    ((AT89C51ED2Solution)res).BaudRate = int.Parse(xpList.Current.GetAttribute("BaudRate", ""));
-            //    if(xpList.Current.GetAttribute("Protocol", "") != "")
-            //        ((AT89C51ED2Solution)res).Protocol = (ProtocolType)Enum.Parse(typeof(ProtocolType), xpList.Current.GetAttribute("Protocol", ""));
-            //    ((AT89C51ED2Solution)res).ReadPassword = xpList.Current.GetAttribute("ReadPassword", "");
-            //    ((AT89C51ED2Solution)res).WritePassword = xpList.Current.GetAttribute("WritePassword", "");
-            //}
+           
             // Считывание активного файла проекта
             xpList = xpNav.Select("/ControllerProgramSolution/ActiveFileName");
             xpList.MoveNext();
@@ -1092,74 +1605,7 @@ namespace Kontel.Relkon.Solutions
             res.Replace("RelkonSolution", "ControllerProgramSolution");
             File.WriteAllText(SolutionFileName, res.ToString());
         }
-        /// <summary>
-        /// Возвращает новый проект, полученный после изменения процессора указанного проекта на другой
-        /// </summary>
-        //public static ControllerProgramSolution ChangeSolutionProcessor(ControllerProgramSolution solution, ProcessorType ProcessorType)
-        //{
-        //    solution.SaveSolutionBackup();
-        //    ControllerProgramSolution res = null;
-        //    if (solution is AT89C51ED2Solution)
-        //    {
-        //        if (ProcessorType == ProcessorType.MB90F347)
-        //            res = ControllerProgramSolution.ConvertAT89C51ED2toMB90F347(solution as AT89C51ED2Solution);
-        //        else
-        //            throw new Exception("Невозможно преобразовать проект под указанный тип процесора");
-        //    }
-        //    if (solution is MB90F347Solution)
-        //        throw new Exception("Невозможно преобразовать проект под указанный тип процесора");
-        //    return res;
-        //}
-        /// <summary>
-        /// Преобразует проект под процессор AT89C51ED2 в проект под процессор MB90F347 
-        /// </summary>
-        //private static MB90F347Solution ConvertAT89C51ED2toMB90F347(AT89C51ED2Solution solution)
-        //{
-        //    MB90F347Solution res = (MB90F347Solution)Create(typeof(MB90F347Solution));
-        //    res.SolutionFileName = solution.fileName;
-        //    res.programFileName = solution.programFileName;
-        //    res.pultFileName = solution.pultFileName;
-        //    //res.fbdFileName = solution.fbdFileName;
-        //    //new FbdEditor().Save(res.fbdFileName);
-        //    res.ActiveFileName = solution.ActiveFileName;
-
-        //    //res.OpenedFiles.Add(res.fbdFileName);
-        //    //foreach (string FileName in solution.OpenedFiles)
-        //    //{
-        //    //    res.OpenedFiles.Add(FileName);
-        //    //}
-
-        //    //res.Files.Add(res.fbdFileName);
-        //    foreach (string FileName in solution.Files)
-        //    {
-        //        if (Path.GetExtension(FileName) == ".plt")
-        //        {
-        //            RelkonPultModel model = RelkonPultModel.FromFile(FileName);
-        //            model.ChangePultType(res.PultParams.DefaultPultType);
-        //            model.Save(FileName);
-        //        }
-        //        string s = Path.GetFileName(FileName).ToLower();
-        //        if (!(s == "fc_u.c" || s == "flash.map" || s == "pult.asm" || s == "eepred2.asm"))
-        //            res.Files.Add(FileName);
-        //        else
-        //            res.OpenedFiles.Remove(FileName);
-        //    }
-            
-        //    foreach (MB90F347Solution.UartOptions uart in res.Uarts)
-        //    {
-        //        uart.Protocol = solution.Protocol;
-        //        uart.BaudRate = solution.BaudRate;
-        //        uart.ReadPassword = solution.ReadPassword;
-        //        uart.WritePassword = solution.WritePassword;
-        //    }
-        //    res.ControllerAddress = solution.ControllerAddress;
-        //    res.SearchedControllerAddress = solution.SearchedControllerAddress;
-        //    if(res.ProgramFileName!="")
-        //        res.ConvertProgram(res.programFileName);
-        //    res.vars.EmbeddedVars.Clear();
-        //    res.vars.EmbeddedVars.AddRange(solution.vars.EmbeddedVars);
-        //    return res;
-        //}
+        
         /// <summary>
         /// Создает экземпляр проект указанного типа
         /// </summary>
@@ -1184,12 +1630,7 @@ namespace Kontel.Relkon.Solutions
             ControllerProgramSolution res = null;
             switch (processor)
             {
-                //case ProcessorType.AT89C51ED2:
-                //    res = Create(typeof(AT89C51ED2Solution));
-                //    break;
-                //case ProcessorType.MB90F347:
-                //    res = Create(typeof(MB90F347Solution));
-                //    break;
+              
                 case ProcessorType.STM32F107:
                     res = Create(typeof(STM32F107Solution));
                     break;
@@ -1198,33 +1639,7 @@ namespace Kontel.Relkon.Solutions
             }
             return res;
         }
-        /// <summary>
-        /// Загружает данные проекта из rpj-файла 
-        /// </summary>
-        public static ControllerProgramSolution FromRelkon4PrjFile(string FileName)
-        {
-            XPathDocument xpDoc = new XPathDocument(FileName);
-            XPathNavigator xpNav = ((IXPathNavigable)xpDoc).CreateNavigator();
-            XPathNodeIterator xpList = xpNav.Select("/Project");
-            xpList.MoveNext();
-            string SolutionName = xpList.Current.GetAttribute("projectName", "");
-            ControllerProgramSolution res = ControllerProgramSolution.Create((int.Parse(xpList.Current.GetAttribute("processor", "")) == 2) ? ProcessorType.AT89C51ED2 : ProcessorType.MB90F347);
-            res.SolutionFileName = SolutionName;
-            xpList = xpNav.Select("/Project/var");
-            while (xpList.MoveNext())
-            {
-                string name = xpList.Current.GetAttribute("name", "");
-                if (res.vars.GetSystemVar(name) != null || res.vars.GetEmbeddedVar(name) != null)
-                    continue;
-                ControllerUserVar var = new ControllerUserVar();
-                var.Name = name;
-                var.Address = Convert.ToInt32(xpList.Current.GetAttribute("address", ""), 16);
-                var.Memory = (int.Parse(xpList.Current.GetAttribute("memoryType", "")) == 0) ? MemoryType.RAM : MemoryType.XRAM;
-                var.Size = int.Parse(xpList.Current.GetAttribute("size", ""));
-                res.vars.Add(var);
-            }
-            return res;
-        }
+       
 
         #endregion
 

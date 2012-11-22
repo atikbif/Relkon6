@@ -218,6 +218,7 @@ namespace Kontel.Relkon
             }
 
             this.deviceResponse = null;
+            this.canceled = false;
 
             if (devicePort != null)
             {
@@ -247,34 +248,23 @@ namespace Kontel.Relkon
             }
             else
             {
-                this.devicePort = null;
-                this.canceled = false;
+                this.devicePort = null;                
                 this.progress = 0;
                 this.portsCount = 0;
-                //if (this.SearchedPortName == null || this.SearchedPortName == "")
-                //{
-                    string[] portNames = SerialPort.GetPortNames();
-                    this.portsCount = portNames.Length;
-                    foreach (string portName in portNames)
+               
+                string[] portNames = SerialPort.GetPortNames();
+                this.portsCount = portNames.Length;
+                foreach (string portName in portNames)
+                {
+                    if (!this.requestingPorts.Keys.Contains(portName))
                     {
-                        if (!this.requestingPorts.Keys.Contains(portName))
-                        {
-                            WorkerEventHandler workerDelegate = new WorkerEventHandler(this.SearchDevice);
-                            AsyncOperation asyncOp = AsyncOperationManager.CreateOperation(portName);
-                            this.requestingPorts.Add(portName, asyncOp);
-                            workerDelegate.BeginInvoke(portName, asyncOp, null, null);
-                        }
+                        WorkerEventHandler workerDelegate = new WorkerEventHandler(this.SearchDevice);
+                        AsyncOperation asyncOp = AsyncOperationManager.CreateOperation(portName);
+                        this.requestingPorts.Add(portName, asyncOp);
+                        workerDelegate.BeginInvoke(portName, asyncOp, null, null);
                     }
-            }
-            //}
-            //else
-            //{
-            //    this.portsCount = 1;
-            //    WorkerEventHandler workerDelegate = new WorkerEventHandler(this.SearchDevice);
-            //    AsyncOperation asyncOp = AsyncOperationManager.CreateOperation(this.SearchedPortName);
-            //    this.requestingPorts.Add(this.SearchedPortName, asyncOp);
-            //    workerDelegate.BeginInvoke(this.SearchedPortName, asyncOp, null, null);
-            //}            
+                }
+            }            
         }
         /// <summary>
         /// Останавливает поиск устройства

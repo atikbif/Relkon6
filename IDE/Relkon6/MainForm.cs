@@ -50,7 +50,10 @@ namespace Kontel.Relkon
             if (FileName != null && File.Exists(FileName) && FileCanLoadedWOSolution(FileName))
                 this.LoadFile(FileName);
             this.DebuggerParametersList.DebuggertParametersUpdated += new EventHandler(DebuggerParametersList_DebuggertParametersUpdated);
-            this.DebuggerParametersList.ProcessorChanged += new EventHandler<EventArgs<ProcessorType>>(DebuggerParametersListProcessesorChanged);          
+            this.DebuggerParametersList.ProcessorChanged += new EventHandler<EventArgs<ProcessorType>>(DebuggerParametersListProcessesorChanged);
+
+            this.progressForm = new ProgressForm(this);
+            this.progressForm.FormClosing += new FormClosingEventHandler(progressForm_FormClosing);
         }
    
 
@@ -260,20 +263,7 @@ namespace Kontel.Relkon
             STM32F107Solution.CompilerDirectory = Program.RelkonDirectory + "\\arm-gcc\\bin";
             this.SolutionExplorer.ControllerProgramSolutionNodeCompileClick += new EventHandler<EventArgs<ControllerProgramSolution>>(SolutionExplorer_ControllerProgramSolutionNodeCompileClick);           
         }
-        /// <summary>
-        /// Возвращает процессор, выранный в списке процессоров
-        /// </summary>
-        //private ProcessorType SelectedProcessor
-        //{
-        //    get
-        //    {
-        //        return (ProcessorType)this.tsbProcessorType.SelectedItem;
-        //    }
-        //    set
-        //    {
-        //        this.tsbProcessorType.SelectedItem = value;
-        //    }
-        //}
+      
         /// <summary>
         /// Возвращает тип пульта, выбранный в списке панели инструментов
         /// </summary>
@@ -1333,20 +1323,13 @@ namespace Kontel.Relkon
                 debuggerEngine.Stop();
                 if (debuggerEngine.EngineStatus == DebuggerEngineStatus.Stopping)
                     Thread.Sleep(200);
-            }
-                    
-            this.progressForm = new ProgressForm(this);
-            this.progressForm.FormClosing += new FormClosingEventHandler(progressForm_FormClosing);
+            }                               
 
             this.solution.UploadingToDeviceCompleted += new AsyncCompletedEventHandler(solution_UploadingToDeviceCompleted);
             this.solution.UploadingToDeviceProgressChanged += new UploadMgrProgressChangedEventHandler(solution_UploadingToDeviceProgressChanged);
 
             ((STM32F107Solution)solution).UploadToDevice(onlyProgram, onlyParams, readEmbVars);
-
-            if (this.progressForm.IsDisposed)
-            {
-               
-            }
+            
 
             this.progressForm.ShowDialog();
          
@@ -2076,8 +2059,7 @@ namespace Kontel.Relkon
         {
             if (e.Error != null)
                 Utils.ErrorMessage(e.Error.Message);
-            if (this.progressForm != null)
-                this.progressForm.Close();
+            this.progressForm.Close();
             ((ControllerProgramSolution)sender).UploadingToDeviceCompleted -= new AsyncCompletedEventHandler(solution_UploadingToDeviceCompleted);
             ((ControllerProgramSolution)sender).UploadingToDeviceProgressChanged -= new UploadMgrProgressChangedEventHandler(solution_UploadingToDeviceProgressChanged);
 
@@ -2092,14 +2074,13 @@ namespace Kontel.Relkon
         }
 
         private void progressForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.progressForm.FormClosing -= new FormClosingEventHandler(progressForm_FormClosing);
+        {            
             if (this.solution != null)
             {
                 this.solution.StopUploading();
                 while (this.solution.IsBusy)
                     Application.DoEvents();
-            }
+            }          
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)

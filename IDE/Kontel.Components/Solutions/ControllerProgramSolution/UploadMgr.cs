@@ -16,7 +16,7 @@ namespace Kontel.Relkon.Solutions
     {
         private delegate void WorkerEventHandler(Relkon4SerialPort port);
 
-        private STM32F107Solution solution = null;        
+        private ControllerProgramSolution solution = null;        
         private bool uploadOnlyParams = false; // если true, то будут загружены только параметры проекта (без программы)
         private bool uploadOnlyProgram = false;
         private bool _readEmbVars = false;
@@ -40,7 +40,7 @@ namespace Kontel.Relkon.Solutions
         /// </summary>
         public event AsyncCompletedEventHandler UploadingCompleted;
 
-        public UploadMgr(STM32F107Solution solution)
+        public UploadMgr(ControllerProgramSolution solution)
             : base()
         {          
             this.solution = solution;
@@ -236,10 +236,7 @@ namespace Kontel.Relkon.Solutions
 
                     initpacket.createPacket();
 
-                    port.DirectPort.Write(initpacket.packet, 0, initpacket.packet.Length);
-
-                    waitforack(port.DirectPort);
-                    waitfor(port.DirectPort, 'C');
+                    SendPacket(port.DirectPort, initpacket);                 
 
                     MemoryStream ms2 = new MemoryStream(bytes);
                     byte[] temparr = new byte[1024];
@@ -266,11 +263,20 @@ namespace Kontel.Relkon.Solutions
                         sendPacket.isinit = false;
                         sendPacket.data = temparr;
                         sendPacket.createPacket();
-                        port.DirectPort.Write(sendPacket.packet, 0, sendPacket.packet.Length);
-                        waitforack(port.DirectPort);
+
+                        SendPacket(port.DirectPort, sendPacket);   
                     }
-                    sendEndOftransmision(port.DirectPort);
-                    waitforack(port.DirectPort);
+
+
+                    port.DirectPort.Write(new byte[] { (byte)0x04 }, 0, 1);
+                    YModemPacket endpacket = new YModemPacket();
+                    endpacket.isend = true;
+                    endpacket.longpacket = false;
+                    endpacket.packetnum = 0;
+                    endpacket.data = new byte[128];
+                    endpacket.createPacket();
+
+                    SendPacket(port.DirectPort, endpacket);   
 
                     Thread.Sleep(2000);
                     port.DiscardInBuffer();                    
@@ -407,57 +413,35 @@ namespace Kontel.Relkon.Solutions
                 this.userStateToLifeTime.Clear();
             }                       
         }
+       
 
-        private void sendEndOftransmision(SerialPort sp)
-        {
-            sp.Write(new byte[] { (byte)0x04 }, 0, 1);
-            YModemPacket endpacket = new YModemPacket();
-            endpacket.isend = true;
-            endpacket.longpacket = false;
-            endpacket.packetnum = 0;
-            endpacket.data = new byte[128];
-            endpacket.createPacket();
-            sp.Write(endpacket.packet, 0, endpacket.packet.Length);
-            return;
-        }
-
-        private void waitforack(SerialPort sp)
-        {
-            int c;
-            do
+        private void SendPacket(SerialPort sp, YModemPacket pack)
+        {              
+            for (int i = 0; i < 3; i++)
             {
-                for (int i = 0; i < 800; i++)
+                sp.Write(pack.packet, 0, pack.packet.Length);
+                for (int j = 0; j < 200; j++)
                 {
                     if (sp.BytesToRead > 0)
                         break;
                     Thread.Sleep(5);
                 }
+
+                int c = sp.BytesToRead;
                 if (sp.BytesToRead == 0)
-                    throw new Exception("Обмен данными с контроллером не возможен!");
+                    continue;
 
-                c = sp.ReadByte();
-            }
-            while (c != (byte)0x06);  
-        }
-
-        private void waitfor(SerialPort sp, char p)
-        {
-            int c;
-            do
-            {
-                for (int i = 0; i < 800; i++)
+                for (int j = 0; j < c; i++)
                 {
-                    if (sp.BytesToRead > 0)
-                        break;
-                    Thread.Sleep(5);
+                    int b = sp.ReadByte();
+                    if (b == 0x06)
+                        return;
                 }
-                if (sp.BytesToRead == 0)
-                    throw new Exception("Обмен данными с контроллером не возможен!");
-
-                c = sp.ReadChar();
             }
-            while (c != (int)p);           
-        }
+
+            throw new Exception("Не удаётся отправить пакет с данными.\nСвязь с контроллером прервана!");
+        }        
+    
 
         private void waitfor(SerialPort sp, string p)
         {

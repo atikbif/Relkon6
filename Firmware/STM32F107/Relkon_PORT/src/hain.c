@@ -102,7 +102,7 @@ unsigned short get_adc(unsigned char num)
 
 void adc_write_set(unsigned char num)
 {
-	if(num>5) num=0;
+	/*if(num>5) num=0;
 	i2c.direction = TRANSMIT;
 	i2c.send_amount=3;
 	i2c.tx[0] = 0x01;
@@ -117,7 +117,6 @@ void adc_write_set(unsigned char num)
 	}
 	i2c.tx[2] = 0xD3;
 	if((GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8)==Bit_SET) && (GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9)==Bit_SET))
-	//if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8) && GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9))
 	{
 		I2C_ITConfig(I2C1, I2C_IT_EVT | I2C_IT_BUF, ENABLE);
 		I2C_GenerateSTART(I2C1, ENABLE);
@@ -126,16 +125,15 @@ void adc_write_set(unsigned char num)
 	{
 		i2c.err++;
 		if(i2c.err>=1000){i2c.err=0;ext_adc_init();}
-	}
+	}*/
 }
 
 void get_ext_adc(void)
 {
-	i2c.direction = RECEIVE;
+/*	i2c.direction = RECEIVE;
 	i2c.tx[0]=0x00;
 	i2c.stat=0;
 	if((GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8)==Bit_SET) && (GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9)==Bit_SET))
-	//if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_8) && GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9))
 	{
 		I2C_ITConfig(I2C1, I2C_IT_EVT | I2C_IT_BUF , ENABLE);
 		I2C_GenerateSTART(I2C1, ENABLE);
@@ -144,12 +142,12 @@ void get_ext_adc(void)
 	{
 		i2c.err++;
 		if(i2c.err>=1000){i2c.err=0;ext_adc_init();}
-	}
+	}*/
 }
 
 void ext_adc_init(void)
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
+/*	GPIO_InitTypeDef GPIO_InitStructure;
 	I2C_InitTypeDef   I2C_InitStructure;
 	NVIC_InitTypeDef  NVIC_InitStructure;
 
@@ -190,7 +188,7 @@ void ext_adc_init(void)
 	I2C_InitStructure.I2C_Ack = I2C_Ack_Enable;
 	I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 	I2C_InitStructure.I2C_ClockSpeed = ClockSpeed;
-	I2C_Init(I2C1, &I2C_InitStructure);
+	I2C_Init(I2C1, &I2C_InitStructure);*/
 }
 
 void I2C1_EV_IRQHandler(void)

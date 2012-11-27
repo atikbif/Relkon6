@@ -1422,10 +1422,8 @@ namespace Kontel.Relkon.Solutions
             // Создание системных переменных, в случае необходимости
             if (res.vars.SystemVars.Count == 0 || (res.vars.SystemVars.GetVarByName("RX_0") == null))
             {
-                res.vars.SystemVars.Clear();
-                res.vars.EmbeddedVars.Clear();
-                res.vars.SystemVars.AddRange(res.GetSystemVarsList());
-                res.vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());              
+                res.vars.SystemVars.Clear();               
+                res.vars.SystemVars.AddRange(res.GetSystemVarsList());                 
             }
 
             if (res.vars.DispatcheringVars.Count == 0)

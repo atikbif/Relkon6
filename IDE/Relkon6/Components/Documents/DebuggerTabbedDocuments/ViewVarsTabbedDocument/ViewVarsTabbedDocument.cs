@@ -567,20 +567,27 @@ namespace Kontel.Relkon.Components.Documents
                     }
                     DataRow m_CurrentRow = (DataRow)this.Table.Rows[this.dgVars.CurrentRow.Index];
                     for (int i = 0; i < this.Table.Rows.Count; i++)
+                    {
                         if ((String)this.Table.Rows[i][0] == m_name)
                         {
                             m_CurrentRow = (DataRow)this.Table.Rows[i];
                             break;
                         }
-                    int m_CurentNode = 4;
-                    if (m_newVar is ControllerSystemVar) m_CurentNode = 0;
+                    }
+
+                    if (m_newVar is ControllerSystemVar)
+                        this.tvVars.Nodes["sys"].Nodes.Add(m_newVar.Name);
+                    else if (m_newVar is ControllerEmbeddedVar)
+                        this.tvVars.Nodes["emb"].Nodes.Add(m_newVar.Name);
+                    else if (m_newVar is ControllerIOVar)
+                        this.tvVars.Nodes["io"].Nodes.Add(m_newVar.Name);
+                    else if (m_newVar is ControllerUserVar)
+                        this.tvVars.Nodes["usr"].Nodes.Add(m_newVar.Name);
+                    else if (m_newVar is ControllerDispatcheringVar)
+                        this.tvVars.Nodes["dsp"].Nodes.Add(m_newVar.Name);
                     else
-                        if (m_newVar is ControllerIOVar) m_CurentNode = 2;
-                        else
-                            if (m_newVar is ControllerEmbeddedVar) m_CurentNode = 1;
-                            else m_CurentNode = 3;
-                    if (m_CurentNode > 3) return;
-                    AddVarToTree(m_CurentNode, m_newVar.Name);
+                        return;                                             
+                  
                     //Удаление переменной из списка опрашиваемых
                     if (_vars.ContainsKey((String)m_newVar.Name))
                     {
@@ -615,11 +622,13 @@ namespace Kontel.Relkon.Components.Documents
             if (_solution != null)
             {
                 this.tvVars.Nodes.Clear();
-                this.tvVars.Nodes.Add("Системные переменные");
-                this.tvVars.Nodes.Add("Заводские установки");
-                this.tvVars.Nodes.Add("Датчики ввода-вывода");
-                this.tvVars.Nodes.Add("Пользовательские переменные");
-                this.tvVars.Nodes.Add("Переменные диспетчеризации");
+                TreeNode tn = new TreeNode();
+
+                this.tvVars.Nodes.Add("sys", "Системные переменные");
+                this.tvVars.Nodes.Add("emb", "Заводские установки");               
+                this.tvVars.Nodes.Add("io", "Датчики ввода-вывода");
+                this.tvVars.Nodes.Add("usr", "Пользовательские переменные");
+                this.tvVars.Nodes.Add("dsp", "Переменные диспетчеризации");
                 this.tvVars.Nodes[0].ImageIndex = 0;
                 this.tvVars.Nodes[1].ImageIndex = 0;
                 this.tvVars.Nodes[2].ImageIndex = 0;
@@ -635,51 +644,36 @@ namespace Kontel.Relkon.Components.Documents
                 for (int i = 0; i < _solution.Vars.SystemVars.Count; i++)
                 {//Заполнение системных переменных
                     if (_solution.Vars.SystemVars[i].Address > 0)
-                    {
-                        AddVarToTree(0, _solution.Vars.SystemVars[i].Name);
-                    }
-                }
-
-                //sort(this.tvVars.Nodes[0]);
+                        this.tvVars.Nodes["sys"].Nodes.Add(_solution.Vars.SystemVars[i].Name);
+                }                
 
                 for (int i = 0; i < _solution.Vars.UserVars.Count; i++)
                 {//Заполнение пользовательских переменных
                     if (_solution.Vars.UserVars[i].Address > 0 && !(_solution.Vars.UserVars[i] is ControllerStructVar))
                     {
-                        AddVarToTree(3, _solution.Vars.UserVars[i].Name);
+                        this.tvVars.Nodes["usr"].Nodes.Add(_solution.Vars.UserVars[i].Name);
                     }
                 }
-                //sort(this.tvVars.Nodes[3]);
-               
+                              
                 for (int i = 0; i < _solution.Vars.EmbeddedVars.Count; i++)
                 {//Заполнение заводских установок
-                    if (_solution.Vars.EmbeddedVars[i].Address > 0)
-                    {
-                        AddVarToTree(1, _solution.Vars.EmbeddedVars[i].Name);
-                    }
+                    this.tvVars.Nodes["emb"].Nodes.Add(_solution.Vars.EmbeddedVars[i].Name);               
                 }
 
-                //sort(this.tvVars.Nodes[1]);
+              
     
                 for (int i = 0; i < _solution.Vars.IOVars.Count; i++)
                 {//Заполнение входов/выходов
                     if (_solution.Vars.IOVars[i].Address > 0)
-                    {
-                        AddVarToTree(2, _solution.Vars.IOVars[i].Name);
-                    }
+                        this.tvVars.Nodes["io"].Nodes.Add(_solution.Vars.IOVars[i].Name);                    
                 }
 
-                //sort(this.tvVars.Nodes[2]);
+                
 
                 for (int i = 0; i < _solution.Vars.DispatcheringVars.Count; i++)
-                {//Заполнение диспетчерских переменных
-                    if (_solution.Vars.DispatcheringVars[i].Address > 0)
-                    {
-                        AddVarToTree(4, _solution.Vars.DispatcheringVars[i].Name);
-                    }
-                }
-
-               // sort(this.tvVars.Nodes[4]);
+                {//Заполнение диспетчерских переменных                    
+                    this.tvVars.Nodes["dsp"].Nodes.Add(_solution.Vars.DispatcheringVars[i].Name);                    
+                }              
             }
 
             this.tvVars.Sort();
@@ -702,26 +696,7 @@ namespace Kontel.Relkon.Components.Documents
             }
             //Очистка таблицы опрашиваемых переменных
             this.Table.Clear();          
-        }       
-
-        /// <summary>
-        /// Добавление переменной в дерево
-        /// </summary>
-        private void AddVarToTree(int node, string name)
-        {
-            //int j = 0;
-            //Match m = Regex.Match(name, "(" + name[0] + ".*)(\\d+)(.*)");
-            //for (; j < this.tvVars.Nodes[node].Nodes.Count; j++)
-            //{
-            //    Match m1 = Regex.Match(this.tvVars.Nodes[node].Nodes[j].Text, "(" + name[0] + ".*)(\\d+)(.*)");
-            //    if (m1.Success && m.Groups[1].Value == m1.Groups[1].Value && m.Groups[2].Value == m1.Groups[2].Value && m.Groups[3].Value.CompareTo(m1.Groups[3].Value) == -1 ||m1.Success && m.Groups[1].Value == m1.Groups[1].Value && int.Parse(m.Groups[2].Value) < int.Parse(m1.Groups[2].Value)||!m1.Success && name.CompareTo(this.tvVars.Nodes[node].Nodes[j].Text) == -1)
-            //    {
-            //        break;
-            //    }
-            //}
-            //this.tvVars.Nodes[node].Nodes.Insert(j, name);
-            this.tvVars.Nodes[node].Nodes.Add(name);                       
-        }
+        }              
 
 
         /// <summary>

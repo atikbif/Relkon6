@@ -441,26 +441,25 @@ namespace Kontel.Relkon.Solutions
 
             throw new Exception("Не удаётся отправить пакет с данными.\nСвязь с контроллером прервана!");
         }        
-    
 
-        private void waitfor(SerialPort sp, string p)
+        private void waitfor(SerialPort sp, char p)
         {
-            string c;
+            int c;
             do
             {
-                //for (int i = 0; i < 4; i++)
-                //{
-                //    if (sp.BytesToRead != 0)
-                //        break;
-                //    Thread.Sleep(50);
-                //}
-                //if (this.canceled || sp.BytesToRead == 0)
-                //    throw new StopUploadinException();
+                for (int i = 0; i < 800; i++)
+                {
+                    if (sp.BytesToRead > 0)
+                        break;
+                    Thread.Sleep(5);
+                }
+                if (sp.BytesToRead == 0)
+                    throw new Exception("Обмен данными с контроллером не возможен!");
 
-                c = sp.ReadLine();
+                c = sp.ReadChar();
             }
-            while (!c.Contains(p));
-        } 
+            while (c != (int)p);           
+        }       
         
          /// <summary>
         /// Создает буфер настроек для записи в контроллер

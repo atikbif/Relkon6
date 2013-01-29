@@ -1001,14 +1001,24 @@ namespace Kontel.Relkon.Solutions
             ControllerSystemVar z = Vars.SystemVars.GetVarByName("Z40");
             if (z != null)
             {
-                m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + z.SystemName + "\\b");
+                m = Regex.Match(map, z.SystemName + @"\s+0x([0-9a-fA-F]{8})\s+");                
                 if (m.Groups[1].Success)
-                    z.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+                {
+                    adr = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+                    z.Address = adr;
+                    z = Vars.SystemVars.GetVarByName("led");
+                    z.Address = adr;
+                }
 
                 z = Vars.SystemVars.GetVarByName("Z50");
                 m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + z.SystemName + "\\b");
                 if (m.Groups[1].Success)
-                    z.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+                {
+                    adr = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16); ;
+                    z.Address = adr;
+                    z = Vars.SystemVars.GetVarByName("key");
+                    z.Address = adr;
+                }
 
 
                 m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys\b");
@@ -1017,14 +1027,22 @@ namespace Kontel.Relkon.Solutions
                     adr = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16) + 1024 + 256 + 5;
                     z = Vars.SystemVars.GetVarByName("Z30");
                     z.Address = adr;
+                    z = Vars.SystemVars.GetVarByName("st1");
+                    z.Address = adr;
                     adr += z.Size;
                     z = Vars.SystemVars.GetVarByName("Z31");
+                    z.Address = adr;
+                    z = Vars.SystemVars.GetVarByName("st2");
                     z.Address = adr;
                     adr += z.Size;
                     z = Vars.SystemVars.GetVarByName("Z32");
                     z.Address = adr;
+                    z = Vars.SystemVars.GetVarByName("st3");
+                    z.Address = adr;
                     adr += z.Size;
                     z = Vars.SystemVars.GetVarByName("Z33");
+                    z.Address = adr;
+                    z = Vars.SystemVars.GetVarByName("st4");
                     z.Address = adr;
                 }
             }
@@ -1042,6 +1060,16 @@ namespace Kontel.Relkon.Solutions
                 if (m.Success)
                     v.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
             }
+
+            ControllerSystemVar v2 = Vars.SystemVars.GetVarByName("RX");
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + v2.SystemName + "\\b");
+            if (m.Success)
+                v2.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
+
+            v2 = Vars.SystemVars.GetVarByName("TX");
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+" + v2.SystemName + "\\b");
+            if (m.Success)
+                v2.Address = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
 
 
             LoadEmbeddedVarsFromFlashMap(map);
@@ -1111,24 +1139,38 @@ namespace Kontel.Relkon.Solutions
         public List<Kontel.Relkon.Classes.ControllerSystemVar> GetSystemVarsList()
         {
             List<ControllerSystemVar> res = new List<ControllerSystemVar>();
-            res.Add(new ControllerSystemVar() { Name = "Z30", SystemName = "Z30", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z31", SystemName = "Z31", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z32", SystemName = "Z32", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z33", SystemName = "Z33", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z40", SystemName = "led", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "Z50", SystemName = "key", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "HOUR", SystemName = "_Sys4x_Hour", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "MIN", SystemName = "_Sys4x_Minute", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "SEC", SystemName = "_Sys4x_Second", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "DATE", SystemName = "_Sys4x_Date", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "MONTH", SystemName = "_Sys4x_Month", Memory = MemoryType.XRAM, Size = 1 });
-            res.Add(new ControllerSystemVar() { Name = "YEAR", SystemName = "_Sys4x_Year", Memory = MemoryType.XRAM, Size = 1 });
+
+            res.Add(new ControllerSystemVar() { Name = "Z30", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z31", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z32", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z33", Memory = MemoryType.XRAM, Size = 1 });
+
+            res.Add(new ControllerSystemVar() { Name = "st1", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "st2", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "st3", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "st4", Memory = MemoryType.XRAM, Size = 1 });
+
+            res.Add(new ControllerSystemVar() { Name = "Z40", SystemName = ".bss.led", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "Z50", SystemName = "_SysKey", Memory = MemoryType.XRAM, Size = 1 });
+
+            res.Add(new ControllerSystemVar() { Name = "led", SystemName = ".bss.led", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "key", SystemName = "_SysKey", Memory = MemoryType.XRAM, Size = 1 });
+
+            res.Add(new ControllerSystemVar() { Name = "HOUR", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "MIN", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "SEC", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "DATE", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "MONTH", Memory = MemoryType.XRAM, Size = 1 });
+            res.Add(new ControllerSystemVar() { Name = "YEAR", Memory = MemoryType.XRAM, Size = 1 });
 
             for (int i = 1; i < 9; i++)
             {
                 res.Add(new ControllerSystemVar() { Name = "TX_" + i, SystemName = "TX_" + i, Memory = MemoryType.XRAM, Size = 64, Array = true });
                 res.Add(new ControllerSystemVar() { Name = "RX_" + i, SystemName = "RX_" + i, Memory = MemoryType.XRAM, Size = 64, Array = true });
             }
+
+            res.Add(new ControllerSystemVar() { Name = "TX", SystemName = "TX", Memory = MemoryType.XRAM, Size = 64, Array = true });
+            res.Add(new ControllerSystemVar() { Name = "RX", SystemName = "RX", Memory = MemoryType.XRAM, Size = 64, Array = true });
 
             return res;
         }

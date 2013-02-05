@@ -582,9 +582,7 @@ namespace Kontel.Relkon.Components.Documents
                     else if (m_newVar is ControllerIOVar)
                         this.tvVars.Nodes["io"].Nodes.Add(m_newVar.Name);
                     else if (m_newVar is ControllerUserVar)
-                        this.tvVars.Nodes["usr"].Nodes.Add(m_newVar.Name);
-                    else if (m_newVar is ControllerDispatcheringVar)
-                        this.tvVars.Nodes["dsp"].Nodes.Add(m_newVar.Name);
+                        this.tvVars.Nodes["usr"].Nodes.Add(m_newVar.Name);                  
                     else
                         return;                                             
                   
@@ -628,17 +626,17 @@ namespace Kontel.Relkon.Components.Documents
                 this.tvVars.Nodes.Add("emb", "Заводские установки");               
                 this.tvVars.Nodes.Add("io", "Датчики ввода-вывода");
                 this.tvVars.Nodes.Add("usr", "Пользовательские переменные");
-                this.tvVars.Nodes.Add("dsp", "Переменные диспетчеризации");
+                
                 this.tvVars.Nodes[0].ImageIndex = 0;
                 this.tvVars.Nodes[1].ImageIndex = 0;
                 this.tvVars.Nodes[2].ImageIndex = 0;
                 this.tvVars.Nodes[3].ImageIndex = 0;
-                this.tvVars.Nodes[4].ImageIndex = 0;
+              
                 this.tvVars.Nodes[0].SelectedImageIndex = 0;
                 this.tvVars.Nodes[1].SelectedImageIndex = 0;
                 this.tvVars.Nodes[2].SelectedImageIndex = 0;
                 this.tvVars.Nodes[3].SelectedImageIndex = 0;
-                this.tvVars.Nodes[4].SelectedImageIndex = 0;               
+                     
                
                 //Заполнения дерева переменных
                 for (int i = 0; i < _solution.Vars.SystemVars.Count; i++)
@@ -666,14 +664,7 @@ namespace Kontel.Relkon.Components.Documents
                 {//Заполнение входов/выходов
                     if (_solution.Vars.IOVars[i].Address > 0)
                         this.tvVars.Nodes["io"].Nodes.Add(_solution.Vars.IOVars[i].Name);                    
-                }
-
-                
-
-                for (int i = 0; i < _solution.Vars.DispatcheringVars.Count; i++)
-                {//Заполнение диспетчерских переменных                    
-                    this.tvVars.Nodes["dsp"].Nodes.Add(_solution.Vars.DispatcheringVars[i].Name);                    
-                }              
+                }                                    
             }
 
             this.tvVars.Sort();

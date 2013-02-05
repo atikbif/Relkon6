@@ -943,10 +943,7 @@ namespace Kontel.Relkon.Components.Documents
             {
                 this.ddlVarNames.AutoCompleteCustomSource.Add(var.Name);
             }
-            for (int i = 0; i < Vars.DispatcheringVars.Count; i++)
-            {
-                this.ddlVarNames.AutoCompleteCustomSource.Add(Vars.DispatcheringVars[i].Name);
-            }        
+            
             
             for (int i = 0; i < Vars.UserVars.Count; i++)
             {                

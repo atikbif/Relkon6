@@ -74,7 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\CompilationError.cs" />
-    <Compile Include="Classes\ControllerDispatcheringVar.cs" />
     <Compile Include="Classes\ControllerEmbeddedVar.cs" />
     <Compile Include="Classes\ControllerEmbeddedVarCollection.cs" />
     <Compile Include="Classes\ControllerIOVar.cs" />

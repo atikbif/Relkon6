@@ -977,6 +977,9 @@ namespace Kontel.Relkon.Solutions
                     this.CompilationParams.Errors.Add(new CompilationError("Не удалость установить адрес переменной " + var.Name, this.ProgramFileName, -1, true));
             }
 
+            Vars.SystemVars.Clear();
+            Vars.SystemVars.AddRange(this.GetSystemVarsList());
+
             m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+times");
             int adr = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
             ControllerSystemVar iov = Vars.SystemVars.GetVarByName("SEC");
@@ -1073,7 +1076,9 @@ namespace Kontel.Relkon.Solutions
 
 
             LoadEmbeddedVarsFromFlashMap(map);
-            LoadProcessAddressesFromFlashMap(map);
+            LoadProcessAddressesFromFlashMap(map);           
+               
+
         }
 
         public void LoadEmbeddedVarsFromFlashMap(string Map)
@@ -1172,6 +1177,20 @@ namespace Kontel.Relkon.Solutions
             res.Add(new ControllerSystemVar() { Name = "TX", SystemName = "TX", Memory = MemoryType.XRAM, Size = 64, Array = true });
             res.Add(new ControllerSystemVar() { Name = "RX", SystemName = "RX", Memory = MemoryType.XRAM, Size = 64, Array = true });
 
+            int address = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 64; j++)
+                {
+                    res.Add(new ControllerSystemVar() { Name = "mem" + (i * 64 + j), Size = 1, Memory = MemoryType.RAM, Address = address });
+                    if (j % 2 == 0)
+                        res.Add(new ControllerSystemVar() { Name = "mem" + (i * 64 + j) + "i", Size = 2, Memory = MemoryType.RAM, Address = address });
+                    if (j % 4 == 0)
+                        res.Add(new ControllerSystemVar() { Name = "mem" + (i * 64 + j) + "l", Size = 4, Memory = MemoryType.RAM, Address = address });
+                    address++;
+                }
+            }
+
             return res;
         }
 
@@ -1209,27 +1228,7 @@ namespace Kontel.Relkon.Solutions
             }
             return res;
         }
-
-        public List<ControllerDispatcheringVar> GetDispatcheringVarsList()
-        {
-            List<ControllerDispatcheringVar> res = new List<ControllerDispatcheringVar>();
-
-            int address = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 64; j++)
-                {
-                    res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j), Size = 1, Memory = MemoryType.RAM, Address = address });
-                    if (j % 2 == 0)
-                        res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j) + "i", Size = 2, Memory = MemoryType.RAM, Address = address });
-                    if (j % 4 == 0)
-                        res.Add(new ControllerDispatcheringVar() { Name = "mem" + (i * 64 + j) + "l", Size = 4, Memory = MemoryType.RAM, Address = address });
-                    address++;
-                }
-            }
-
-            return res;
-        }
+       
         
         /// <summary>
         /// Очищает список перменных, полученных из кода прогаммы
@@ -1385,10 +1384,7 @@ namespace Kontel.Relkon.Solutions
             res.Vars.SystemVars.Clear();
             res.Vars.SystemVars.AddRange(res.GetSystemVarsList());
             res.Vars.EmbeddedVars.Clear();
-            res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());
-
-            res.Vars.DispatcheringVars.Clear();
-            res.Vars.DispatcheringVars.AddRange(res.GetDispatcheringVarsList());
+            res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());      
 
             File.WriteAllBytes(res.programFileName, Kontel.Components.Properties.Resources.ControllerProgramTemplate);
             using (RelkonPultModel pm = new RelkonPultModel(res.pultParams.DefaultPultType))
@@ -1420,9 +1416,7 @@ namespace Kontel.Relkon.Solutions
             res.Vars.SystemVars.Clear();
             res.Vars.SystemVars.AddRange(res.GetSystemVarsList());
             res.Vars.EmbeddedVars.Clear();
-            res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());
-            res.Vars.DispatcheringVars.Clear();
-            res.Vars.DispatcheringVars.AddRange(res.GetDispatcheringVarsList());
+            res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());        
             return res;
         }
         /// <summary>
@@ -1458,25 +1452,7 @@ namespace Kontel.Relkon.Solutions
             // Установка путей к файлам
             res.SolutionFileName = SolutionFileName;
             if (Path.GetDirectoryName(res.programFileName) != Path.GetDirectoryName(SolutionFileName))
-                res.ChangeFilesPath(Path.GetDirectoryName(SolutionFileName));
-            
-
-            // Создание системных переменных, в случае необходимости
-            if (res.vars.SystemVars.Count == 0 || (res.vars.SystemVars.GetVarByName("RX_0") == null))
-            {
-                res.vars.SystemVars.Clear();               
-                res.vars.SystemVars.AddRange(res.GetSystemVarsList());                 
-            }
-
-            if (res.vars.DispatcheringVars.Count == 0)
-            {
-                res.Vars.DispatcheringVars.AddRange(res.GetDispatcheringVarsList());              
-            }
-
-            var yearVar = res.vars.SystemVars.GetVarByName("YEAR");
-
-            if (yearVar == null)
-                res.vars.SystemVars.Add(new ControllerSystemVar() { Name = "YEAR", SystemName = "_Sys4x_Year", Memory = MemoryType.XRAM, Size = 1 });          
+                res.ChangeFilesPath(Path.GetDirectoryName(SolutionFileName));                            
 
             if(is50)
                 res.ComputeMultibyteEmbeddedVarsValues();
@@ -1656,10 +1632,10 @@ namespace Kontel.Relkon.Solutions
                 res = new STM32F107Solution();
             else
                 throw new Exception("Проекты типа " + type + " не поддеживаются");
-            res.Vars.SystemVars.AddRange(res.GetSystemVarsList());
+           
             res.Vars.IOVars.AddRange(res.GetDefaultIOVarsList());
-            res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());
-            res.Vars.DispatcheringVars.AddRange(res.GetDispatcheringVarsList());
+            res.Vars.EmbeddedVars.AddRange(res.GetEmbeddedVarsList());    
+    
             return res;
         }
         /// <summary>

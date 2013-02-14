@@ -13,7 +13,6 @@ namespace Kontel.Relkon.Classes
     [XmlInclude(typeof(ControllerSystemVar)),
      XmlInclude(typeof(ControllerIOVar)),
      XmlInclude(typeof(ControllerEmbeddedVar)),
-     XmlInclude(typeof(ControllerDispatcheringVar)),
      XmlInclude(typeof(ControllerUserVar)),    
      XmlInclude(typeof(ControllerStructVar))]        
     public abstract class ControllerVar
@@ -27,7 +26,7 @@ namespace Kontel.Relkon.Classes
         /// јдрес, по кототрому располагаетс€ переменна€
         /// </summary>
         [XmlAttribute]
-        public int Address = -1;
+        public int Address = 0;
         /// <summary>
         /// –азмер переменной в байтах (по-умолчанию - 1)
         /// </summary>

@@ -17,6 +17,7 @@ static const char cmti[] = "+CMTI:";
 
 extern volatile unsigned int canal_rx_cnt;
 extern volatile unsigned int canal2_rx_cnt;
+extern unsigned char mstr1,mstr2;
 
 const unsigned char ascii_code[16]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
@@ -341,8 +342,8 @@ void clear_buf(unsigned char can_num)
     for(tmp=0;tmp<BUF_SIZE;tmp++) rx_buf[tmp]=0;
     switch(can_num)
     {
-    	case 1:canal2_rx_cnt=0;break;
-    	case 2:canal_rx_cnt=0;break;
+    	case 1:mstr2=0;canal2_rx_cnt=0;break;
+    	case 2:mstr1=0;canal_rx_cnt=0;break;
     }
 }
 

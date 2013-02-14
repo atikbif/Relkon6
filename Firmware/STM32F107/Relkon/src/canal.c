@@ -139,9 +139,9 @@ void send(unsigned char can_num,unsigned char* ptr, unsigned short cnt)
     for(tmp=0;tmp<cnt;tmp++) tx_buf[tmp]=ptr[tmp];
     switch(can_num)
     {
-    	case 1:write_canal2(cnt);canal2_rx_cnt=0;break;
-    	case 2:write_canal(cnt);canal_rx_cnt=0;break;
-    	case 3:write_module(cnt);rx_mod_cnt=0;break;
+    	case 1:canal2_rx_cnt=0;write_canal2(cnt);break;
+    	case 2:canal_rx_cnt=0;write_canal(cnt);break;
+    	case 3:rx_mod_cnt=0;write_module(cnt);break;
     }
 }
 

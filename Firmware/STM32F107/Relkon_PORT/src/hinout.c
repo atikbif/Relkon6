@@ -14,6 +14,9 @@ extern volatile unsigned char Tx_end;
 extern volatile unsigned short rx_mod_cnt;
 extern volatile unsigned char emu_mode;
 
+extern volatile unsigned char prot_enable;
+extern volatile unsigned char EXCHANGE;
+
 extern const unsigned char mod_table[];
 
 static unsigned char get_input(void);
@@ -327,7 +330,7 @@ void USART1_IRQHandler(void)
         GPIO_WriteBit(GPIOE, GPIO_Pin_0, Bit_RESET);
         USART_ITConfig(USART1, USART_IT_TC, DISABLE);
         USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-        Tx_end++;TIM4->CNT=0;rx_mod_cnt=0;
+        if((prot_enable==0)||(EXCHANGE)) {Tx_end++;TIM4->CNT=0;rx_mod_cnt=0;}
      }
    }
    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)

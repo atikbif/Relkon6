@@ -1424,7 +1424,9 @@ namespace Kontel.Relkon.Solutions
         /// </summary>
         public static ControllerProgramSolution FromFile(string SolutionFileName)
         {
-            string s = File.ReadAllText(SolutionFileName, Encoding.Default);
+            string s = File.ReadAllText(SolutionFileName, Encoding.Default);            
+
+
             bool is50 = false; // показывает, является ли файл проекта в фомате 5.0
             ControllerProgramSolution res = null;
             if (s.Contains("<RelkonSolution"))
@@ -1441,6 +1443,18 @@ namespace Kontel.Relkon.Solutions
             }
             else
             {
+                if (s.Contains("ControllerDispatcheringVar"))
+                {
+                    List<string> newFile = new List<string>();
+                    string[] strs = File.ReadAllLines(SolutionFileName, Encoding.Default);
+                    for (int i = 0; i < strs.Length; i++)
+                        if (!strs[i].Contains("ControllerDispatcheringVar"))
+                            newFile.Add(strs[i]);
+
+                    File.WriteAllLines(SolutionFileName, newFile.ToArray());
+                }
+            
+
                 // Файл в текущей версии
                 // Загузка проекта из файла
                 XmlSerializer xs = new XmlSerializer(typeof(ControllerProgramSolution));

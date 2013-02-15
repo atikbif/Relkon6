@@ -168,7 +168,18 @@ namespace Kontel.Relkon.Solutions
 
                 port.Open();
 
-                byte[] req = port.SendRequest(this.deviceSearcher.Request, this.deviceSearcher.Pattern.Length, 2);
+                byte[] req;
+
+                req = port.SendRequest(new byte[] { 0x00, 0xA2 }, 16, 2);
+                if (req != null)
+                {
+                    string s = Encoding.ASCII.GetString(req);
+                    if (s.Substring(9, 4) != "PROG")
+                        throw new Exception("Данный порт не предназначен ддля программирования!");
+                }
+
+
+                req = port.SendRequest(this.deviceSearcher.Request, this.deviceSearcher.Pattern.Length, 2);
                 if (req != null)
                 {
                     string s = Encoding.ASCII.GetString(req);
@@ -197,10 +208,9 @@ namespace Kontel.Relkon.Solutions
                     port.Protocol = ProtocolType.RC51BIN;
                     port.Open();
 
-                    port.DirectPort.Write("1");
-                    //Thread.Sleep(500);            
+                    port.DirectPort.Write("1");                  
                     waitfor(port.DirectPort, 'C');
-                  
+                
                     Stream fs = new FileStream(solution.DirectoryName + "\\" + solution.Name + ".bin", FileMode.Open);
                     BinaryReader br = new BinaryReader(fs);
                     MemoryStream ms = new MemoryStream();
@@ -236,7 +246,10 @@ namespace Kontel.Relkon.Solutions
 
                     initpacket.createPacket();
 
-                    SendPacket(port.DirectPort, initpacket);                 
+                    port.DiscardInBuffer();
+                    SendPacket(port.DirectPort, initpacket);
+                    waitfor(port.DirectPort, 'C');
+                    //port.DiscardInBuffer();
 
                     MemoryStream ms2 = new MemoryStream(bytes);
                     byte[] temparr = new byte[1024];
@@ -420,23 +433,13 @@ namespace Kontel.Relkon.Solutions
             for (int i = 0; i < 3; i++)
             {
                 sp.Write(pack.packet, 0, pack.packet.Length);
-                for (int j = 0; j < 200; j++)
+                for (int j = 0; j < 10; j++)
                 {
-                    if (sp.BytesToRead > 0)
-                        break;
-                    Thread.Sleep(5);
-                }
-
-                int c = sp.BytesToRead;
-                if (sp.BytesToRead == 0)
-                    continue;
-
-                for (int j = 0; j < c; i++)
-                {
-                    int b = sp.ReadByte();
+                    int b = sp.ReadByte();                   
                     if (b == 0x06)
                         return;
-                }
+                    Thread.Sleep(50);
+                }                
             }
 
             throw new Exception("Не удаётся отправить пакет с данными.\nСвязь с контроллером прервана!");

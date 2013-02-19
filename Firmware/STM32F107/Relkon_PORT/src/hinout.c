@@ -330,7 +330,7 @@ void USART1_IRQHandler(void)
         GPIO_WriteBit(GPIOE, GPIO_Pin_0, Bit_RESET);
         USART_ITConfig(USART1, USART_IT_TC, DISABLE);
         USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-        if((prot_enable==0)||(EXCHANGE)) {Tx_end++;TIM4->CNT=0;rx_mod_cnt=0;}
+        if(((mod_table[0])&&(emu_mode!=2))||(EXCHANGE)) {Tx_end++;TIM4->CNT=0;rx_mod_cnt=0;}
      }
    }
    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)

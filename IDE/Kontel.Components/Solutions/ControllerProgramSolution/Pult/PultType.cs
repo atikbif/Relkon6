@@ -108,7 +108,7 @@ namespace Kontel.Relkon.Solutions
         {
             this.rowCount = 4;
             this.symbolsInRow = 20;
-            this.caption = "ос-132";
+            this.caption = "ос-132ы";
         }
     }
 

@@ -547,7 +547,8 @@ namespace Kontel.Relkon.Solutions
             Array.Reverse(macBytes);
             res.AddRange(macBytes);
 
-            res.Add((byte)0); //0x7F56 – год (от 0 до 99)
+
+            res.Add((byte)(DateTime.Now.Year - 2000)); //0x7F56 – год (от 0 до 99)
 
             //0x7F57 – разрешение коммуникационного канала вместо пульта
             //(0x31 – канал, любое другое значение - пульт)

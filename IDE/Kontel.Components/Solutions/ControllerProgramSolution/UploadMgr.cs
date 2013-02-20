@@ -175,7 +175,7 @@ namespace Kontel.Relkon.Solutions
                 {
                     string s = Encoding.ASCII.GetString(req);
                     if (s.Substring(9, 4) != "PROG")
-                        throw new Exception("Данный порт не предназначен ддля программирования!");
+                        throw new Exception("Данный порт не предназначен для программирования!");
                 }
 
 

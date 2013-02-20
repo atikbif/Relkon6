@@ -462,33 +462,16 @@ namespace Kontel.Relkon.Components.Documents
 
             //Добавление прочитанного значения
             String m_StrVar = this._EditCellText;
-            if (_vars[m_row.ItemArray[0].ToString()] is ControllerUserVar && ((ControllerUserVar)_vars[m_row.ItemArray[0].ToString()]).Array)
-            {//обработка значения если это массив
-                //switch (codingType)
-                //{
-                //    case 16:
-                //        String m_Str = "";
-                //        String m_Byte = "";
-                //        foreach (Byte m_byte in Buffer)
-                //        {
-                //            m_Byte = Convert.ToString(m_byte, codingType);
-                //            switch (m_Byte.Length)
-                //            {
-                //                case 0: m_Byte = "00" + m_Byte; break;
-                //                case 1: m_Byte = "0" + m_Byte; break;
-                //                default: break;
-                //            }
-                //            m_Str += m_Byte + " ";
-                //        }
-                //        m_StrVar = m_Str.ToUpper();
-                //        break;
-                //    default:
-                //        String m_Str1 = "";
-                //        foreach (Byte m_byte in Buffer)
-                //            m_Str1 += Convert.ToString(m_byte, codingType) + " ";
-                //        m_StrVar = m_Str1.ToUpper();
-                //        break;
-                //}
+            String varName = m_row.ItemArray[0].ToString();
+            bool array = false;
+
+            array = _vars[varName] is ControllerUserVar && ((ControllerUserVar)_vars[varName]).Array;
+
+            if (!array)
+                array = _vars[varName] is ControllerSystemVar && ((ControllerSystemVar)_vars[varName]).Array;
+
+            if (array)
+            {//обработка значения если это массив              
                 switch (codingType)
                 {
                     case 16:
@@ -641,13 +624,13 @@ namespace Kontel.Relkon.Components.Documents
                 //Заполнения дерева переменных
                 for (int i = 0; i < _solution.Vars.SystemVars.Count; i++)
                 {//Заполнение системных переменных
-                    if (_solution.Vars.SystemVars[i].Address > 0)
+                    if (_solution.Vars.SystemVars[i].Address > -1)
                         this.tvVars.Nodes["sys"].Nodes.Add(_solution.Vars.SystemVars[i].Name);
                 }                
 
                 for (int i = 0; i < _solution.Vars.UserVars.Count; i++)
                 {//Заполнение пользовательских переменных
-                    if (_solution.Vars.UserVars[i].Address > 0 && !(_solution.Vars.UserVars[i] is ControllerStructVar))
+                    if (_solution.Vars.UserVars[i].Address > -1 && !(_solution.Vars.UserVars[i] is ControllerStructVar))
                     {
                         this.tvVars.Nodes["usr"].Nodes.Add(_solution.Vars.UserVars[i].Name);
                     }
@@ -662,7 +645,7 @@ namespace Kontel.Relkon.Components.Documents
     
                 for (int i = 0; i < _solution.Vars.IOVars.Count; i++)
                 {//Заполнение входов/выходов
-                    if (_solution.Vars.IOVars[i].Address > 0)
+                    if (_solution.Vars.IOVars[i].Address > -1)
                         this.tvVars.Nodes["io"].Nodes.Add(_solution.Vars.IOVars[i].Name);                    
                 }                                    
             }

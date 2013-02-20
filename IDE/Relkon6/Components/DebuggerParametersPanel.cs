@@ -194,15 +194,15 @@ namespace Kontel.Relkon.Components
             this.progressForm.FormClosing += new FormClosingEventHandler(this.progressForm_FormClosing);
             this.progressForm.Message = "Поиск контроллера...";
 
-            if (this.DebuggerEngine.Parameters.ProcessorType == ProcessorType.STM32F107)
-                this.controllerSearcher = new SerialPortDeviceSearcher(new byte[] { 0x00, 0xA0 }, "Relkon");
-            else
-                this.controllerSearcher = new SerialPortDeviceSearcher(new byte[] { 0x01, 0x20 }, "relkon");
 
+            this.controllerSearcher = new SerialPortDeviceSearcher(null, null);
+            this.controllerSearcher.Pattern = "Relkon 6";
+            this.controllerSearcher.BootPattern = "boot";
+            this.controllerSearcher.Request = new byte[] { 0x00, 0xA0 };
+           
             this.controllerSearcher.DeviceSearchCompleted += new DeviceSearchCompletedEventHandler(controllerSearcher_DeviceSearchCompleted);
             this.controllerSearcher.ProgressChanged += new ProgressChangedEventHandler(controllerSearcher_ProgressChanged);
-
-            this.controllerSearcher.Request[0] = (byte)this.nudControllerAddress.Value;
+          
             this.controllerSearcher.StartSearch();
             this.progressForm.ShowDialog();
         }
@@ -223,21 +223,21 @@ namespace Kontel.Relkon.Components
                 //Получение строки из массива байт
                 string response = Encoding.Default.GetString(e.DeviceResponse).ToLower();
 
-                if (response.Contains("relkon3"))
-                    this.DebuggerEngine.Parameters.ProcessorType = ProcessorType.AT89C51ED2;
-                else if (response.Contains("relkon 6.0"))
+               
+                if (response.Contains("relkon 6"))
                 {
                     this.DebuggerEngine.Parameters.ProcessorType = ProcessorType.STM32F107;
                     this.nudControllerAddress.Value = e.DeviceResponse[0];
+
+                    this.ddlPortName.SelectedItem = e.Port.PortName;
+                    this.ddlBaudRate.SelectedItem = e.Port.BaudRate.ToString();
+                    this.ddlProtocol.SelectedItem = e.Port.Protocol;
                 }
                 else
                 {
-                    this.DebuggerEngine.Parameters.ProcessorType = ProcessorType.MB90F347;
-                    this.nudControllerAddress.Value = e.DeviceResponse[0];
+                    Utils.WarningMessage("Контроллер находится в режиме загрузчика.\n Работка отладчика не возможна.");
                 }
-                this.ddlPortName.SelectedItem = e.Port.PortName;
-                this.ddlBaudRate.SelectedItem = e.Port.BaudRate.ToString();
-                this.ddlProtocol.SelectedItem = e.Port.Protocol;
+              
             }
             this.progressForm.Close();
         }

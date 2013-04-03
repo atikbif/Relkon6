@@ -1182,11 +1182,11 @@ namespace Kontel.Relkon.Solutions
             {
                 for (int j = 0; j < 64; j++)
                 {
-                    res.Add(new ControllerSystemVar() { Name = "mem" + (i * 64 + j), Size = 1, Memory = MemoryType.RAM, Address = address });
+                    res.Add(new ControllerSystemVar() { Name = "mm" + (i * 64 + j), Size = 1, Memory = MemoryType.RAM, Address = address });
                     if (j % 2 == 0)
-                        res.Add(new ControllerSystemVar() { Name = "mem" + (i * 64 + j) + "i", Size = 2, Memory = MemoryType.RAM, Address = address });
+                        res.Add(new ControllerSystemVar() { Name = "mm" + (i * 64 + j) + "i", Size = 2, Memory = MemoryType.RAM, Address = address });
                     if (j % 4 == 0)
-                        res.Add(new ControllerSystemVar() { Name = "mem" + (i * 64 + j) + "l", Size = 4, Memory = MemoryType.RAM, Address = address });
+                        res.Add(new ControllerSystemVar() { Name = "mm" + (i * 64 + j) + "l", Size = 4, Memory = MemoryType.RAM, Address = address });
                     address++;
                 }
             }

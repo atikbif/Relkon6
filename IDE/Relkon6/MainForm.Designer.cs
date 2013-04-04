@@ -156,8 +156,7 @@ namespace Kontel.Relkon
             this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.tsbNewProject = new System.Windows.Forms.ToolStripSplitButton();
             this.tsbNewRelkonProject = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
-            this.конвертироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();          
             this.tsbOpen = new System.Windows.Forms.ToolStripButton();
             this.tsbSave = new System.Windows.Forms.ToolStripButton();
             this.tsbSaveAll = new System.Windows.Forms.ToolStripButton();
@@ -477,9 +476,7 @@ namespace Kontel.Relkon
             // miNewProject
             // 
             this.miNewProject.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.проектRelkonToolStripMenuItem,
-            this.toolStripSeparator21,
-            this.проектЌаќснове—уществующих‘айловToolStripMenuItem});
+            this.проектRelkonToolStripMenuItem});
             this.miNewProject.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miNewProject.Name = "miNewProject";
             this.miNewProject.Size = new System.Drawing.Size(271, 22);
@@ -493,19 +490,7 @@ namespace Kontel.Relkon
             this.проектRelkonToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.проектRelkonToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.проектRelkonToolStripMenuItem.Text = "ѕроект Relkon (STM32)";
-            this.проектRelkonToolStripMenuItem.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);
-            // 
-            // toolStripSeparator21
-            // 
-            this.toolStripSeparator21.Name = "toolStripSeparator21";
-            this.toolStripSeparator21.Size = new System.Drawing.Size(236, 6);
-            // 
-            // проектЌаќснове—уществующих‘айловToolStripMenuItem
-            // 
-            this.проектЌаќснове—уществующих‘айловToolStripMenuItem.Name = "проектЌаќснове—уществующих‘айловToolStripMenuItem";
-            this.проектЌаќснове—уществующих‘айловToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            this.проектЌаќснове—уществующих‘айловToolStripMenuItem.Text = " онвертировать...";
-            this.проектЌаќснове—уществующих‘айловToolStripMenuItem.Click += new System.EventHandler(this.проектЌаќснове—уществующих‘айловToolStripMenuItem_Click);
+            this.проектRelkonToolStripMenuItem.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);           
             // 
             // miOpen
             // 
@@ -1455,9 +1440,7 @@ namespace Kontel.Relkon
             // 
             this.tsbNewProject.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsbNewProject.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbNewRelkonProject,
-            this.toolStripSeparator20,
-            this.конвертироватьToolStripMenuItem});
+            this.tsbNewRelkonProject});
             this.tsbNewProject.Image = ((System.Drawing.Image)(resources.GetObject("tsbNewProject.Image")));
             this.tsbNewProject.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbNewProject.Name = "tsbNewProject";
@@ -1472,20 +1455,7 @@ namespace Kontel.Relkon
             this.tsbNewRelkonProject.Name = "tsbNewRelkonProject";
             this.tsbNewRelkonProject.Size = new System.Drawing.Size(182, 22);
             this.tsbNewRelkonProject.Text = "ѕроект Relkon";
-            this.tsbNewRelkonProject.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);
-            // 
-            // toolStripSeparator20
-            // 
-            this.toolStripSeparator20.Name = "toolStripSeparator20";
-            this.toolStripSeparator20.Size = new System.Drawing.Size(179, 6);
-            // 
-            // конвертироватьToolStripMenuItem
-            // 
-            this.конвертироватьToolStripMenuItem.Enabled = false;
-            this.конвертироватьToolStripMenuItem.Name = "конвертироватьToolStripMenuItem";
-            this.конвертироватьToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.конвертироватьToolStripMenuItem.Text = " онвертировать...";
-            this.конвертироватьToolStripMenuItem.Click += new System.EventHandler(this.проектЌаќснове—уществующих‘айловToolStripMenuItem_Click);
+            this.tsbNewRelkonProject.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);           
             // 
             // tsbOpen
             // 
@@ -1891,8 +1861,7 @@ namespace Kontel.Relkon
         private System.Windows.Forms.ToolStrip MainToolStrip;
         private System.Windows.Forms.ToolStripSplitButton tsbNewProject;
         private System.Windows.Forms.ToolStripMenuItem tsbNewRelkonProject;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;
-        private System.Windows.Forms.ToolStripMenuItem конвертироватьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;        
         private System.Windows.Forms.ToolStripButton tsbOpen;
         private System.Windows.Forms.ToolStripButton tsbSave;
         private System.Windows.Forms.ToolStripButton tsbSaveAll;

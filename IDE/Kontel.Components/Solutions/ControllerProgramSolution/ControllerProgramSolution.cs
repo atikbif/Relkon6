@@ -1356,6 +1356,30 @@ namespace Kontel.Relkon.Solutions
                 }
                 this.CompilationParams.Errors.Add(error);
             }
+
+
+            pattern = @":(\d+):\d+: warning:([^\r\n]+)";
+            mc = Regex.Matches(ErrorString, pattern, RegexOptions.IgnoreCase);            
+            for (int i = 0; i < mc.Count; i++)
+            {
+                CompilationError error = new CompilationError();
+                error.Warning = true;
+                error.Description = mc[i].Groups[2].Value;
+                if (error.Description.Contains("implicit declaration"))
+                    error.Warning = false;
+                int ln = this.GetProgramLineNumber(int.Parse(mc[i].Groups[1].Value));
+                if (ln == -1)
+                {
+                    error.LineNumber = int.Parse(mc[i].Groups[1].Value);
+                    error.FileName = this.DirectoryName + "\\fc_u.c";
+                }
+                else
+                {
+                    error.LineNumber = ln;
+                    error.FileName = this.ProgramFileName;
+                }
+                this.CompilationParams.Errors.Add(error);
+            }
         }
 
         #region Static methods

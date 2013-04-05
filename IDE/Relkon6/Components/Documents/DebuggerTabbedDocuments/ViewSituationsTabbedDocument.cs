@@ -123,7 +123,7 @@ namespace Kontel.Relkon.Components.Documents
                 {
                     ProjectProcess m_p = this._solution.GetProcessByName((string)this.dgProcess.Rows[i].Cells[0].Value);
                     //_engine.AddReadItem(_engine.Parameters.ProcessorType == ProcessorType.MB90F347 ? (m_p.Address + 6) : (m_p.Address + 5), MemoryType.XRAM, _engine.Parameters.ProcessorType == ProcessorType.MB90F347 ? 4 : 2, this.dgProcess.Rows[i], null, CallBack);
-                    _engine.AddReadItem(m_p.Address + 4, MemoryType.XRAM, 2, this.dgProcess.Rows[i], null, CallBack);
+                    _engine.AddReadItem(m_p.Address + 4, MemoryType.XRAM, 4, this.dgProcess.Rows[i], null, CallBack);
                 }
                 _IsReading = true;
             }

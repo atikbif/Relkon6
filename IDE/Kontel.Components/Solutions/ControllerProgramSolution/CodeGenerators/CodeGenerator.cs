@@ -134,9 +134,13 @@ namespace Kontel.Relkon.Solutions
         /// </summary>
         protected virtual void GenerateProcessesDefenitions(IndentedTextWriter CodeWriter)
         {
-            this.GenerateProcessStructDefenition(CodeWriter);
+            this.GenerateProcessStructDefenition(CodeWriter);            
             for(int i = 0; i<this.codeModel.Processes.Count; i++)
             {
+                for (int j = i + 1; j < this.codeModel.Processes.Count; j++)
+                    if (codeModel.Processes[i].Index == codeModel.Processes[j].Index)
+                        errors.Add(new CompilationError("Несколько процессов с индексом " + codeModel.Processes[i].Index.ToString(), this.codeModel.FileName, this.codeModel.Processes[i].LineNumber, false));
+                                    
                 CodeWriter.Write(this.GetProcessName(this.codeModel.Processes[i]));
                 if (i < this.codeModel.Processes.Count - 1)
                     CodeWriter.Write(",");

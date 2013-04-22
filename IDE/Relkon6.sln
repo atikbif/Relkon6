@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Relkon6", "Relkon6\Relkon6.csproj", "{DD443F19-99B8-4C92-83D6-202BE55DD96C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A99144B1-0356-46C3-88D0-D146DA0F7768} = {A99144B1-0356-46C3-88D0-D146DA0F7768}
@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kontel.Components", "Kontel
 	ProjectSection(ProjectDependencies) = postProject
 		{A99144B1-0356-46C3-88D0-D146DA0F7768} = {A99144B1-0356-46C3-88D0-D146DA0F7768}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReLoader", "Reloader\ReLoader.csproj", "{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,16 @@ Global
 		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|x86.ActiveCfg = Release|Any CPU
 		{B506227B-8FB4-4E01-AB64-97996B5F16A9}.Release|x86.Build.0 = Release|Any CPU
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Debug|x86.ActiveCfg = Debug|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Debug|x86.Build.0 = Debug|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Release|Any CPU.ActiveCfg = Release|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Release|x86.ActiveCfg = Release|x86
+		{D1F68677-F3FA-4945-B6A4-B99D9EC49F07}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

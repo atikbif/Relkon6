@@ -389,14 +389,21 @@ namespace Kontel.Relkon.Solutions
                 if (_readEmbVars && !bootLoaderMode)
                 {
                     this.ChangeProgressMethod("Чтение заводских уставок...", 0);
-                    int adr = 0x7B00;                  
-                    byte[] buf = port.ReadFromMemory(MemoryType.FRAM, adr, 128 * 8);
+                    int adr = 0x7B00;
 
+                    for (int i = 0; i < 8; i++)
+                    {
+                        byte[] buf = port.ReadFromMemory(MemoryType.FRAM, adr, 128);
 
-                    for (int i = 0; i < buf.Length; i++)                    
-                        this.solution.Vars.GetEmbeddedVar("EE" + i).Value = buf[i];
+                        for (int j = 0; j < 128; j++)
+                            this.solution.Vars.GetEmbeddedVar("EE" + (i * 128 + j).ToString()).Value = buf[j];
 
-                    this.ChangeProgressMethod("Чтение заводских уставок...", 100);
+                        adr += 128;
+
+                        this.ChangeProgressMethod("Чтение заводских уставок...", (int)(i * ((double)100 / (double)8)));
+                    }
+                                       
+                    
                 }
 
                 try

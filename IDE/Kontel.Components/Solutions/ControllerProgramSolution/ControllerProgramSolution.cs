@@ -1117,10 +1117,16 @@ namespace Kontel.Relkon.Solutions
             List<ControllerIOVar> res = new List<ControllerIOVar>();
 
             // Цифровые входа
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 4; i++)
             {
                 res.Add(new ControllerIOVar() { Name = "IN" + i, SystemName = "_Sys_IN[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
                 res.Add(new ControllerIOVar() { Name = "OUT" + i, SystemName = "_Sys_OUT[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
+            }
+
+            for (int i = 4; i < 6; i++)
+            {
+                res.Add(new ControllerIOVar() { Name = "DIN" + i, SystemName = "_Sys_IN[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
+                res.Add(new ControllerIOVar() { Name = "DOUT" + i, SystemName = "_Sys_OUT[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
             }
 
             for (int i = 1; i < 9; i++)

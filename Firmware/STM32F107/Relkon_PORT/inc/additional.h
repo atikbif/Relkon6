@@ -27,6 +27,7 @@
 #include "stm32f10x_conf.h"
 
 #include "fat_filelib.h"
+#include <stdlib.h>
 
 #define key	_SysKey
 

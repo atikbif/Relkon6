@@ -40,7 +40,6 @@ extern volatile unsigned char Tx_end;
 
 void mmb_work(void)
 {
-
 	switch(step)
 	{
 		case 0:// разбор ответа от модулей
@@ -144,7 +143,7 @@ void mmb_work(void)
 								if((rx_mod_buf[rx_pos]!=mod_num)||(rx_mod_buf[rx_pos+1]!=mod_num))
 								{
 									err_mod[mod_num]++;Sum_err++;rx_pos+=2;
-								}
+								}else rx_pos+=2;
 							}else {err_mod[mod_num]++;Sum_err++;rx_pos+=2;}
 						}
 					}

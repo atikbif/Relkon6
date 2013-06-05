@@ -57,7 +57,7 @@ namespace Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSenso
                     break;
             }
             this.Width = this.tbarValue.Location.X + this.tbarValue.Size.Width + 5;
-            this.SigleByte = true;
+            //this.SigleByte = true;
         }
 
         /// <summary>

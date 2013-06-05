@@ -871,7 +871,7 @@ namespace Kontel.Relkon.Solutions
 
             int groupSize = 32 * 4;
 
-            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_ADC");
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_ADC\b");
             int adcStructureAdress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
 
             foreach (ControllerIOVar var in Vars.IOVars)
@@ -933,7 +933,7 @@ namespace Kontel.Relkon.Solutions
                 }
             }
 
-            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+IN");
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+IN\b");
             if (m.Success)
             {
                 int adress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);
@@ -951,7 +951,7 @@ namespace Kontel.Relkon.Solutions
             }
 
 
-            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+OUT");
+            m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+OUT\b");
             if (m.Success)
             {
                 int adress = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16);

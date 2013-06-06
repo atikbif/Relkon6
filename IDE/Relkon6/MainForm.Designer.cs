@@ -38,6 +38,7 @@ namespace Kontel.Relkon
             TD.SandDock.DockContainer dockContainer1;
             TD.SandDock.DockingRules dockingRules4 = new TD.SandDock.DockingRules();
             TD.SandDock.DockingRules dockingRules1 = new TD.SandDock.DockingRules();
+            this.DocumentManager2 = new TD.SandDock.SandDockManager();
             this.ErrorsList = new Kontel.Relkon.Components.ErrorList();
             this.Console = new Kontel.Relkon.Components.OutputList();
             this.InformationMessages = new Kontel.Relkon.Components.OutputList();
@@ -53,8 +54,6 @@ namespace Kontel.Relkon
             this.miFile = new System.Windows.Forms.ToolStripMenuItem();
             this.miNewProject = new System.Windows.Forms.ToolStripMenuItem();
             this.проектRelkonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
-            this.проектНаОсновеСуществующихФайловToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.miOpenSolution = new System.Windows.Forms.ToolStripMenuItem();
             this.miOpenFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -127,6 +126,7 @@ namespace Kontel.Relkon
             this.miDebuggerOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.miUtilits = new System.Windows.Forms.ToolStripMenuItem();
             this.miModulesSetup = new System.Windows.Forms.ToolStripMenuItem();
+            this.kontelReLoaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.miRunHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.miAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -156,7 +156,6 @@ namespace Kontel.Relkon
             this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.tsbNewProject = new System.Windows.Forms.ToolStripSplitButton();
             this.tsbNewRelkonProject = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();          
             this.tsbOpen = new System.Windows.Forms.ToolStripButton();
             this.tsbSave = new System.Windows.Forms.ToolStripButton();
             this.tsbSaveAll = new System.Windows.Forms.ToolStripButton();
@@ -187,6 +186,9 @@ namespace Kontel.Relkon
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbFind = new System.Windows.Forms.ToolStripButton();
             this.tsbRunHelp = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
+            this.проектНаОсновеСуществующихФайловToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.CompileBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.UsefullImages = new System.Windows.Forms.ImageList(this.components);
             documentContainer1 = new TD.SandDock.DocumentContainer();
@@ -207,21 +209,22 @@ namespace Kontel.Relkon
             // 
             // DocumentManager
             // 
-            this.DocumentManager.DockSystemContainer = this.toolStripContainer1.ContentPanel;
-            this.DocumentManager.ActiveTabbedDocumentChanged += new System.EventHandler(this.DocumentManager_ActiveTabbedDocumentChanged);
+            this.DocumentManager2.DockSystemContainer = this.toolStripContainer1.ContentPanel;
+            this.DocumentManager2.OwnerForm = this;
+            this.DocumentManager2.ActiveTabbedDocumentChanged += new System.EventHandler(this.DocumentManager_ActiveTabbedDocumentChanged);
             // 
             // OpenFileDialog
             // 
             this.OpenFileDialog.Filter = "Файлы проектов (*.rp6)|*.rp6|Файлы программ (*.kon, *.c, *.asm)|*.kon;*.c;*.asm|К" +
-                "арты памяти (*.map)|*.map|Файлы пульта (*.fpr, *.plt)|*.fpr;*.plt|Файлы параметр" +
-                "ов отладчика (*.dbg)|*.dbg";
+    "арты памяти (*.map)|*.map|Файлы пульта (*.fpr, *.plt)|*.fpr;*.plt|Файлы параметр" +
+    "ов отладчика (*.dbg)|*.dbg";
             // 
             // documentContainer1
             // 
             documentContainer1.ContentSize = 124;
             documentContainer1.LayoutSystem = new TD.SandDock.SplitLayoutSystem(new System.Drawing.SizeF(491F, 124F), System.Windows.Forms.Orientation.Horizontal, new TD.SandDock.LayoutSystemBase[0]);
             documentContainer1.Location = new System.Drawing.Point(258, 0);
-            documentContainer1.Manager = this.DocumentManager;
+            documentContainer1.Manager = this.DocumentManager2;
             documentContainer1.Name = "documentContainer1";
             documentContainer1.Size = new System.Drawing.Size(453, 331);
             documentContainer1.TabIndex = 3;
@@ -239,7 +242,7 @@ namespace Kontel.Relkon
                         ((TD.SandDock.DockControl)(this.Console)),
                         ((TD.SandDock.DockControl)(this.InformationMessages))}, this.ErrorsList)))});
             dockContainer2.Location = new System.Drawing.Point(0, 331);
-            dockContainer2.Manager = this.DocumentManager;
+            dockContainer2.Manager = this.DocumentManager2;
             dockContainer2.Name = "dockContainer2";
             dockContainer2.Size = new System.Drawing.Size(711, 186);
             dockContainer2.TabIndex = 1;
@@ -278,6 +281,7 @@ namespace Kontel.Relkon
             this.Console.TabImage = ((System.Drawing.Image)(resources.GetObject("Console.TabImage")));
             this.Console.TabIndex = 1;
             this.Console.Text = "Консоль";
+            this.Console.Visible = false;
             // 
             // InformationMessages
             // 
@@ -295,6 +299,7 @@ namespace Kontel.Relkon
             this.InformationMessages.TabImage = ((System.Drawing.Image)(resources.GetObject("InformationMessages.TabImage")));
             this.InformationMessages.TabIndex = 1;
             this.InformationMessages.Text = "Информационные сообщения";
+            this.InformationMessages.Visible = false;
             // 
             // dockContainer1
             // 
@@ -305,7 +310,7 @@ namespace Kontel.Relkon
             ((TD.SandDock.LayoutSystemBase)(new TD.SandDock.ControlLayoutSystem(new System.Drawing.SizeF(247F, 312F), new TD.SandDock.DockControl[] {
                         ((TD.SandDock.DockControl)(this.SolutionExplorer))}, this.SolutionExplorer)))});
             dockContainer1.Location = new System.Drawing.Point(711, 0);
-            dockContainer1.Manager = this.DocumentManager;
+            dockContainer1.Manager = this.DocumentManager2;
             dockContainer1.Name = "dockContainer1";
             dockContainer1.Size = new System.Drawing.Size(251, 517);
             dockContainer1.TabIndex = 0;
@@ -356,8 +361,8 @@ namespace Kontel.Relkon
             this.toolStripContainer1.TopToolStripPanel.ContextMenuStrip = this.TooolStripContextMenu;
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MainMenu);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.DebuggerToolStrip);
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.PultToolStrip);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MainToolStrip);
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.PultToolStrip);
             // 
             // dockContainer3
             // 
@@ -368,7 +373,7 @@ namespace Kontel.Relkon
             ((TD.SandDock.LayoutSystemBase)(new TD.SandDock.ControlLayoutSystem(new System.Drawing.SizeF(214F, 312F), new TD.SandDock.DockControl[] {
                         ((TD.SandDock.DockControl)(this.DebuggerParametersList))}, this.DebuggerParametersList)))});
             this.dockContainer3.Location = new System.Drawing.Point(0, 0);
-            this.dockContainer3.Manager = this.DocumentManager;
+            this.dockContainer3.Manager = this.DocumentManager2;
             this.dockContainer3.Name = "dockContainer3";
             this.dockContainer3.Size = new System.Drawing.Size(258, 331);
             this.dockContainer3.TabIndex = 4;
@@ -403,14 +408,14 @@ namespace Kontel.Relkon
             this.cmiDebuggerToolStripVisible,
             this.cmiMainToolStripVisible});
             this.TooolStripContextMenu.Name = "TooolStripContextMenu";
-            this.TooolStripContextMenu.Size = new System.Drawing.Size(154, 70);
+            this.TooolStripContextMenu.Size = new System.Drawing.Size(144, 70);
             this.TooolStripContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.TooolStripContextMenu_Opening);
             // 
             // cmiPultToolStripVisible
             // 
             this.cmiPultToolStripVisible.CheckOnClick = true;
             this.cmiPultToolStripVisible.Name = "cmiPultToolStripVisible";
-            this.cmiPultToolStripVisible.Size = new System.Drawing.Size(153, 22);
+            this.cmiPultToolStripVisible.Size = new System.Drawing.Size(143, 22);
             this.cmiPultToolStripVisible.Text = "&Пульты";
             this.cmiPultToolStripVisible.Click += new System.EventHandler(this.cmiPultToolStripVisible_Click);
             // 
@@ -418,7 +423,7 @@ namespace Kontel.Relkon
             // 
             this.cmiDebuggerToolStripVisible.CheckOnClick = true;
             this.cmiDebuggerToolStripVisible.Name = "cmiDebuggerToolStripVisible";
-            this.cmiDebuggerToolStripVisible.Size = new System.Drawing.Size(153, 22);
+            this.cmiDebuggerToolStripVisible.Size = new System.Drawing.Size(143, 22);
             this.cmiDebuggerToolStripVisible.Text = "О&тладчик";
             this.cmiDebuggerToolStripVisible.Click += new System.EventHandler(this.cmiDebuggerToolStripVisible_Click);
             // 
@@ -426,7 +431,7 @@ namespace Kontel.Relkon
             // 
             this.cmiMainToolStripVisible.CheckOnClick = true;
             this.cmiMainToolStripVisible.Name = "cmiMainToolStripVisible";
-            this.cmiMainToolStripVisible.Size = new System.Drawing.Size(153, 22);
+            this.cmiMainToolStripVisible.Size = new System.Drawing.Size(143, 22);
             this.cmiMainToolStripVisible.Text = "&Стандартная";
             this.cmiMainToolStripVisible.Click += new System.EventHandler(this.cmiMainToolStripVisible_Click);
             // 
@@ -469,7 +474,7 @@ namespace Kontel.Relkon
             this.toolStripSeparator5,
             this.miExit});
             this.miFile.Name = "miFile";
-            this.miFile.Size = new System.Drawing.Size(45, 20);
+            this.miFile.Size = new System.Drawing.Size(48, 20);
             this.miFile.Text = "&Файл";
             this.miFile.DropDownOpening += new System.EventHandler(this.miFile_DropDownOpening);
             // 
@@ -479,7 +484,7 @@ namespace Kontel.Relkon
             this.проектRelkonToolStripMenuItem});
             this.miNewProject.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miNewProject.Name = "miNewProject";
-            this.miNewProject.Size = new System.Drawing.Size(271, 22);
+            this.miNewProject.Size = new System.Drawing.Size(266, 22);
             this.miNewProject.Text = "&Новый проект";
             // 
             // проектRelkonToolStripMenuItem
@@ -488,9 +493,9 @@ namespace Kontel.Relkon
             this.проектRelkonToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.проектRelkonToolStripMenuItem.Name = "проектRelkonToolStripMenuItem";
             this.проектRelkonToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.проектRelkonToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.проектRelkonToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.проектRelkonToolStripMenuItem.Text = "Проект Relkon (STM32)";
-            this.проектRelkonToolStripMenuItem.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);           
+            this.проектRelkonToolStripMenuItem.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);
             // 
             // miOpen
             // 
@@ -499,7 +504,7 @@ namespace Kontel.Relkon
             this.miOpenFile});
             this.miOpen.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.miOpen.Name = "miOpen";
-            this.miOpen.Size = new System.Drawing.Size(271, 22);
+            this.miOpen.Size = new System.Drawing.Size(266, 22);
             this.miOpen.Text = "О&ткрыть";
             // 
             // miOpenSolution
@@ -507,9 +512,9 @@ namespace Kontel.Relkon
             this.miOpenSolution.Image = ((System.Drawing.Image)(resources.GetObject("miOpenSolution.Image")));
             this.miOpenSolution.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miOpenSolution.Name = "miOpenSolution";
-            this.miOpenSolution.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.O)));
-            this.miOpenSolution.Size = new System.Drawing.Size(192, 22);
+            this.miOpenSolution.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.O)));
+            this.miOpenSolution.Size = new System.Drawing.Size(189, 22);
             this.miOpenSolution.Text = "Проект";
             this.miOpenSolution.Click += new System.EventHandler(this.miOpenSolution_Click);
             // 
@@ -518,20 +523,20 @@ namespace Kontel.Relkon
             this.miOpenFile.Image = ((System.Drawing.Image)(resources.GetObject("miOpenFile.Image")));
             this.miOpenFile.Name = "miOpenFile";
             this.miOpenFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.miOpenFile.Size = new System.Drawing.Size(192, 22);
+            this.miOpenFile.Size = new System.Drawing.Size(189, 22);
             this.miOpenFile.Text = "Файл";
             this.miOpenFile.Click += new System.EventHandler(this.miOpenFile_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(263, 6);
             // 
             // miClose
             // 
             this.miClose.Enabled = false;
             this.miClose.Name = "miClose";
-            this.miClose.Size = new System.Drawing.Size(271, 22);
+            this.miClose.Size = new System.Drawing.Size(266, 22);
             this.miClose.Text = "&Закрыть";
             this.miClose.Click += new System.EventHandler(this.miClose_Click);
             // 
@@ -541,14 +546,14 @@ namespace Kontel.Relkon
             this.miCloseProject.Image = ((System.Drawing.Image)(resources.GetObject("miCloseProject.Image")));
             this.miCloseProject.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miCloseProject.Name = "miCloseProject";
-            this.miCloseProject.Size = new System.Drawing.Size(271, 22);
+            this.miCloseProject.Size = new System.Drawing.Size(266, 22);
             this.miCloseProject.Text = "&Закрыть проект";
             this.miCloseProject.Click += new System.EventHandler(this.miCloseProject_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(263, 6);
             // 
             // miSave
             // 
@@ -557,7 +562,7 @@ namespace Kontel.Relkon
             this.miSave.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miSave.Name = "miSave";
             this.miSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.miSave.Size = new System.Drawing.Size(271, 22);
+            this.miSave.Size = new System.Drawing.Size(266, 22);
             this.miSave.Text = "&Сохранить";
             this.miSave.Click += new System.EventHandler(this.tsbSave_Click);
             // 
@@ -565,7 +570,7 @@ namespace Kontel.Relkon
             // 
             this.miSaveAs.Enabled = false;
             this.miSaveAs.Name = "miSaveAs";
-            this.miSaveAs.Size = new System.Drawing.Size(271, 22);
+            this.miSaveAs.Size = new System.Drawing.Size(266, 22);
             this.miSaveAs.Text = "Сохранить &как";
             this.miSaveAs.Click += new System.EventHandler(this.miSaveAs_Click);
             // 
@@ -574,9 +579,9 @@ namespace Kontel.Relkon
             this.miSaveAll.Image = ((System.Drawing.Image)(resources.GetObject("miSaveAll.Image")));
             this.miSaveAll.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miSaveAll.Name = "miSaveAll";
-            this.miSaveAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.S)));
-            this.miSaveAll.Size = new System.Drawing.Size(271, 22);
+            this.miSaveAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.miSaveAll.Size = new System.Drawing.Size(266, 22);
             this.miSaveAll.Text = "Сохранить &все";
             this.miSaveAll.Click += new System.EventHandler(this.tsbSaveAll_Click);
             // 
@@ -584,16 +589,16 @@ namespace Kontel.Relkon
             // 
             this.miSaveProjectAs.Enabled = false;
             this.miSaveProjectAs.Name = "miSaveProjectAs";
-            this.miSaveProjectAs.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt)
-                        | System.Windows.Forms.Keys.S)));
-            this.miSaveProjectAs.Size = new System.Drawing.Size(271, 22);
+            this.miSaveProjectAs.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.S)));
+            this.miSaveProjectAs.Size = new System.Drawing.Size(266, 22);
             this.miSaveProjectAs.Text = "&Сохранить проект как...";
             this.miSaveProjectAs.Click += new System.EventHandler(this.miSaveProjectAs_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(263, 6);
             // 
             // miPrintSetup
             // 
@@ -601,7 +606,7 @@ namespace Kontel.Relkon
             this.miPrintSetup.Image = ((System.Drawing.Image)(resources.GetObject("miPrintSetup.Image")));
             this.miPrintSetup.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miPrintSetup.Name = "miPrintSetup";
-            this.miPrintSetup.Size = new System.Drawing.Size(271, 22);
+            this.miPrintSetup.Size = new System.Drawing.Size(266, 22);
             this.miPrintSetup.Text = "&Параметры страницы";
             this.miPrintSetup.Click += new System.EventHandler(this.tsbPrintSetup_Click);
             // 
@@ -610,7 +615,7 @@ namespace Kontel.Relkon
             this.miPrintPreview.Enabled = false;
             this.miPrintPreview.Image = ((System.Drawing.Image)(resources.GetObject("miPrintPreview.Image")));
             this.miPrintPreview.Name = "miPrintPreview";
-            this.miPrintPreview.Size = new System.Drawing.Size(271, 22);
+            this.miPrintPreview.Size = new System.Drawing.Size(266, 22);
             this.miPrintPreview.Text = "&Предварительный просмотр";
             this.miPrintPreview.Click += new System.EventHandler(this.tsbPrintPreview_Click);
             // 
@@ -621,7 +626,7 @@ namespace Kontel.Relkon
             this.miPrint.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miPrint.Name = "miPrint";
             this.miPrint.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.miPrint.Size = new System.Drawing.Size(271, 22);
+            this.miPrint.Size = new System.Drawing.Size(266, 22);
             this.miPrint.Text = "&Печать...";
             this.miPrint.Click += new System.EventHandler(this.tsbPrint_Click);
             // 
@@ -631,22 +636,22 @@ namespace Kontel.Relkon
             this.miPrintToFile.Image = ((System.Drawing.Image)(resources.GetObject("miPrintToFile.Image")));
             this.miPrintToFile.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miPrintToFile.Name = "miPrintToFile";
-            this.miPrintToFile.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.P)));
-            this.miPrintToFile.Size = new System.Drawing.Size(271, 22);
+            this.miPrintToFile.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.P)));
+            this.miPrintToFile.Size = new System.Drawing.Size(266, 22);
             this.miPrintToFile.Text = "&Печать в файл ";
             this.miPrintToFile.Click += new System.EventHandler(this.tsbPrintToFile_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(263, 6);
             // 
             // miExit
             // 
             this.miExit.Name = "miExit";
             this.miExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.miExit.Size = new System.Drawing.Size(271, 22);
+            this.miExit.Size = new System.Drawing.Size(266, 22);
             this.miExit.Text = "&Выход";
             this.miExit.Click += new System.EventHandler(this.miExit_Click);
             // 
@@ -665,7 +670,7 @@ namespace Kontel.Relkon
             this.toolStripSeparator8,
             this.miFindAndReplace});
             this.miEdit.Name = "miEdit";
-            this.miEdit.Size = new System.Drawing.Size(56, 20);
+            this.miEdit.Size = new System.Drawing.Size(59, 20);
             this.miEdit.Text = "&Правка";
             // 
             // miUndo
@@ -675,7 +680,7 @@ namespace Kontel.Relkon
             this.miUndo.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miUndo.Name = "miUndo";
             this.miUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.miUndo.Size = new System.Drawing.Size(195, 22);
+            this.miUndo.Size = new System.Drawing.Size(190, 22);
             this.miUndo.Text = "О&тменить";
             this.miUndo.Click += new System.EventHandler(this.tsbUndo_Click);
             // 
@@ -686,14 +691,14 @@ namespace Kontel.Relkon
             this.miRedo.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miRedo.Name = "miRedo";
             this.miRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.miRedo.Size = new System.Drawing.Size(195, 22);
+            this.miRedo.Size = new System.Drawing.Size(190, 22);
             this.miRedo.Text = "&Вернуть";
             this.miRedo.Click += new System.EventHandler(this.tsbRedo_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(187, 6);
             // 
             // miCut
             // 
@@ -702,7 +707,7 @@ namespace Kontel.Relkon
             this.miCut.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miCut.Name = "miCut";
             this.miCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.miCut.Size = new System.Drawing.Size(195, 22);
+            this.miCut.Size = new System.Drawing.Size(190, 22);
             this.miCut.Text = "&Вырезать";
             this.miCut.Click += new System.EventHandler(this.tsbCut_Click);
             // 
@@ -713,7 +718,7 @@ namespace Kontel.Relkon
             this.miCopy.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miCopy.Name = "miCopy";
             this.miCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.miCopy.Size = new System.Drawing.Size(195, 22);
+            this.miCopy.Size = new System.Drawing.Size(190, 22);
             this.miCopy.Text = "&Копировать";
             this.miCopy.Click += new System.EventHandler(this.tsbCopy_Click);
             // 
@@ -724,7 +729,7 @@ namespace Kontel.Relkon
             this.miPaste.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miPaste.Name = "miPaste";
             this.miPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.miPaste.Size = new System.Drawing.Size(195, 22);
+            this.miPaste.Size = new System.Drawing.Size(190, 22);
             this.miPaste.Text = "В&ставить";
             this.miPaste.Click += new System.EventHandler(this.tsbPaste_Click);
             // 
@@ -735,28 +740,28 @@ namespace Kontel.Relkon
             this.miDelete.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miDelete.Name = "miDelete";
             this.miDelete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.miDelete.Size = new System.Drawing.Size(195, 22);
+            this.miDelete.Size = new System.Drawing.Size(190, 22);
             this.miDelete.Text = "У&далить";
             this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(187, 6);
             // 
             // miSelectAll
             // 
             this.miSelectAll.Enabled = false;
             this.miSelectAll.Name = "miSelectAll";
             this.miSelectAll.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.miSelectAll.Size = new System.Drawing.Size(195, 22);
+            this.miSelectAll.Size = new System.Drawing.Size(190, 22);
             this.miSelectAll.Text = "Выделить в&се";
             this.miSelectAll.Click += new System.EventHandler(this.miSelectAll_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(187, 6);
             // 
             // miFindAndReplace
             // 
@@ -765,7 +770,7 @@ namespace Kontel.Relkon
             this.miReplace});
             this.miFindAndReplace.Enabled = false;
             this.miFindAndReplace.Name = "miFindAndReplace";
-            this.miFindAndReplace.Size = new System.Drawing.Size(195, 22);
+            this.miFindAndReplace.Size = new System.Drawing.Size(190, 22);
             this.miFindAndReplace.Text = "&Поиск и замена";
             // 
             // miFind
@@ -774,7 +779,7 @@ namespace Kontel.Relkon
             this.miFind.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miFind.Name = "miFind";
             this.miFind.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.miFind.Size = new System.Drawing.Size(172, 22);
+            this.miFind.Size = new System.Drawing.Size(170, 22);
             this.miFind.Text = "&Найти";
             this.miFind.Click += new System.EventHandler(this.tsbFind_Click);
             // 
@@ -784,7 +789,7 @@ namespace Kontel.Relkon
             this.miReplace.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miReplace.Name = "miReplace";
             this.miReplace.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.miReplace.Size = new System.Drawing.Size(172, 22);
+            this.miReplace.Size = new System.Drawing.Size(170, 22);
             this.miReplace.Text = "&Заменить";
             this.miReplace.Click += new System.EventHandler(this.miReplace_Click);
             // 
@@ -798,7 +803,7 @@ namespace Kontel.Relkon
             this.toolStripSeparator24,
             this.панелиИнсToolStripMenuItem});
             this.miView.Name = "miView";
-            this.miView.Size = new System.Drawing.Size(38, 20);
+            this.miView.Size = new System.Drawing.Size(39, 20);
             this.miView.Text = "&Вид";
             // 
             // miShowSolutionExplorer
@@ -806,7 +811,7 @@ namespace Kontel.Relkon
             this.miShowSolutionExplorer.Image = ((System.Drawing.Image)(resources.GetObject("miShowSolutionExplorer.Image")));
             this.miShowSolutionExplorer.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miShowSolutionExplorer.Name = "miShowSolutionExplorer";
-            this.miShowSolutionExplorer.Size = new System.Drawing.Size(233, 22);
+            this.miShowSolutionExplorer.Size = new System.Drawing.Size(245, 22);
             this.miShowSolutionExplorer.Text = "&Файлы проекта";
             this.miShowSolutionExplorer.Click += new System.EventHandler(this.tsbSolutionExplorer_Click);
             // 
@@ -815,7 +820,7 @@ namespace Kontel.Relkon
             this.miShowErrorList.Image = ((System.Drawing.Image)(resources.GetObject("miShowErrorList.Image")));
             this.miShowErrorList.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miShowErrorList.Name = "miShowErrorList";
-            this.miShowErrorList.Size = new System.Drawing.Size(233, 22);
+            this.miShowErrorList.Size = new System.Drawing.Size(245, 22);
             this.miShowErrorList.Text = "&Сообщения об ошибках";
             this.miShowErrorList.Click += new System.EventHandler(this.tsbErrorList_Click);
             // 
@@ -824,7 +829,7 @@ namespace Kontel.Relkon
             this.miShowOutput.Image = ((System.Drawing.Image)(resources.GetObject("miShowOutput.Image")));
             this.miShowOutput.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miShowOutput.Name = "miShowOutput";
-            this.miShowOutput.Size = new System.Drawing.Size(233, 22);
+            this.miShowOutput.Size = new System.Drawing.Size(245, 22);
             this.miShowOutput.Text = "&Консоль";
             this.miShowOutput.Click += new System.EventHandler(this.tsbConsole_Click);
             // 
@@ -833,14 +838,14 @@ namespace Kontel.Relkon
             this.miInforamtionList.Image = ((System.Drawing.Image)(resources.GetObject("miInforamtionList.Image")));
             this.miInforamtionList.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miInforamtionList.Name = "miInforamtionList";
-            this.miInforamtionList.Size = new System.Drawing.Size(233, 22);
+            this.miInforamtionList.Size = new System.Drawing.Size(245, 22);
             this.miInforamtionList.Text = "И&нформационные сообщения";
             this.miInforamtionList.Click += new System.EventHandler(this.tbInformationList_Click);
             // 
             // toolStripSeparator24
             // 
             this.toolStripSeparator24.Name = "toolStripSeparator24";
-            this.toolStripSeparator24.Size = new System.Drawing.Size(230, 6);
+            this.toolStripSeparator24.Size = new System.Drawing.Size(242, 6);
             // 
             // панелиИнсToolStripMenuItem
             // 
@@ -849,7 +854,7 @@ namespace Kontel.Relkon
             this.miDebuggerToolStripVisible,
             this.miMainToolStripVisible});
             this.панелиИнсToolStripMenuItem.Name = "панелиИнсToolStripMenuItem";
-            this.панелиИнсToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.панелиИнсToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.панелиИнсToolStripMenuItem.Text = "&Панели инструментов";
             this.панелиИнсToolStripMenuItem.DropDownOpened += new System.EventHandler(this.панелиИнсToolStripMenuItem_DropDownOpened);
             // 
@@ -857,7 +862,7 @@ namespace Kontel.Relkon
             // 
             this.miPultToolStripVisible.CheckOnClick = true;
             this.miPultToolStripVisible.Name = "miPultToolStripVisible";
-            this.miPultToolStripVisible.Size = new System.Drawing.Size(153, 22);
+            this.miPultToolStripVisible.Size = new System.Drawing.Size(143, 22);
             this.miPultToolStripVisible.Text = "&Пульты";
             this.miPultToolStripVisible.Click += new System.EventHandler(this.cmiPultToolStripVisible_Click);
             // 
@@ -865,7 +870,7 @@ namespace Kontel.Relkon
             // 
             this.miDebuggerToolStripVisible.CheckOnClick = true;
             this.miDebuggerToolStripVisible.Name = "miDebuggerToolStripVisible";
-            this.miDebuggerToolStripVisible.Size = new System.Drawing.Size(153, 22);
+            this.miDebuggerToolStripVisible.Size = new System.Drawing.Size(143, 22);
             this.miDebuggerToolStripVisible.Text = "О&тладчик";
             this.miDebuggerToolStripVisible.Click += new System.EventHandler(this.cmiDebuggerToolStripVisible_Click);
             // 
@@ -873,7 +878,7 @@ namespace Kontel.Relkon
             // 
             this.miMainToolStripVisible.CheckOnClick = true;
             this.miMainToolStripVisible.Name = "miMainToolStripVisible";
-            this.miMainToolStripVisible.Size = new System.Drawing.Size(153, 22);
+            this.miMainToolStripVisible.Size = new System.Drawing.Size(143, 22);
             this.miMainToolStripVisible.Text = "&Стандартная";
             this.miMainToolStripVisible.Click += new System.EventHandler(this.cmiMainToolStripVisible_Click);
             // 
@@ -884,7 +889,7 @@ namespace Kontel.Relkon
             this.toolStripSeparator22,
             this.miDefaultFormat});
             this.miFormat.Name = "miFormat";
-            this.miFormat.Size = new System.Drawing.Size(57, 20);
+            this.miFormat.Size = new System.Drawing.Size(62, 20);
             this.miFormat.Text = "&Формат";
             // 
             // miEditorFont
@@ -892,19 +897,19 @@ namespace Kontel.Relkon
             this.miEditorFont.Image = ((System.Drawing.Image)(resources.GetObject("miEditorFont.Image")));
             this.miEditorFont.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miEditorFont.Name = "miEditorFont";
-            this.miEditorFont.Size = new System.Drawing.Size(158, 22);
+            this.miEditorFont.Size = new System.Drawing.Size(159, 22);
             this.miEditorFont.Text = "&Шрифт";
             this.miEditorFont.Click += new System.EventHandler(this.miEditorFont_Click);
             // 
             // toolStripSeparator22
             // 
             this.toolStripSeparator22.Name = "toolStripSeparator22";
-            this.toolStripSeparator22.Size = new System.Drawing.Size(155, 6);
+            this.toolStripSeparator22.Size = new System.Drawing.Size(156, 6);
             // 
             // miDefaultFormat
             // 
             this.miDefaultFormat.Name = "miDefaultFormat";
-            this.miDefaultFormat.Size = new System.Drawing.Size(158, 22);
+            this.miDefaultFormat.Size = new System.Drawing.Size(159, 22);
             this.miDefaultFormat.Text = "&По умолчанию";
             this.miDefaultFormat.Click += new System.EventHandler(this.miDefaultFormat_Click);
             // 
@@ -921,7 +926,7 @@ namespace Kontel.Relkon
             this.toolStripSeparator9,
             this.miProjectProperties});
             this.miProject.Name = "miProject";
-            this.miProject.Size = new System.Drawing.Size(56, 20);
+            this.miProject.Size = new System.Drawing.Size(59, 20);
             this.miProject.Text = "&Проект";
             // 
             // miAdd
@@ -931,7 +936,7 @@ namespace Kontel.Relkon
             this.miAddExistingFile});
             this.miAdd.Enabled = false;
             this.miAdd.Name = "miAdd";
-            this.miAdd.Size = new System.Drawing.Size(212, 22);
+            this.miAdd.Size = new System.Drawing.Size(213, 22);
             this.miAdd.Text = "&Добавить";
             this.miAdd.Visible = false;
             // 
@@ -940,9 +945,9 @@ namespace Kontel.Relkon
             this.miAddNewFile.Image = ((System.Drawing.Image)(resources.GetObject("miAddNewFile.Image")));
             this.miAddNewFile.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miAddNewFile.Name = "miAddNewFile";
-            this.miAddNewFile.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.A)));
-            this.miAddNewFile.Size = new System.Drawing.Size(271, 22);
+            this.miAddNewFile.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.A)));
+            this.miAddNewFile.Size = new System.Drawing.Size(274, 22);
             this.miAddNewFile.Text = "&Новый объект";
             // 
             // miAddExistingFile
@@ -950,15 +955,15 @@ namespace Kontel.Relkon
             this.miAddExistingFile.Image = ((System.Drawing.Image)(resources.GetObject("miAddExistingFile.Image")));
             this.miAddExistingFile.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miAddExistingFile.Name = "miAddExistingFile";
-            this.miAddExistingFile.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.A)));
-            this.miAddExistingFile.Size = new System.Drawing.Size(271, 22);
+            this.miAddExistingFile.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.A)));
+            this.miAddExistingFile.Size = new System.Drawing.Size(274, 22);
             this.miAddExistingFile.Text = "&Существующий объект";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(209, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(210, 6);
             this.toolStripSeparator2.Visible = false;
             // 
             // miCompile
@@ -968,7 +973,7 @@ namespace Kontel.Relkon
             this.miCompile.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miCompile.Name = "miCompile";
             this.miCompile.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.miCompile.Size = new System.Drawing.Size(212, 22);
+            this.miCompile.Size = new System.Drawing.Size(213, 22);
             this.miCompile.Text = "&Компилировать";
             this.miCompile.Click += new System.EventHandler(this.tsbCompile_Click);
             // 
@@ -979,7 +984,7 @@ namespace Kontel.Relkon
             this.miUploadProgramAndParams.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miUploadProgramAndParams.Name = "miUploadProgramAndParams";
             this.miUploadProgramAndParams.ShortcutKeys = System.Windows.Forms.Keys.F6;
-            this.miUploadProgramAndParams.Size = new System.Drawing.Size(212, 22);
+            this.miUploadProgramAndParams.Size = new System.Drawing.Size(213, 22);
             this.miUploadProgramAndParams.Text = "Загрузить &всё";
             this.miUploadProgramAndParams.Click += new System.EventHandler(this.tsbProgrammer_Click);
             // 
@@ -988,7 +993,7 @@ namespace Kontel.Relkon
             this.miLoadProjectProgram.Enabled = false;
             this.miLoadProjectProgram.Name = "miLoadProjectProgram";
             this.miLoadProjectProgram.ShortcutKeys = System.Windows.Forms.Keys.F7;
-            this.miLoadProjectProgram.Size = new System.Drawing.Size(212, 22);
+            this.miLoadProjectProgram.Size = new System.Drawing.Size(213, 22);
             this.miLoadProjectProgram.Text = "Загрузить &программу";
             this.miLoadProjectProgram.Click += new System.EventHandler(this.miLoadProjectProgram_Click);
             // 
@@ -997,7 +1002,7 @@ namespace Kontel.Relkon
             this.miLoadProjectParams.Enabled = false;
             this.miLoadProjectParams.Name = "miLoadProjectParams";
             this.miLoadProjectParams.ShortcutKeys = System.Windows.Forms.Keys.F8;
-            this.miLoadProjectParams.Size = new System.Drawing.Size(212, 22);
+            this.miLoadProjectParams.Size = new System.Drawing.Size(213, 22);
             this.miLoadProjectParams.Text = "Загрузить &настройки";
             this.miLoadProjectParams.Click += new System.EventHandler(this.miLoadProjectParams_Click);
             // 
@@ -1006,14 +1011,14 @@ namespace Kontel.Relkon
             this.miGetEmbVarsFromController.Enabled = false;
             this.miGetEmbVarsFromController.Name = "miGetEmbVarsFromController";
             this.miGetEmbVarsFromController.ShortcutKeys = System.Windows.Forms.Keys.F9;
-            this.miGetEmbVarsFromController.Size = new System.Drawing.Size(212, 22);
+            this.miGetEmbVarsFromController.Size = new System.Drawing.Size(213, 22);
             this.miGetEmbVarsFromController.Text = "Прочитать &уставки";
             this.miGetEmbVarsFromController.Click += new System.EventHandler(this.miGetEmbVarsFromController_Click);
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(209, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(210, 6);
             // 
             // miProjectProperties
             // 
@@ -1022,7 +1027,7 @@ namespace Kontel.Relkon
             this.miProjectProperties.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miProjectProperties.Name = "miProjectProperties";
             this.miProjectProperties.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.miProjectProperties.Size = new System.Drawing.Size(212, 22);
+            this.miProjectProperties.Size = new System.Drawing.Size(213, 22);
             this.miProjectProperties.Text = "&Настройки";
             this.miProjectProperties.Click += new System.EventHandler(this.miProjectProperties_Click);
             // 
@@ -1041,7 +1046,7 @@ namespace Kontel.Relkon
             this.toolStripSeparator33,
             this.miDebuggerOptions});
             this.miDebugger.Name = "miDebugger";
-            this.miDebugger.Size = new System.Drawing.Size(70, 20);
+            this.miDebugger.Size = new System.Drawing.Size(72, 20);
             this.miDebugger.Text = "О&тладчик";
             this.miDebugger.DropDownOpening += new System.EventHandler(this.miDebugger_DropDownOpening);
             // 
@@ -1049,7 +1054,7 @@ namespace Kontel.Relkon
             // 
             this.miIO.Image = ((System.Drawing.Image)(resources.GetObject("miIO.Image")));
             this.miIO.Name = "miIO";
-            this.miIO.Size = new System.Drawing.Size(217, 22);
+            this.miIO.Size = new System.Drawing.Size(221, 22);
             this.miIO.Text = "&Входы - выходы";
             this.miIO.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
@@ -1058,7 +1063,7 @@ namespace Kontel.Relkon
             this.miViewMemory.Image = ((System.Drawing.Image)(resources.GetObject("miViewMemory.Image")));
             this.miViewMemory.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miViewMemory.Name = "miViewMemory";
-            this.miViewMemory.Size = new System.Drawing.Size(217, 22);
+            this.miViewMemory.Size = new System.Drawing.Size(221, 22);
             this.miViewMemory.Text = "&Память контроллера";
             this.miViewMemory.Click += new System.EventHandler(this.miViewMemory_Click);
             // 
@@ -1067,7 +1072,7 @@ namespace Kontel.Relkon
             this.miViewVars.Image = ((System.Drawing.Image)(resources.GetObject("miViewVars.Image")));
             this.miViewVars.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miViewVars.Name = "miViewVars";
-            this.miViewVars.Size = new System.Drawing.Size(217, 22);
+            this.miViewVars.Size = new System.Drawing.Size(221, 22);
             this.miViewVars.Text = "&Переменные контроллера";
             this.miViewVars.Click += new System.EventHandler(this.miViewVars_Click);
             // 
@@ -1076,7 +1081,7 @@ namespace Kontel.Relkon
             this.miViewStructurs.Image = ((System.Drawing.Image)(resources.GetObject("miViewStructurs.Image")));
             this.miViewStructurs.ImageTransparentColor = System.Drawing.SystemColors.ControlText;
             this.miViewStructurs.Name = "miViewStructurs";
-            this.miViewStructurs.Size = new System.Drawing.Size(217, 22);
+            this.miViewStructurs.Size = new System.Drawing.Size(221, 22);
             this.miViewStructurs.Text = "&Структуры контроллера";
             this.miViewStructurs.Click += new System.EventHandler(this.miViewStructurs_Click);
             // 
@@ -1085,7 +1090,7 @@ namespace Kontel.Relkon
             this.miViewGraphics.Image = ((System.Drawing.Image)(resources.GetObject("miViewGraphics.Image")));
             this.miViewGraphics.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miViewGraphics.Name = "miViewGraphics";
-            this.miViewGraphics.Size = new System.Drawing.Size(217, 22);
+            this.miViewGraphics.Size = new System.Drawing.Size(221, 22);
             this.miViewGraphics.Text = "&Графики";
             this.miViewGraphics.Click += new System.EventHandler(this.miViewGraphics_Click);
             // 
@@ -1094,21 +1099,21 @@ namespace Kontel.Relkon
             this.miSituations.Image = ((System.Drawing.Image)(resources.GetObject("miSituations.Image")));
             this.miSituations.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miSituations.Name = "miSituations";
-            this.miSituations.Size = new System.Drawing.Size(217, 22);
+            this.miSituations.Size = new System.Drawing.Size(221, 22);
             this.miSituations.Text = "&Ситуации";
             this.miSituations.Click += new System.EventHandler(this.tsbSituations_Click);
             // 
             // toolStripSeparator32
             // 
             this.toolStripSeparator32.Name = "toolStripSeparator32";
-            this.toolStripSeparator32.Size = new System.Drawing.Size(214, 6);
+            this.toolStripSeparator32.Size = new System.Drawing.Size(218, 6);
             // 
             // miStartDebugger
             // 
             this.miStartDebugger.Image = ((System.Drawing.Image)(resources.GetObject("miStartDebugger.Image")));
             this.miStartDebugger.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miStartDebugger.Name = "miStartDebugger";
-            this.miStartDebugger.Size = new System.Drawing.Size(217, 22);
+            this.miStartDebugger.Size = new System.Drawing.Size(221, 22);
             this.miStartDebugger.Text = "&Запустить опрос";
             this.miStartDebugger.Click += new System.EventHandler(this.tsbDebuggerStart_Click);
             // 
@@ -1118,14 +1123,14 @@ namespace Kontel.Relkon
             this.miStopDebugger.Image = ((System.Drawing.Image)(resources.GetObject("miStopDebugger.Image")));
             this.miStopDebugger.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miStopDebugger.Name = "miStopDebugger";
-            this.miStopDebugger.Size = new System.Drawing.Size(217, 22);
+            this.miStopDebugger.Size = new System.Drawing.Size(221, 22);
             this.miStopDebugger.Text = "Остановить опрос";
             this.miStopDebugger.Click += new System.EventHandler(this.tsbDebuggerStop_Click);
             // 
             // toolStripSeparator33
             // 
             this.toolStripSeparator33.Name = "toolStripSeparator33";
-            this.toolStripSeparator33.Size = new System.Drawing.Size(214, 6);
+            this.toolStripSeparator33.Size = new System.Drawing.Size(218, 6);
             // 
             // miDebuggerOptions
             // 
@@ -1133,25 +1138,33 @@ namespace Kontel.Relkon
             this.miDebuggerOptions.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miDebuggerOptions.Name = "miDebuggerOptions";
             this.miDebuggerOptions.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.miDebuggerOptions.Size = new System.Drawing.Size(217, 22);
+            this.miDebuggerOptions.Size = new System.Drawing.Size(221, 22);
             this.miDebuggerOptions.Text = "Панель управления";
             this.miDebuggerOptions.Click += new System.EventHandler(this.tbDebuggerOptions_Click);
             // 
             // miUtilits
             // 
             this.miUtilits.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miModulesSetup});
+            this.miModulesSetup,
+            this.kontelReLoaderToolStripMenuItem});
             this.miUtilits.Name = "miUtilits";
-            this.miUtilits.Size = new System.Drawing.Size(64, 20);
+            this.miUtilits.Size = new System.Drawing.Size(66, 20);
             this.miUtilits.Text = "У&тилиты";
             // 
             // miModulesSetup
             // 
             this.miModulesSetup.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.miModulesSetup.Name = "miModulesSetup";
-            this.miModulesSetup.Size = new System.Drawing.Size(235, 22);
+            this.miModulesSetup.Size = new System.Drawing.Size(240, 22);
             this.miModulesSetup.Text = "&Настройка модулей Matchbox";
             this.miModulesSetup.Click += new System.EventHandler(this.miModulesSetup_Click);
+            // 
+            // kontelReLoaderToolStripMenuItem
+            // 
+            this.kontelReLoaderToolStripMenuItem.Name = "kontelReLoaderToolStripMenuItem";
+            this.kontelReLoaderToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.kontelReLoaderToolStripMenuItem.Text = "Kontel ReLoader";
+            this.kontelReLoaderToolStripMenuItem.Click += new System.EventHandler(this.kontelReLoaderToolStripMenuItem_Click_1);
             // 
             // miHelp
             // 
@@ -1159,7 +1172,7 @@ namespace Kontel.Relkon
             this.miRunHelp,
             this.miAbout});
             this.miHelp.Name = "miHelp";
-            this.miHelp.Size = new System.Drawing.Size(62, 20);
+            this.miHelp.Size = new System.Drawing.Size(65, 20);
             this.miHelp.Text = "&Справка";
             // 
             // miRunHelp
@@ -1168,13 +1181,13 @@ namespace Kontel.Relkon
             this.miRunHelp.Image = ((System.Drawing.Image)(resources.GetObject("miRunHelp.Image")));
             this.miRunHelp.Name = "miRunHelp";
             this.miRunHelp.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.miRunHelp.Size = new System.Drawing.Size(179, 22);
+            this.miRunHelp.Size = new System.Drawing.Size(175, 22);
             this.miRunHelp.Text = "&Вызов справки";
             // 
             // miAbout
             // 
             this.miAbout.Name = "miAbout";
-            this.miAbout.Size = new System.Drawing.Size(179, 22);
+            this.miAbout.Size = new System.Drawing.Size(175, 22);
             this.miAbout.Text = "О &программе";
             this.miAbout.Click += new System.EventHandler(this.miAbout_Click);
             // 
@@ -1197,7 +1210,7 @@ namespace Kontel.Relkon
             this.tbDebuggerOptions});
             this.DebuggerToolStrip.Location = new System.Drawing.Point(3, 24);
             this.DebuggerToolStrip.Name = "DebuggerToolStrip";
-            this.DebuggerToolStrip.Size = new System.Drawing.Size(793, 25);
+            this.DebuggerToolStrip.Size = new System.Drawing.Size(831, 25);
             this.DebuggerToolStrip.TabIndex = 8;
             // 
             // tsbViewIO
@@ -1205,7 +1218,7 @@ namespace Kontel.Relkon
             this.tsbViewIO.Image = ((System.Drawing.Image)(resources.GetObject("tsbViewIO.Image")));
             this.tsbViewIO.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbViewIO.Name = "tsbViewIO";
-            this.tsbViewIO.Size = new System.Drawing.Size(111, 22);
+            this.tsbViewIO.Size = new System.Drawing.Size(114, 22);
             this.tsbViewIO.Text = "Входы - выходы";
             this.tsbViewIO.ToolTipText = "Опрос датчиков ввода / вывода контроллера";
             this.tsbViewIO.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
@@ -1215,7 +1228,7 @@ namespace Kontel.Relkon
             this.tsbViewVars.Image = ((System.Drawing.Image)(resources.GetObject("tsbViewVars.Image")));
             this.tsbViewVars.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbViewVars.Name = "tsbViewVars";
-            this.tsbViewVars.Size = new System.Drawing.Size(90, 22);
+            this.tsbViewVars.Size = new System.Drawing.Size(99, 22);
             this.tsbViewVars.Text = "Переменные";
             this.tsbViewVars.ToolTipText = "Просмотр значений переменных";
             this.tsbViewVars.Click += new System.EventHandler(this.miViewVars_Click);
@@ -1225,7 +1238,7 @@ namespace Kontel.Relkon
             this.tsbViewStructs.Image = ((System.Drawing.Image)(resources.GetObject("tsbViewStructs.Image")));
             this.tsbViewStructs.ImageTransparentColor = System.Drawing.SystemColors.ControlText;
             this.tsbViewStructs.Name = "tsbViewStructs";
-            this.tsbViewStructs.Size = new System.Drawing.Size(84, 22);
+            this.tsbViewStructs.Size = new System.Drawing.Size(86, 22);
             this.tsbViewStructs.Text = "Структуры";
             this.tsbViewStructs.ToolTipText = "Просмотр значений структур";
             this.tsbViewStructs.Click += new System.EventHandler(this.miViewStructurs_Click);
@@ -1235,7 +1248,7 @@ namespace Kontel.Relkon
             this.tsbViewMemory.Image = ((System.Drawing.Image)(resources.GetObject("tsbViewMemory.Image")));
             this.tsbViewMemory.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbViewMemory.Name = "tsbViewMemory";
-            this.tsbViewMemory.Size = new System.Drawing.Size(64, 22);
+            this.tsbViewMemory.Size = new System.Drawing.Size(68, 22);
             this.tsbViewMemory.Text = "Память";
             this.tsbViewMemory.ToolTipText = "Просмотр памяти контроллера";
             this.tsbViewMemory.Click += new System.EventHandler(this.miViewMemory_Click);
@@ -1245,7 +1258,7 @@ namespace Kontel.Relkon
             this.tsbViewGraphics.Image = ((System.Drawing.Image)(resources.GetObject("tsbViewGraphics.Image")));
             this.tsbViewGraphics.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbViewGraphics.Name = "tsbViewGraphics";
-            this.tsbViewGraphics.Size = new System.Drawing.Size(71, 22);
+            this.tsbViewGraphics.Size = new System.Drawing.Size(75, 22);
             this.tsbViewGraphics.Text = "Графики";
             this.tsbViewGraphics.ToolTipText = "Графическое отображение данных";
             this.tsbViewGraphics.Click += new System.EventHandler(this.miViewGraphics_Click);
@@ -1255,7 +1268,7 @@ namespace Kontel.Relkon
             this.tsbSituations.Image = ((System.Drawing.Image)(resources.GetObject("tsbSituations.Image")));
             this.tsbSituations.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSituations.Name = "tsbSituations";
-            this.tsbSituations.Size = new System.Drawing.Size(76, 22);
+            this.tsbSituations.Size = new System.Drawing.Size(80, 22);
             this.tsbSituations.Text = "Ситуации";
             this.tsbSituations.ToolTipText = "Активные ситуации";
             this.tsbSituations.Click += new System.EventHandler(this.tsbSituations_Click);
@@ -1271,7 +1284,7 @@ namespace Kontel.Relkon
             this.tbHex.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tbHex.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbHex.Name = "tbHex";
-            this.tbHex.Size = new System.Drawing.Size(30, 22);
+            this.tbHex.Size = new System.Drawing.Size(31, 22);
             this.tbHex.Text = "Hex";
             this.tbHex.ToolTipText = "Шестнадцатеричное / десятичное отображение";
             this.tbHex.CheckedChanged += new System.EventHandler(this.tbHex_CheckedChanged);
@@ -1297,7 +1310,7 @@ namespace Kontel.Relkon
             this.tsbDebuggerStop.Image = ((System.Drawing.Image)(resources.GetObject("tsbDebuggerStop.Image")));
             this.tsbDebuggerStop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDebuggerStop.Name = "tsbDebuggerStop";
-            this.tsbDebuggerStop.Size = new System.Drawing.Size(52, 22);
+            this.tsbDebuggerStop.Size = new System.Drawing.Size(54, 22);
             this.tsbDebuggerStop.Text = "Стоп";
             this.tsbDebuggerStop.ToolTipText = "Остановка опроса контроллера";
             this.tsbDebuggerStop.Click += new System.EventHandler(this.tsbDebuggerStop_Click);
@@ -1312,7 +1325,7 @@ namespace Kontel.Relkon
             this.tbDebuggerOptions.Image = ((System.Drawing.Image)(resources.GetObject("tbDebuggerOptions.Image")));
             this.tbDebuggerOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbDebuggerOptions.Name = "tbDebuggerOptions";
-            this.tbDebuggerOptions.Size = new System.Drawing.Size(127, 22);
+            this.tbDebuggerOptions.Size = new System.Drawing.Size(136, 22);
             this.tbDebuggerOptions.Text = "Панель управления";
             this.tbDebuggerOptions.ToolTipText = "Открытие панели управления отладчика";
             this.tbDebuggerOptions.Click += new System.EventHandler(this.tbDebuggerOptions_Click);
@@ -1330,16 +1343,16 @@ namespace Kontel.Relkon
             this.tsbImportPultModel,
             this.toolStripSeparator23,
             this.tsbSaveToFromatRelkon42});
-            this.PultToolStrip.Location = new System.Drawing.Point(96, 49);
+            this.PultToolStrip.Location = new System.Drawing.Point(3, 74);
             this.PultToolStrip.Name = "PultToolStrip";
-            this.PultToolStrip.Size = new System.Drawing.Size(617, 25);
+            this.PultToolStrip.Size = new System.Drawing.Size(640, 25);
             this.PultToolStrip.TabIndex = 5;
             // 
             // tsbPultTypeLabel
             // 
             this.tsbPultTypeLabel.Enabled = false;
             this.tsbPultTypeLabel.Name = "tsbPultTypeLabel";
-            this.tsbPultTypeLabel.Size = new System.Drawing.Size(68, 22);
+            this.tsbPultTypeLabel.Size = new System.Drawing.Size(71, 22);
             this.tsbPultTypeLabel.Text = "Тип пульта:";
             // 
             // tsbPultType
@@ -1361,7 +1374,7 @@ namespace Kontel.Relkon
             this.tsbClearPult.Image = ((System.Drawing.Image)(resources.GetObject("tsbClearPult.Image")));
             this.tsbClearPult.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbClearPult.Name = "tsbClearPult";
-            this.tsbClearPult.Size = new System.Drawing.Size(76, 22);
+            this.tsbClearPult.Size = new System.Drawing.Size(79, 22);
             this.tsbClearPult.Text = "Очистить";
             this.tsbClearPult.Click += new System.EventHandler(this.tsbClearPult_Click);
             // 
@@ -1376,7 +1389,7 @@ namespace Kontel.Relkon
             this.tsbImportPultModel.Image = ((System.Drawing.Image)(resources.GetObject("tsbImportPultModel.Image")));
             this.tsbImportPultModel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbImportPultModel.Name = "tsbImportPultModel";
-            this.tsbImportPultModel.Size = new System.Drawing.Size(128, 22);
+            this.tsbImportPultModel.Size = new System.Drawing.Size(134, 22);
             this.tsbImportPultModel.Text = "Загрузить из файла";
             this.tsbImportPultModel.Click += new System.EventHandler(this.tsbImportPultModel_Click);
             // 
@@ -1391,7 +1404,7 @@ namespace Kontel.Relkon
             this.tsbSaveToFromatRelkon42.Image = ((System.Drawing.Image)(resources.GetObject("tsbSaveToFromatRelkon42.Image")));
             this.tsbSaveToFromatRelkon42.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSaveToFromatRelkon42.Name = "tsbSaveToFromatRelkon42";
-            this.tsbSaveToFromatRelkon42.Size = new System.Drawing.Size(192, 22);
+            this.tsbSaveToFromatRelkon42.Size = new System.Drawing.Size(203, 22);
             this.tsbSaveToFromatRelkon42.Text = "Сохранить в формате Relkon 4.2";
             this.tsbSaveToFromatRelkon42.ToolTipText = "Сохранить файл пультов в формате Relkon 4.2";
             // 
@@ -1431,7 +1444,7 @@ namespace Kontel.Relkon
             this.toolStripSeparator16,
             this.tsbFind,
             this.tsbRunHelp});
-            this.MainToolStrip.Location = new System.Drawing.Point(3, 74);
+            this.MainToolStrip.Location = new System.Drawing.Point(3, 49);
             this.MainToolStrip.Name = "MainToolStrip";
             this.MainToolStrip.Size = new System.Drawing.Size(615, 25);
             this.MainToolStrip.TabIndex = 4;
@@ -1453,9 +1466,9 @@ namespace Kontel.Relkon
             this.tsbNewRelkonProject.Image = ((System.Drawing.Image)(resources.GetObject("tsbNewRelkonProject.Image")));
             this.tsbNewRelkonProject.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.tsbNewRelkonProject.Name = "tsbNewRelkonProject";
-            this.tsbNewRelkonProject.Size = new System.Drawing.Size(182, 22);
+            this.tsbNewRelkonProject.Size = new System.Drawing.Size(153, 22);
             this.tsbNewRelkonProject.Text = "Проект Relkon";
-            this.tsbNewRelkonProject.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);           
+            this.tsbNewRelkonProject.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);
             // 
             // tsbOpen
             // 
@@ -1739,6 +1752,21 @@ namespace Kontel.Relkon
             this.tsbRunHelp.Size = new System.Drawing.Size(23, 22);
             this.tsbRunHelp.Text = "Вызов справки";
             // 
+            // toolStripSeparator21
+            // 
+            this.toolStripSeparator21.Name = "toolStripSeparator21";
+            this.toolStripSeparator21.Size = new System.Drawing.Size(6, 6);
+            // 
+            // проектНаОсновеСуществующихФайловToolStripMenuItem
+            // 
+            this.проектНаОсновеСуществующихФайловToolStripMenuItem.Name = "проектНаОсновеСуществующихФайловToolStripMenuItem";
+            this.проектНаОсновеСуществующихФайловToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
+            // 
+            // toolStripSeparator20
+            // 
+            this.toolStripSeparator20.Name = "toolStripSeparator20";
+            this.toolStripSeparator20.Size = new System.Drawing.Size(6, 6);
+            // 
             // CompileBackgroundWorker
             // 
             this.CompileBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CompileBackgroundWorker_DoWork);
@@ -1791,7 +1819,6 @@ namespace Kontel.Relkon
         #endregion
 
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
-        internal Kontel.Relkon.Components.SolutionExplorer SolutionExplorer;
         private Kontel.Relkon.Components.OutputList Console;
         private Kontel.Relkon.Components.OutputList InformationMessages;
         private System.Windows.Forms.MenuStrip MainMenu;
@@ -1905,7 +1932,6 @@ namespace Kontel.Relkon
         private System.Windows.Forms.ImageList UsefullImages;
         private System.Windows.Forms.ToolStripButton tsbPrintToFile;
         private System.Windows.Forms.ToolStripMenuItem miPrintToFile;
-        internal Kontel.Relkon.Components.DebuggerParametersPanel DebuggerParametersList;
         private System.Windows.Forms.ToolStripMenuItem miDebugger;
         private System.Windows.Forms.ToolStripMenuItem miIO;
         private System.Windows.Forms.ToolStripMenuItem miViewMemory;
@@ -1937,10 +1963,14 @@ namespace Kontel.Relkon
         private System.Windows.Forms.ToolStripMenuItem miSituations;
         private System.Windows.Forms.ToolStripMenuItem miViewStructurs;
         private System.Windows.Forms.ToolStripButton tsbViewStructs;
-        internal Kontel.Relkon.Components.ErrorList ErrorsList;
         private System.Windows.Forms.ToolStripButton tsbEmulationMode2;
         private System.Windows.Forms.ToolStripMenuItem miLoadProjectProgram;
-        private System.Windows.Forms.ToolStripMenuItem miGetEmbVarsFromController;
+        private System.Windows.Forms.ToolStripMenuItem miGetEmbVarsFromController;        
+        private System.Windows.Forms.ToolStripMenuItem kontelReLoaderToolStripMenuItem;
+        private Components.SolutionExplorer SolutionExplorer;
+        private Components.DebuggerParametersPanel DebuggerParametersList;
+        private Components.ErrorList ErrorsList;
+        private TD.SandDock.SandDockManager DocumentManager2;
 
 
     }

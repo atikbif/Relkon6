@@ -771,7 +771,7 @@ namespace Kontel.Relkon
         private void FillOpenedFilesList()
         {
             this.solution.OpenedFiles.Clear();
-            DockControl[] docs = this.DocumentManager.GetDockControls(DockSituation.Document);
+            DockControl[] docs = this.DocumentManager2.GetDockControls(DockSituation.Document);
             //Array.Sort<DockControl>(docs, new Comparison<DockControl>((a, b) => b.TabBounds.X - a.TabBounds.Y));
             Array.Sort<DockControl>(docs, new Comparison<DockControl>((a, b) => b.TabBounds.X - a.TabBounds.X));
             foreach (TabbedDocument doc in docs)
@@ -800,7 +800,7 @@ namespace Kontel.Relkon
                 switch (Utils.QuestionMessage("Сохранить проект ?", "Relkon"))
                 {
                     case DialogResult.No:
-                        foreach (RelkonTabbedDocument doc in this.DocumentManager.GetDockControls(DockSituation.Document))
+                        foreach (RelkonTabbedDocument doc in this.DocumentManager2.GetDockControls(DockSituation.Document))
                         {
                             if(doc is IEditableTabbedDocument)
                                 ((IEditableTabbedDocument)doc).SaveRequired = false;
@@ -844,7 +844,7 @@ namespace Kontel.Relkon
         /// </summary>
         private void CloseActiveDocument()
         {
-            this.DocumentManager.ActiveTabbedDocument.Close();
+            this.DocumentManager2.ActiveTabbedDocument.Close();
         }
         /// <summary>
         /// Создает новый проект Relkon
@@ -868,7 +868,7 @@ namespace Kontel.Relkon
         /// <returns>Документ, содержащий файл или null</returns>
         private FileTabbedDocument FileAlreadyLoaded(string FileName)
         {
-            foreach (RelkonTabbedDocument doc in this.DocumentManager.GetDockControls(DockSituation.Document))
+            foreach (RelkonTabbedDocument doc in this.DocumentManager2.GetDockControls(DockSituation.Document))
             {
                 if (doc is FileTabbedDocument && ((FileTabbedDocument)doc).FileName == FileName)
                     return (FileTabbedDocument)doc;
@@ -1101,7 +1101,7 @@ namespace Kontel.Relkon
         {
             try
             {
-                foreach (RelkonTabbedDocument doc in this.DocumentManager.GetDockControls(DockSituation.Document))
+                foreach (RelkonTabbedDocument doc in this.DocumentManager2.GetDockControls(DockSituation.Document))
                 {
                     if (doc.Solution!= null && doc.Solution.ID == solution.ID && doc is IEditableTabbedDocument)
                         ((IEditableTabbedDocument)doc).Save();
@@ -1308,7 +1308,7 @@ namespace Kontel.Relkon
         /// </summary>
         public void UploadToDevice(ControllerProgramSolution solution, bool onlyProgram, bool onlyParams, bool readEmbVars)
         {
-            foreach (RelkonTabbedDocument doc in this.DocumentManager.GetDockControls(DockSituation.Document))
+            foreach (RelkonTabbedDocument doc in this.DocumentManager2.GetDockControls(DockSituation.Document))
             {
                 if (doc is PropertiesTabbedDocument)
                 {
@@ -2063,7 +2063,7 @@ namespace Kontel.Relkon
             ((ControllerProgramSolution)sender).UploadingToDeviceCompleted -= new AsyncCompletedEventHandler(solution_UploadingToDeviceCompleted);
             ((ControllerProgramSolution)sender).UploadingToDeviceProgressChanged -= new UploadMgrProgressChangedEventHandler(solution_UploadingToDeviceProgressChanged);
 
-            foreach (RelkonTabbedDocument doc in this.DocumentManager.GetDockControls(DockSituation.Document))
+            foreach (RelkonTabbedDocument doc in this.DocumentManager2.GetDockControls(DockSituation.Document))
             {
                 if (doc is PropertiesTabbedDocument)
                 {
@@ -2093,7 +2093,7 @@ namespace Kontel.Relkon
 
         private void tbHex_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (RelkonTabbedDocument doc in this.DocumentManager.GetDockControls(DockSituation.Document))
+            foreach (RelkonTabbedDocument doc in this.DocumentManager2.GetDockControls(DockSituation.Document))
             {
                 if (doc is DebuggerTabbedDocument)
                     ((DebuggerTabbedDocument)doc).UpdateDataPresentation(this.tbHex.Checked);
@@ -2238,6 +2238,18 @@ namespace Kontel.Relkon
         private void miGetEmbVarsFromController_Click(object sender, EventArgs e)
         {
             this.UploadToDevice(this.solution, false, false, true);
+        }       
+
+        private void kontelReLoaderToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                Utils.RunProgram(Program.RelkonDirectory + "\\ReLoader.exe");
+            }
+            catch (Exception ex)
+            {
+                Utils.ErrorMessage(ex.Message);
+            }
         }        
     }
 }

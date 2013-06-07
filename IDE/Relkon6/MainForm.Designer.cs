@@ -31,21 +31,14 @@ namespace Kontel.Relkon
         {
             this.components = new System.ComponentModel.Container();
             TD.SandDock.DocumentContainer documentContainer1;
+            TD.SandDock.DockingRules dockingRules1 = new TD.SandDock.DockingRules();
             TD.SandDock.DockContainer dockContainer2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             TD.SandDock.DockingRules dockingRules2 = new TD.SandDock.DockingRules();
             TD.SandDock.DockingRules dockingRules3 = new TD.SandDock.DockingRules();
             TD.SandDock.DockContainer dockContainer1;
-            TD.SandDock.DockingRules dockingRules4 = new TD.SandDock.DockingRules();
-            TD.SandDock.DockingRules dockingRules1 = new TD.SandDock.DockingRules();
-            this.DocumentManager2 = new TD.SandDock.SandDockManager();
-            this.ErrorsList = new Kontel.Relkon.Components.ErrorList();
-            this.Console = new Kontel.Relkon.Components.OutputList();
-            this.InformationMessages = new Kontel.Relkon.Components.OutputList();
-            this.SolutionExplorer = new Kontel.Relkon.Components.SolutionExplorer();
+            TD.SandDock.DockingRules dockingRules4 = new TD.SandDock.DockingRules();            
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.dockContainer3 = new TD.SandDock.DockContainer();
-            this.DebuggerParametersList = new Kontel.Relkon.Components.DebuggerParametersPanel();
             this.TooolStripContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmiPultToolStripVisible = new System.Windows.Forms.ToolStripMenuItem();
             this.cmiDebuggerToolStripVisible = new System.Windows.Forms.ToolStripMenuItem();
@@ -126,7 +119,7 @@ namespace Kontel.Relkon
             this.miDebuggerOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.miUtilits = new System.Windows.Forms.ToolStripMenuItem();
             this.miModulesSetup = new System.Windows.Forms.ToolStripMenuItem();
-            this.kontelReLoaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Á‡ÔÛÒÍReLoaderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.miRunHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.miAbout = new System.Windows.Forms.ToolStripMenuItem();
@@ -156,6 +149,8 @@ namespace Kontel.Relkon
             this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.tsbNewProject = new System.Windows.Forms.ToolStripSplitButton();
             this.tsbNewRelkonProject = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
+            this.ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbOpen = new System.Windows.Forms.ToolStripButton();
             this.tsbSave = new System.Windows.Forms.ToolStripButton();
             this.tsbSaveAll = new System.Windows.Forms.ToolStripButton();
@@ -186,32 +181,34 @@ namespace Kontel.Relkon
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbFind = new System.Windows.Forms.ToolStripButton();
             this.tsbRunHelp = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
-            this.ÔÓÂÍÚÕ‡ŒÒÌÓ‚Â—Û˘ÂÒÚ‚Û˛˘Ëı‘‡ÈÎÓ‚ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.CompileBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.UsefullImages = new System.Windows.Forms.ImageList(this.components);
+            this.dockContainer3 = new TD.SandDock.DockContainer();
+            this.DebuggerParametersList = new Kontel.Relkon.Components.DebuggerParametersPanel();
+            this.ErrorsList = new Kontel.Relkon.Components.ErrorList();
+            this.Console = new Kontel.Relkon.Components.OutputList();
+            this.InformationMessages = new Kontel.Relkon.Components.OutputList();
+            this.SolutionExplorer = new Kontel.Relkon.Components.SolutionExplorer();
             documentContainer1 = new TD.SandDock.DocumentContainer();
             dockContainer2 = new TD.SandDock.DockContainer();
             dockContainer1 = new TD.SandDock.DockContainer();
-            dockContainer2.SuspendLayout();
-            dockContainer1.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
-            this.dockContainer3.SuspendLayout();
             this.TooolStripContextMenu.SuspendLayout();
             this.MainMenu.SuspendLayout();
             this.DebuggerToolStrip.SuspendLayout();
             this.PultToolStrip.SuspendLayout();
             this.MainToolStrip.SuspendLayout();
+            this.dockContainer3.SuspendLayout();
+            dockContainer2.SuspendLayout();
+            dockContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // DocumentManager
             // 
-            this.DocumentManager2.DockSystemContainer = this.toolStripContainer1.ContentPanel;
-            this.DocumentManager2.OwnerForm = this;
-            this.DocumentManager2.ActiveTabbedDocumentChanged += new System.EventHandler(this.DocumentManager_ActiveTabbedDocumentChanged);
+            this.DocumentManager.DockSystemContainer = this.toolStripContainer1.ContentPanel;            
+            this.DocumentManager.ActiveTabbedDocumentChanged += new System.EventHandler(this.DocumentManager_ActiveTabbedDocumentChanged);
             // 
             // OpenFileDialog
             // 
@@ -224,119 +221,10 @@ namespace Kontel.Relkon
             documentContainer1.ContentSize = 124;
             documentContainer1.LayoutSystem = new TD.SandDock.SplitLayoutSystem(new System.Drawing.SizeF(491F, 124F), System.Windows.Forms.Orientation.Horizontal, new TD.SandDock.LayoutSystemBase[0]);
             documentContainer1.Location = new System.Drawing.Point(258, 0);
-            documentContainer1.Manager = this.DocumentManager2;
+            documentContainer1.Manager = this.DocumentManager;
             documentContainer1.Name = "documentContainer1";
             documentContainer1.Size = new System.Drawing.Size(453, 331);
             documentContainer1.TabIndex = 3;
-            // 
-            // dockContainer2
-            // 
-            dockContainer2.ContentSize = 182;
-            dockContainer2.Controls.Add(this.ErrorsList);
-            dockContainer2.Controls.Add(this.Console);
-            dockContainer2.Controls.Add(this.InformationMessages);
-            dockContainer2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            dockContainer2.LayoutSystem = new TD.SandDock.SplitLayoutSystem(new System.Drawing.SizeF(493F, 182F), System.Windows.Forms.Orientation.Vertical, new TD.SandDock.LayoutSystemBase[] {
-            ((TD.SandDock.LayoutSystemBase)(new TD.SandDock.ControlLayoutSystem(new System.Drawing.SizeF(493F, 182F), new TD.SandDock.DockControl[] {
-                        ((TD.SandDock.DockControl)(this.ErrorsList)),
-                        ((TD.SandDock.DockControl)(this.Console)),
-                        ((TD.SandDock.DockControl)(this.InformationMessages))}, this.ErrorsList)))});
-            dockContainer2.Location = new System.Drawing.Point(0, 331);
-            dockContainer2.Manager = this.DocumentManager2;
-            dockContainer2.Name = "dockContainer2";
-            dockContainer2.Size = new System.Drawing.Size(711, 186);
-            dockContainer2.TabIndex = 1;
-            // 
-            // ErrorsList
-            // 
-            this.ErrorsList.BorderStyle = TD.SandDock.Rendering.BorderStyle.Flat;
-            this.ErrorsList.DescriptionColumnWidth = 100;
-            this.ErrorsList.FileColumnWidth = 100;
-            this.ErrorsList.Guid = new System.Guid("d5d5d59c-7cb7-4f31-98f9-77cec051c546");
-            this.ErrorsList.LastModifySizeColumnIndex = -1;
-            this.ErrorsList.LineColumnWidth = 100;
-            this.ErrorsList.Location = new System.Drawing.Point(0, 22);
-            this.ErrorsList.Name = "ErrorsList";
-            this.ErrorsList.Size = new System.Drawing.Size(711, 140);
-            this.ErrorsList.TabImage = ((System.Drawing.Image)(resources.GetObject("ErrorsList.TabImage")));
-            this.ErrorsList.TabIndex = 1;
-            this.ErrorsList.TabText = "—ÔËÒÓÍ Ó¯Ë·ÓÍ";
-            this.ErrorsList.Text = "—ÔËÒÓÍ Ó¯Ë·ÓÍ";
-            this.ErrorsList.RelkonCompilationErrorShow += new Kontel.Relkon.Components.RelkonCompilationErrorEventHandler(this.ErrorsList_RelkonCompilationErrorShow);
-            this.ErrorsList.ErrorFileMustOpen += new Kontel.Relkon.Components.FileEventHandler(this.ErrorsList_ErrorFileMustOpen);
-            // 
-            // Console
-            // 
-            dockingRules2.AllowDockBottom = true;
-            dockingRules2.AllowDockLeft = false;
-            dockingRules2.AllowDockRight = false;
-            dockingRules2.AllowDockTop = false;
-            dockingRules2.AllowFloat = false;
-            dockingRules2.AllowTab = false;
-            this.Console.DockingRules = dockingRules2;
-            this.Console.Guid = new System.Guid("f5cc9265-a225-4aa4-a8bd-12cef3f429f1");
-            this.Console.Location = new System.Drawing.Point(0, 0);
-            this.Console.Name = "Console";
-            this.Console.Size = new System.Drawing.Size(493, 140);
-            this.Console.TabImage = ((System.Drawing.Image)(resources.GetObject("Console.TabImage")));
-            this.Console.TabIndex = 1;
-            this.Console.Text = " ÓÌÒÓÎ¸";
-            this.Console.Visible = false;
-            // 
-            // InformationMessages
-            // 
-            dockingRules3.AllowDockBottom = true;
-            dockingRules3.AllowDockLeft = false;
-            dockingRules3.AllowDockRight = false;
-            dockingRules3.AllowDockTop = false;
-            dockingRules3.AllowFloat = false;
-            dockingRules3.AllowTab = false;
-            this.InformationMessages.DockingRules = dockingRules3;
-            this.InformationMessages.Guid = new System.Guid("301645a0-0f7e-4f3f-8014-18075c9a1dbd");
-            this.InformationMessages.Location = new System.Drawing.Point(0, 0);
-            this.InformationMessages.Name = "InformationMessages";
-            this.InformationMessages.Size = new System.Drawing.Size(493, 140);
-            this.InformationMessages.TabImage = ((System.Drawing.Image)(resources.GetObject("InformationMessages.TabImage")));
-            this.InformationMessages.TabIndex = 1;
-            this.InformationMessages.Text = "»ÌÙÓÏ‡ˆËÓÌÌ˚Â ÒÓÓ·˘ÂÌËˇ";
-            this.InformationMessages.Visible = false;
-            // 
-            // dockContainer1
-            // 
-            dockContainer1.ContentSize = 247;
-            dockContainer1.Controls.Add(this.SolutionExplorer);
-            dockContainer1.Dock = System.Windows.Forms.DockStyle.Right;
-            dockContainer1.LayoutSystem = new TD.SandDock.SplitLayoutSystem(new System.Drawing.SizeF(247F, 312F), System.Windows.Forms.Orientation.Horizontal, new TD.SandDock.LayoutSystemBase[] {
-            ((TD.SandDock.LayoutSystemBase)(new TD.SandDock.ControlLayoutSystem(new System.Drawing.SizeF(247F, 312F), new TD.SandDock.DockControl[] {
-                        ((TD.SandDock.DockControl)(this.SolutionExplorer))}, this.SolutionExplorer)))});
-            dockContainer1.Location = new System.Drawing.Point(711, 0);
-            dockContainer1.Manager = this.DocumentManager2;
-            dockContainer1.Name = "dockContainer1";
-            dockContainer1.Size = new System.Drawing.Size(251, 517);
-            dockContainer1.TabIndex = 0;
-            // 
-            // SolutionExplorer
-            // 
-            dockingRules4.AllowDockBottom = false;
-            dockingRules4.AllowDockLeft = false;
-            dockingRules4.AllowDockRight = true;
-            dockingRules4.AllowDockTop = false;
-            dockingRules4.AllowFloat = true;
-            dockingRules4.AllowTab = false;
-            this.SolutionExplorer.DockingRules = dockingRules4;
-            this.SolutionExplorer.Guid = new System.Guid("f1738490-445c-4132-86fa-e5cc4afd48f0");
-            this.SolutionExplorer.Location = new System.Drawing.Point(4, 18);
-            this.SolutionExplorer.Name = "SolutionExplorer";
-            this.SolutionExplorer.ShowOptions = false;
-            this.SolutionExplorer.Size = new System.Drawing.Size(247, 475);
-            this.SolutionExplorer.TabImage = ((System.Drawing.Image)(resources.GetObject("SolutionExplorer.TabImage")));
-            this.SolutionExplorer.TabIndex = 0;
-            this.SolutionExplorer.TabText = "Œ·ÓÁÂ‚‡ÚÂÎ¸ ÔÓÂÍÚ‡";
-            this.SolutionExplorer.Text = "Œ·ÓÁÂ‚‡ÚÂÎ¸ ÔÓÂÍÚ‡";
-            this.SolutionExplorer.ProperitiesTreeNodeDoubleClick += new Kontel.Relkon.Components.ProperitiesTreeNodeDoubleClickEventHandler(this.SolutionExplorer_ProperitiesTreeNodeDoubleClick);
-            this.SolutionExplorer.FileTreeNodeDoubleClick += new Kontel.Relkon.Components.FileTreeNodeDoubleClickEventHandler(this.SolutionExplorer_FileTreeNodeDoubleClick);
-            this.SolutionExplorer.FileTreeNodeTextChanged += new Kontel.Relkon.Components.FileTreeNodeTextChangedEventHandler(this.SolutionExplorer_FileTreeNodeTextChanged);
-            this.SolutionExplorer.ControllerProgramSolutionTreeNodeTextChanged += new Kontel.Relkon.Components.ControllerProgramSolutionTreeNodeTextChangedEventHandler(this.SolutionExplorer_RelkonSolutionTreeNodeTextChanged);
             // 
             // toolStripContainer1
             // 
@@ -363,43 +251,6 @@ namespace Kontel.Relkon
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.DebuggerToolStrip);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.MainToolStrip);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.PultToolStrip);
-            // 
-            // dockContainer3
-            // 
-            this.dockContainer3.ContentSize = 254;
-            this.dockContainer3.Controls.Add(this.DebuggerParametersList);
-            this.dockContainer3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.dockContainer3.LayoutSystem = new TD.SandDock.SplitLayoutSystem(new System.Drawing.SizeF(250F, 400F), System.Windows.Forms.Orientation.Horizontal, new TD.SandDock.LayoutSystemBase[] {
-            ((TD.SandDock.LayoutSystemBase)(new TD.SandDock.ControlLayoutSystem(new System.Drawing.SizeF(214F, 312F), new TD.SandDock.DockControl[] {
-                        ((TD.SandDock.DockControl)(this.DebuggerParametersList))}, this.DebuggerParametersList)))});
-            this.dockContainer3.Location = new System.Drawing.Point(0, 0);
-            this.dockContainer3.Manager = this.DocumentManager2;
-            this.dockContainer3.Name = "dockContainer3";
-            this.dockContainer3.Size = new System.Drawing.Size(258, 331);
-            this.dockContainer3.TabIndex = 4;
-            // 
-            // DebuggerParametersList
-            // 
-            this.DebuggerParametersList.AutoScroll = true;
-            this.DebuggerParametersList.DebuggerEngine = null;
-            dockingRules1.AllowDockBottom = false;
-            dockingRules1.AllowDockLeft = true;
-            dockingRules1.AllowDockRight = true;
-            dockingRules1.AllowDockTop = false;
-            dockingRules1.AllowFloat = true;
-            dockingRules1.AllowTab = false;
-            this.DebuggerParametersList.DockingRules = dockingRules1;
-            this.DebuggerParametersList.FloatingSize = new System.Drawing.Size(251, 661);
-            this.DebuggerParametersList.Guid = new System.Guid("4987d871-2500-4487-995b-90165dd8c7af");
-            this.DebuggerParametersList.Location = new System.Drawing.Point(0, 18);
-            this.DebuggerParametersList.MinimumSize = new System.Drawing.Size(251, 50);
-            this.DebuggerParametersList.Name = "DebuggerParametersList";
-            this.DebuggerParametersList.Padding = new System.Windows.Forms.Padding(2);
-            this.DebuggerParametersList.ShowOptions = false;
-            this.DebuggerParametersList.Size = new System.Drawing.Size(254, 289);
-            this.DebuggerParametersList.TabIndex = 1;
-            this.DebuggerParametersList.Text = "œ‡‡ÏÂÚ˚ ÓÚÎ‡‰˜ËÍ‡";
-            this.DebuggerParametersList.Closing += new TD.SandDock.DockControlClosingEventHandler(this.DebuggerParametersList_Closing);
             // 
             // TooolStripContextMenu
             // 
@@ -1146,7 +997,7 @@ namespace Kontel.Relkon
             // 
             this.miUtilits.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miModulesSetup,
-            this.kontelReLoaderToolStripMenuItem});
+            this.Á‡ÔÛÒÍReLoaderToolStripMenuItem});
             this.miUtilits.Name = "miUtilits";
             this.miUtilits.Size = new System.Drawing.Size(66, 20);
             this.miUtilits.Text = "”&ÚËÎËÚ˚";
@@ -1159,12 +1010,12 @@ namespace Kontel.Relkon
             this.miModulesSetup.Text = "&Õ‡ÒÚÓÈÍ‡ ÏÓ‰ÛÎÂÈ Matchbox";
             this.miModulesSetup.Click += new System.EventHandler(this.miModulesSetup_Click);
             // 
-            // kontelReLoaderToolStripMenuItem
+            // Á‡ÔÛÒÍReLoaderToolStripMenuItem
             // 
-            this.kontelReLoaderToolStripMenuItem.Name = "kontelReLoaderToolStripMenuItem";
-            this.kontelReLoaderToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
-            this.kontelReLoaderToolStripMenuItem.Text = "Kontel ReLoader";
-            this.kontelReLoaderToolStripMenuItem.Click += new System.EventHandler(this.kontelReLoaderToolStripMenuItem_Click_1);
+            this.Á‡ÔÛÒÍReLoaderToolStripMenuItem.Name = "Á‡ÔÛÒÍReLoaderToolStripMenuItem";
+            this.Á‡ÔÛÒÍReLoaderToolStripMenuItem.Size = new System.Drawing.Size(240, 22);
+            this.Á‡ÔÛÒÍReLoaderToolStripMenuItem.Text = "«‡ÔÛÒÍ ReLoader";
+            this.Á‡ÔÛÒÍReLoaderToolStripMenuItem.Click += new System.EventHandler(this.Á‡ÔÛÒÍReLoaderToolStripMenuItem_Click);
             // 
             // miHelp
             // 
@@ -1453,7 +1304,9 @@ namespace Kontel.Relkon
             // 
             this.tsbNewProject.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsbNewProject.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbNewRelkonProject});
+            this.tsbNewRelkonProject,
+            this.toolStripSeparator20,
+            this.ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem});
             this.tsbNewProject.Image = ((System.Drawing.Image)(resources.GetObject("tsbNewProject.Image")));
             this.tsbNewProject.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbNewProject.Name = "tsbNewProject";
@@ -1466,9 +1319,22 @@ namespace Kontel.Relkon
             this.tsbNewRelkonProject.Image = ((System.Drawing.Image)(resources.GetObject("tsbNewRelkonProject.Image")));
             this.tsbNewRelkonProject.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             this.tsbNewRelkonProject.Name = "tsbNewRelkonProject";
-            this.tsbNewRelkonProject.Size = new System.Drawing.Size(153, 22);
+            this.tsbNewRelkonProject.Size = new System.Drawing.Size(172, 22);
             this.tsbNewRelkonProject.Text = "œÓÂÍÚ Relkon";
             this.tsbNewRelkonProject.Click += new System.EventHandler(this.tsbNewRelkonProject_Click);
+            // 
+            // toolStripSeparator20
+            // 
+            this.toolStripSeparator20.Name = "toolStripSeparator20";
+            this.toolStripSeparator20.Size = new System.Drawing.Size(169, 6);
+            // 
+            // ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem
+            // 
+            this.ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem.Enabled = false;
+            this.ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem.Name = "ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem";
+            this.ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem.Text = " ÓÌ‚ÂÚËÓ‚‡Ú¸...";
+            this.ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem.Click += new System.EventHandler(this.ÔÓÂÍÚÕ‡ŒÒÌÓ‚Â—Û˘ÂÒÚ‚Û˛˘Ëı‘‡ÈÎÓ‚ToolStripMenuItem_Click);
             // 
             // tsbOpen
             // 
@@ -1752,21 +1618,6 @@ namespace Kontel.Relkon
             this.tsbRunHelp.Size = new System.Drawing.Size(23, 22);
             this.tsbRunHelp.Text = "¬˚ÁÓ‚ ÒÔ‡‚ÍË";
             // 
-            // toolStripSeparator21
-            // 
-            this.toolStripSeparator21.Name = "toolStripSeparator21";
-            this.toolStripSeparator21.Size = new System.Drawing.Size(6, 6);
-            // 
-            // ÔÓÂÍÚÕ‡ŒÒÌÓ‚Â—Û˘ÂÒÚ‚Û˛˘Ëı‘‡ÈÎÓ‚ToolStripMenuItem
-            // 
-            this.ÔÓÂÍÚÕ‡ŒÒÌÓ‚Â—Û˘ÂÒÚ‚Û˛˘Ëı‘‡ÈÎÓ‚ToolStripMenuItem.Name = "ÔÓÂÍÚÕ‡ŒÒÌÓ‚Â—Û˘ÂÒÚ‚Û˛˘Ëı‘‡ÈÎÓ‚ToolStripMenuItem";
-            this.ÔÓÂÍÚÕ‡ŒÒÌÓ‚Â—Û˘ÂÒÚ‚Û˛˘Ëı‘‡ÈÎÓ‚ToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
-            // 
-            // toolStripSeparator20
-            // 
-            this.toolStripSeparator20.Name = "toolStripSeparator20";
-            this.toolStripSeparator20.Size = new System.Drawing.Size(6, 6);
-            // 
             // CompileBackgroundWorker
             // 
             this.CompileBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CompileBackgroundWorker_DoWork);
@@ -1778,6 +1629,152 @@ namespace Kontel.Relkon
             this.UsefullImages.TransparentColor = System.Drawing.Color.Fuchsia;
             this.UsefullImages.Images.SetKeyName(0, "InformationList.bmp");
             this.UsefullImages.Images.SetKeyName(1, "Debugger.bmp");
+            // 
+            // dockContainer3
+            // 
+            this.dockContainer3.ContentSize = 254;
+            this.dockContainer3.Controls.Add(this.DebuggerParametersList);
+            this.dockContainer3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.dockContainer3.LayoutSystem = new TD.SandDock.SplitLayoutSystem(new System.Drawing.SizeF(250F, 400F), System.Windows.Forms.Orientation.Horizontal, new TD.SandDock.LayoutSystemBase[] {
+            ((TD.SandDock.LayoutSystemBase)(new TD.SandDock.ControlLayoutSystem(new System.Drawing.SizeF(214F, 312F), new TD.SandDock.DockControl[] {
+                        ((TD.SandDock.DockControl)(this.DebuggerParametersList))}, this.DebuggerParametersList)))});
+            this.dockContainer3.Location = new System.Drawing.Point(0, 0);
+            this.dockContainer3.Manager = this.DocumentManager;
+            this.dockContainer3.Name = "dockContainer3";
+            this.dockContainer3.Size = new System.Drawing.Size(258, 331);
+            this.dockContainer3.TabIndex = 4;
+            // 
+            // DebuggerParametersList
+            // 
+            this.DebuggerParametersList.AutoScroll = true;
+            this.DebuggerParametersList.DebuggerEngine = null;
+            dockingRules1.AllowDockBottom = false;
+            dockingRules1.AllowDockLeft = true;
+            dockingRules1.AllowDockRight = true;
+            dockingRules1.AllowDockTop = false;
+            dockingRules1.AllowFloat = true;
+            dockingRules1.AllowTab = false;
+            this.DebuggerParametersList.DockingRules = dockingRules1;
+            this.DebuggerParametersList.FloatingSize = new System.Drawing.Size(251, 661);
+            this.DebuggerParametersList.Guid = new System.Guid("4987d871-2500-4487-995b-90165dd8c7af");
+            this.DebuggerParametersList.Location = new System.Drawing.Point(0, 18);
+            this.DebuggerParametersList.MinimumSize = new System.Drawing.Size(251, 50);
+            this.DebuggerParametersList.Name = "DebuggerParametersList";
+            this.DebuggerParametersList.Padding = new System.Windows.Forms.Padding(2);
+            this.DebuggerParametersList.ShowOptions = false;
+            this.DebuggerParametersList.Size = new System.Drawing.Size(254, 289);
+            this.DebuggerParametersList.TabIndex = 1;
+            this.DebuggerParametersList.Text = "œ‡‡ÏÂÚ˚ ÓÚÎ‡‰˜ËÍ‡";
+            this.DebuggerParametersList.Closing += new TD.SandDock.DockControlClosingEventHandler(this.DebuggerParametersList_Closing);
+            // 
+            // dockContainer2
+            // 
+            dockContainer2.ContentSize = 182;
+            dockContainer2.Controls.Add(this.ErrorsList);
+            dockContainer2.Controls.Add(this.Console);
+            dockContainer2.Controls.Add(this.InformationMessages);
+            dockContainer2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            dockContainer2.LayoutSystem = new TD.SandDock.SplitLayoutSystem(new System.Drawing.SizeF(493F, 182F), System.Windows.Forms.Orientation.Vertical, new TD.SandDock.LayoutSystemBase[] {
+            ((TD.SandDock.LayoutSystemBase)(new TD.SandDock.ControlLayoutSystem(new System.Drawing.SizeF(493F, 182F), new TD.SandDock.DockControl[] {
+                        ((TD.SandDock.DockControl)(this.ErrorsList)),
+                        ((TD.SandDock.DockControl)(this.Console)),
+                        ((TD.SandDock.DockControl)(this.InformationMessages))}, this.ErrorsList)))});
+            dockContainer2.Location = new System.Drawing.Point(0, 331);
+            dockContainer2.Manager = this.DocumentManager;
+            dockContainer2.Name = "dockContainer2";
+            dockContainer2.Size = new System.Drawing.Size(711, 186);
+            dockContainer2.TabIndex = 1;
+            // 
+            // ErrorsList
+            // 
+            this.ErrorsList.BorderStyle = TD.SandDock.Rendering.BorderStyle.Flat;
+            this.ErrorsList.DescriptionColumnWidth = 100;
+            this.ErrorsList.FileColumnWidth = 100;
+            this.ErrorsList.Guid = new System.Guid("d5d5d59c-7cb7-4f31-98f9-77cec051c546");
+            this.ErrorsList.LastModifySizeColumnIndex = -1;
+            this.ErrorsList.LineColumnWidth = 100;
+            this.ErrorsList.Location = new System.Drawing.Point(0, 22);
+            this.ErrorsList.Name = "ErrorsList";
+            this.ErrorsList.Size = new System.Drawing.Size(711, 140);
+            this.ErrorsList.TabImage = ((System.Drawing.Image)(resources.GetObject("ErrorsList.TabImage")));
+            this.ErrorsList.TabIndex = 1;
+            this.ErrorsList.TabText = "—ÔËÒÓÍ Ó¯Ë·ÓÍ";
+            this.ErrorsList.Text = "—ÔËÒÓÍ Ó¯Ë·ÓÍ";
+            this.ErrorsList.RelkonCompilationErrorShow += new Kontel.Relkon.Components.RelkonCompilationErrorEventHandler(this.ErrorsList_RelkonCompilationErrorShow);
+            this.ErrorsList.ErrorFileMustOpen += new Kontel.Relkon.Components.FileEventHandler(this.ErrorsList_ErrorFileMustOpen);
+            // 
+            // Console
+            // 
+            dockingRules2.AllowDockBottom = true;
+            dockingRules2.AllowDockLeft = false;
+            dockingRules2.AllowDockRight = false;
+            dockingRules2.AllowDockTop = false;
+            dockingRules2.AllowFloat = false;
+            dockingRules2.AllowTab = false;
+            this.Console.DockingRules = dockingRules2;
+            this.Console.Guid = new System.Guid("f5cc9265-a225-4aa4-a8bd-12cef3f429f1");
+            this.Console.Location = new System.Drawing.Point(0, 0);
+            this.Console.Name = "Console";
+            this.Console.Size = new System.Drawing.Size(493, 140);
+            this.Console.TabImage = ((System.Drawing.Image)(resources.GetObject("Console.TabImage")));
+            this.Console.TabIndex = 1;
+            this.Console.Text = " ÓÌÒÓÎ¸";
+            this.Console.Visible = false;
+            // 
+            // InformationMessages
+            // 
+            dockingRules3.AllowDockBottom = true;
+            dockingRules3.AllowDockLeft = false;
+            dockingRules3.AllowDockRight = false;
+            dockingRules3.AllowDockTop = false;
+            dockingRules3.AllowFloat = false;
+            dockingRules3.AllowTab = false;
+            this.InformationMessages.DockingRules = dockingRules3;
+            this.InformationMessages.Guid = new System.Guid("301645a0-0f7e-4f3f-8014-18075c9a1dbd");
+            this.InformationMessages.Location = new System.Drawing.Point(0, 0);
+            this.InformationMessages.Name = "InformationMessages";
+            this.InformationMessages.Size = new System.Drawing.Size(493, 140);
+            this.InformationMessages.TabImage = ((System.Drawing.Image)(resources.GetObject("InformationMessages.TabImage")));
+            this.InformationMessages.TabIndex = 1;
+            this.InformationMessages.Text = "»ÌÙÓÏ‡ˆËÓÌÌ˚Â ÒÓÓ·˘ÂÌËˇ";
+            this.InformationMessages.Visible = false;
+            // 
+            // dockContainer1
+            // 
+            dockContainer1.ContentSize = 247;
+            dockContainer1.Controls.Add(this.SolutionExplorer);
+            dockContainer1.Dock = System.Windows.Forms.DockStyle.Right;
+            dockContainer1.LayoutSystem = new TD.SandDock.SplitLayoutSystem(new System.Drawing.SizeF(247F, 312F), System.Windows.Forms.Orientation.Horizontal, new TD.SandDock.LayoutSystemBase[] {
+            ((TD.SandDock.LayoutSystemBase)(new TD.SandDock.ControlLayoutSystem(new System.Drawing.SizeF(247F, 312F), new TD.SandDock.DockControl[] {
+                        ((TD.SandDock.DockControl)(this.SolutionExplorer))}, this.SolutionExplorer)))});
+            dockContainer1.Location = new System.Drawing.Point(711, 0);
+            dockContainer1.Manager = this.DocumentManager;
+            dockContainer1.Name = "dockContainer1";
+            dockContainer1.Size = new System.Drawing.Size(251, 517);
+            dockContainer1.TabIndex = 0;
+            // 
+            // SolutionExplorer
+            // 
+            dockingRules4.AllowDockBottom = false;
+            dockingRules4.AllowDockLeft = false;
+            dockingRules4.AllowDockRight = true;
+            dockingRules4.AllowDockTop = false;
+            dockingRules4.AllowFloat = true;
+            dockingRules4.AllowTab = false;
+            this.SolutionExplorer.DockingRules = dockingRules4;
+            this.SolutionExplorer.Guid = new System.Guid("f1738490-445c-4132-86fa-e5cc4afd48f0");
+            this.SolutionExplorer.Location = new System.Drawing.Point(4, 18);
+            this.SolutionExplorer.Name = "SolutionExplorer";
+            this.SolutionExplorer.ShowOptions = false;
+            this.SolutionExplorer.Size = new System.Drawing.Size(247, 475);
+            this.SolutionExplorer.TabImage = ((System.Drawing.Image)(resources.GetObject("SolutionExplorer.TabImage")));
+            this.SolutionExplorer.TabIndex = 0;
+            this.SolutionExplorer.TabText = "Œ·ÓÁÂ‚‡ÚÂÎ¸ ÔÓÂÍÚ‡";
+            this.SolutionExplorer.Text = "Œ·ÓÁÂ‚‡ÚÂÎ¸ ÔÓÂÍÚ‡";
+            this.SolutionExplorer.ProperitiesTreeNodeDoubleClick += new Kontel.Relkon.Components.ProperitiesTreeNodeDoubleClickEventHandler(this.SolutionExplorer_ProperitiesTreeNodeDoubleClick);
+            this.SolutionExplorer.FileTreeNodeDoubleClick += new Kontel.Relkon.Components.FileTreeNodeDoubleClickEventHandler(this.SolutionExplorer_FileTreeNodeDoubleClick);
+            this.SolutionExplorer.FileTreeNodeTextChanged += new Kontel.Relkon.Components.FileTreeNodeTextChangedEventHandler(this.SolutionExplorer_FileTreeNodeTextChanged);
+            this.SolutionExplorer.ControllerProgramSolutionTreeNodeTextChanged += new Kontel.Relkon.Components.ControllerProgramSolutionTreeNodeTextChangedEventHandler(this.SolutionExplorer_RelkonSolutionTreeNodeTextChanged);
             // 
             // MainForm
             // 
@@ -1794,14 +1791,11 @@ namespace Kontel.Relkon
             this.LocationChanged += new System.EventHandler(this.MainForm_LocationChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.Controls.SetChildIndex(this.toolStripContainer1, 0);
-            dockContainer2.ResumeLayout(false);
-            dockContainer1.ResumeLayout(false);
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
-            this.dockContainer3.ResumeLayout(false);
             this.TooolStripContextMenu.ResumeLayout(false);
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
@@ -1811,6 +1805,9 @@ namespace Kontel.Relkon
             this.PultToolStrip.PerformLayout();
             this.MainToolStrip.ResumeLayout(false);
             this.MainToolStrip.PerformLayout();
+            this.dockContainer3.ResumeLayout(false);
+            dockContainer2.ResumeLayout(false);
+            dockContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1825,8 +1822,6 @@ namespace Kontel.Relkon
         private System.Windows.Forms.ToolStripMenuItem miFile;
         private System.Windows.Forms.ToolStripMenuItem miNewProject;
         private System.Windows.Forms.ToolStripMenuItem ÔÓÂÍÚRelkonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator21;
-        private System.Windows.Forms.ToolStripMenuItem ÔÓÂÍÚÕ‡ŒÒÌÓ‚Â—Û˘ÂÒÚ‚Û˛˘Ëı‘‡ÈÎÓ‚ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem miOpen;
         private System.Windows.Forms.ToolStripMenuItem miOpenSolution;
         private System.Windows.Forms.ToolStripMenuItem miOpenFile;
@@ -1888,7 +1883,8 @@ namespace Kontel.Relkon
         private System.Windows.Forms.ToolStrip MainToolStrip;
         private System.Windows.Forms.ToolStripSplitButton tsbNewProject;
         private System.Windows.Forms.ToolStripMenuItem tsbNewRelkonProject;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;        
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;
+        private System.Windows.Forms.ToolStripMenuItem ÍÓÌ‚ÂÚËÓ‚‡Ú¸ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton tsbOpen;
         private System.Windows.Forms.ToolStripButton tsbSave;
         private System.Windows.Forms.ToolStripButton tsbSaveAll;
@@ -1965,12 +1961,12 @@ namespace Kontel.Relkon
         private System.Windows.Forms.ToolStripButton tsbViewStructs;
         private System.Windows.Forms.ToolStripButton tsbEmulationMode2;
         private System.Windows.Forms.ToolStripMenuItem miLoadProjectProgram;
-        private System.Windows.Forms.ToolStripMenuItem miGetEmbVarsFromController;        
-        private System.Windows.Forms.ToolStripMenuItem kontelReLoaderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem miGetEmbVarsFromController;
+        private System.Windows.Forms.ToolStripMenuItem Á‡ÔÛÒÍReLoaderToolStripMenuItem;
         private Components.SolutionExplorer SolutionExplorer;
         private Components.DebuggerParametersPanel DebuggerParametersList;
         private Components.ErrorList ErrorsList;
-        private TD.SandDock.SandDockManager DocumentManager2;
+
 
 
     }

@@ -87,7 +87,7 @@
             this.linkLabel1.Size = new System.Drawing.Size(130, 16);
             this.linkLabel1.TabIndex = 4;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "©  ООО \"КОНТЭЛ\", 2012\r\n";
+            this.linkLabel1.Text = "©  ООО \"КОНТЭЛ\", 2013";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // button1

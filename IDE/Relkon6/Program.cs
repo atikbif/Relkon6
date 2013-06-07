@@ -5,6 +5,7 @@ using System.IO;
 using Kontel.Relkon;
 using Kontel.Relkon.Solutions;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace Kontel.Relkon
 {
@@ -32,6 +33,36 @@ namespace Kontel.Relkon
                 return di.FullName;
             }
         }
+
+        public static string AssemblyVersion
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
+                if (attributes.Length == 0)
+                    return "";
+                return ((AssemblyFileVersionAttribute)attributes[0]).Version;
+                //return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+        }
+
+        public static string AssemblyTitle
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                    if (titleAttribute.Title != "")
+                    {
+                        return titleAttribute.Title;
+                    }
+                }
+                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+            }
+        }       
+
         /// <summary>
         /// Возвращает имя каталога, в котором размещаются новые проекты
         /// </summary>

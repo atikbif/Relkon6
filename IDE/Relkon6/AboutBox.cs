@@ -12,41 +12,13 @@ namespace Kontel.Relkon
         public AboutBox()
         {
             InitializeComponent();
-            this.Text = String.Format("О программе {0}", AssemblyTitle);
-            this.lVersion.Text = String.Format("Версия {0}", AssemblyVersion);
+            this.Text = String.Format("О программе {0}", Program.AssemblyTitle);
+            this.lVersion.Text = String.Format("Версия {0}", Program.AssemblyVersion);
             this.rtbDesc.Text = AssemblyDescription;
         }
 
         #region Assembly Attribute Accessors
-
-        public string AssemblyTitle
-        {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (titleAttribute.Title != "")
-                    {
-                        return titleAttribute.Title;
-                    }
-                }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
-            }
-        }
-
-        public string AssemblyVersion
-        {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
-                if (attributes.Length == 0)
-                    return "";
-                return ((AssemblyFileVersionAttribute)attributes[0]).Version;
-                //return Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            }
-        }
+       
 
         public string AssemblyDescription
         {

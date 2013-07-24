@@ -20,8 +20,7 @@ namespace Kontel.Relkon.Components.Documents
 {
     partial class ViewIOSensorsTabbedDocument : DebuggerTabbedDocument
     {
-        private ControllerProgramSolution _solution;//Текущий проект
-        private DebuggerEngine _engine = null; // движок отладчика
+        private ControllerProgramSolution _solution;//Текущий проект     
         //Список цифровых входов
         private SortedList<int, Kontel.Relkon.Classes.ControllerVar> _inVarsDigital = new SortedList<int, Kontel.Relkon.Classes.ControllerVar>();
         //Список цифровых выходов
@@ -62,7 +61,7 @@ namespace Kontel.Relkon.Components.Documents
         public ViewIOSensorsTabbedDocument(ControllerProgramSolution solution, DebuggerEngine engine)
             : base(solution, engine)
         {
-            _engine = engine;
+            debuggerEngine = engine;
             _solution = solution;
             InitializeComponent();
         }
@@ -74,10 +73,10 @@ namespace Kontel.Relkon.Components.Documents
         /// <param name="e"></param>
         private void DigitalIOTabbedDocument_Load(object sender, EventArgs e)
         {
-            _engine.EngineStatusChanged += new EventHandler<DebuggerEngineStatusChangedEventArgs>(DebuggerParametersList_ChangeStatusEngine);
+            debuggerEngine.EngineStatusChanged += new EventHandler<DebuggerEngineStatusChangedEventArgs>(DebuggerParametersList_ChangeStatusEngine);
             //Загрузка параметров
             this._tpDefault = this.tabControl1.TabPages[0];
-            this.Update(_solution, _engine);
+            this.Update(_solution, debuggerEngine);
         }
 
 
@@ -86,11 +85,11 @@ namespace Kontel.Relkon.Components.Documents
         /// </summary>
         public override void Update(ControllerProgramSolution solution, DebuggerEngine engine)
         {
-            _engine = engine;
+            debuggerEngine = engine;
             if (solution != null)
                 _solution = solution;
             else
-                _solution = Kontel.Relkon.Solutions.ControllerProgramSolution.Create(_engine.Parameters.ProcessorType);
+                _solution = Kontel.Relkon.Solutions.ControllerProgramSolution.Create(debuggerEngine.Parameters.ProcessorType);
             CreateComponents();
             this.pSettings.Visible = true;
             if (_solution != null)
@@ -98,7 +97,7 @@ namespace Kontel.Relkon.Components.Documents
                 //Загрузка меток дискретных датчиков
                 this.digitalIO.ClearLabels();
                 Match m;
-                Relkon.DebuggerParameters.DigitalSensorDescription[] m_sensors = _engine.Parameters.DINSensors.ToArray();
+                Relkon.DebuggerParameters.DigitalSensorDescription[] m_sensors = debuggerEngine.Parameters.DINSensors.ToArray();
                 for (int i = 0; i < m_sensors.Length; i++)
                 {
                     Relkon.DebuggerParameters.SensorLabels[] m_labelse = m_sensors[i].Labels.ToArray();
@@ -112,7 +111,7 @@ namespace Kontel.Relkon.Components.Documents
                         catch{}
                     }
                 }
-                m_sensors = _engine.Parameters.DOUTSensors.ToArray();
+                m_sensors = debuggerEngine.Parameters.DOUTSensors.ToArray();
                 for (int i = 0; i < m_sensors.Length; i++)
                 {
                     Relkon.DebuggerParameters.SensorLabels[] m_labelse = m_sensors[i].Labels.ToArray();
@@ -130,33 +129,33 @@ namespace Kontel.Relkon.Components.Documents
                 IList<int> m_key = this._inVarsAnalog.Keys;
                 for (int i = 0; i < this._inVarsAnalog.Count; i++)
                 {
-                    for (int j = 0; j < _engine.Parameters.ADCSensors.Count; j++)
-                        if (_engine.Parameters.ADCSensors[j].Name == this.ascInputs[i].SensorName)
+                    for (int j = 0; j < debuggerEngine.Parameters.ADCSensors.Count; j++)
+                        if (debuggerEngine.Parameters.ADCSensors[j].Name == this.ascInputs[i].SensorName)
                         {
-                            this.ascInputs[i].SensorLabel = _engine.Parameters.ADCSensors[j].Caption;
-                            this.ascInputs[i].SigleByte = _engine.Parameters.ADCSensors[j].DisplayOneByte;
+                            this.ascInputs[i].SensorLabel = debuggerEngine.Parameters.ADCSensors[j].Caption;
+                            this.ascInputs[i].SigleByte = debuggerEngine.Parameters.ADCSensors[j].DisplayOneByte;
                             break;
                         }
                 }
                 m_key = this._outVarsAnalog.Keys;
                 for (int i = 0; i < this._outVarsAnalog.Count; i++)
                 {
-                    for (int j = 0; j < _engine.Parameters.DACSensors.Count; j++)
-                        if (_engine.Parameters.DACSensors[j].Name == this.ascOutputs[i].SensorName)
+                    for (int j = 0; j < debuggerEngine.Parameters.DACSensors.Count; j++)
+                        if (debuggerEngine.Parameters.DACSensors[j].Name == this.ascOutputs[i].SensorName)
                         {
-                            this.ascOutputs[i].SensorLabel = _engine.Parameters.DACSensors[j].Caption;
-                            this.ascOutputs[i].SigleByte = _engine.Parameters.DACSensors[j].DisplayOneByte;
+                            this.ascOutputs[i].SensorLabel = debuggerEngine.Parameters.DACSensors[j].Caption;
+                            this.ascOutputs[i].SigleByte = debuggerEngine.Parameters.DACSensors[j].DisplayOneByte;
                             break;
                         }
                 }
             }
             //Установка доступности полей в зависимости от состояния отладчика
-            DebuggerParametersList_ChangeStatusEngine(null, new Debugger.DebuggerEngineStatusChangedEventArgs(_engine.EngineStatus, null));
+            DebuggerParametersList_ChangeStatusEngine(null, new Debugger.DebuggerEngineStatusChangedEventArgs(debuggerEngine.EngineStatus, null));
             //Установка невидемыми встроенных датчиков
 
-            if (this.cbDefault.Checked != _engine.Parameters.DisplayDefault || _engine.Parameters.ProcessorType == ProcessorType.AT89C51ED2)
+            if (this.cbDefault.Checked != debuggerEngine.Parameters.DisplayDefault || debuggerEngine.Parameters.ProcessorType == ProcessorType.AT89C51ED2)
             {
-                this.cbDefault.Checked = _engine.Parameters.ProcessorType == ProcessorType.STM32F107 ? _engine.Parameters.DisplayDefault : true;
+                this.cbDefault.Checked = debuggerEngine.Parameters.ProcessorType == ProcessorType.STM32F107 ? debuggerEngine.Parameters.DisplayDefault : true;
                 checkBox1_CheckedChanged(this.cbDefault, null);
             }
 
@@ -168,10 +167,10 @@ namespace Kontel.Relkon.Components.Documents
                 tp.Dispose();
             }
             this.tpBloks = new SortedList<int, TD.SandDock.TabPage>();
-            if (_engine.Parameters.ProcessorType == ProcessorType.STM32F107)
+            if (debuggerEngine.Parameters.ProcessorType == ProcessorType.STM32F107)
             {
                 //Создание всех вкалдок из параметров отладчика
-                foreach (Kontel.Relkon.DebuggerParameters.Block b in _engine.Parameters.ModulBlocks)
+                foreach (Kontel.Relkon.DebuggerParameters.Block b in debuggerEngine.Parameters.ModulBlocks)
                 {
                     this.CreateTabPage(b.Number, b.Caption,false);
                 }
@@ -226,7 +225,7 @@ namespace Kontel.Relkon.Components.Documents
                     if (digitalIO.InVars[Convert.ToInt32(m.Groups[1].Value)].PrimaryValue != Buffer[0])
                     {
                         digitalIO.ChangeStatePictures(true, Convert.ToInt32(m.Groups[1].Value), Buffer[0]);
-                        foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription dsd in _engine.Parameters.DINSensors)
+                        foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription dsd in debuggerEngine.Parameters.DINSensors)
                             if (dsd.Name == "DIN" + Convert.ToInt32(m.Groups[1].Value))
                             {
                                 dsd.Value = Buffer;
@@ -239,7 +238,7 @@ namespace Kontel.Relkon.Components.Documents
                         dsd1.MemoryType = CurentValue1.Memory;
                         dsd1.Address = CurentValue1.Address;
                         dsd1.Value = Buffer;
-                        _engine.Parameters.DINSensors.Add(dsd1);
+                        debuggerEngine.Parameters.DINSensors.Add(dsd1);
                         return;
                     }
                 }
@@ -249,7 +248,7 @@ namespace Kontel.Relkon.Components.Documents
                     if (digitalIO.OutVars[Convert.ToInt32(m.Groups[1].Value)].PrimaryValue != Buffer[0])
                     {
                         digitalIO.ChangeStatePictures(false, Convert.ToInt32(m.Groups[1].Value), Buffer[0]);
-                        foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription dsd in _engine.Parameters.DOUTSensors)
+                        foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription dsd in debuggerEngine.Parameters.DOUTSensors)
                             if (dsd.Name == "DOUT" + Convert.ToInt32(m.Groups[1].Value))
                             {
                                 dsd.Value = Buffer;
@@ -262,7 +261,7 @@ namespace Kontel.Relkon.Components.Documents
                         dsd1.MemoryType = CurentValue1.Memory;
                         dsd1.Address = CurentValue1.Address;
                         dsd1.Value = Buffer;
-                        _engine.Parameters.DOUTSensors.Add(dsd1);
+                        debuggerEngine.Parameters.DOUTSensors.Add(dsd1);
                         return;
                     }
                 }
@@ -307,11 +306,11 @@ namespace Kontel.Relkon.Components.Documents
                     Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl m_sender = (Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl)Marker;
                     if (!m_sender.Edited)
                     {
-                        m_sender.InverseByteOrder = _engine.Parameters.InverseByteOrder;
+                        m_sender.InverseByteOrder = debuggerEngine.Parameters.InverseByteOrder;
                         m_sender.SetData(Buffer);
                         if (m_sender.SensorName.Contains("ADC"))
                         {
-                            foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription dsd in _engine.Parameters.ADCSensors)
+                            foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription dsd in debuggerEngine.Parameters.ADCSensors)
                             {
                                  if (dsd.Name == m_sender.SensorName)
                                 {
@@ -329,12 +328,12 @@ namespace Kontel.Relkon.Components.Documents
                             dsd1.MemoryType = CurentValue1.Memory;
                             dsd1.Address = CurentValue1.Address;
                             dsd1.Value = Buffer;
-                            _engine.Parameters.ADCSensors.Add(dsd1);
+                            debuggerEngine.Parameters.ADCSensors.Add(dsd1);
                             return;
                         }
                         else if (m_sender.SensorName.Contains("DAC"))
                         {
-                            foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription dsd in _engine.Parameters.DACSensors)
+                            foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription dsd in debuggerEngine.Parameters.DACSensors)
                                 if (dsd.Name == m_sender.SensorName)
                                 {
                                     ControllerIOVar CurentValue = _solution.Vars.GetIOVar(m_sender.SensorName);
@@ -350,7 +349,7 @@ namespace Kontel.Relkon.Components.Documents
                             dsd1.MemoryType = CurentValue1.Memory;
                             dsd1.Address = CurentValue1.Address;
                             dsd1.Value = Buffer;
-                            _engine.Parameters.DACSensors.Add(dsd1);
+                            debuggerEngine.Parameters.DACSensors.Add(dsd1);
                             return;
                         }
                     }
@@ -369,6 +368,8 @@ namespace Kontel.Relkon.Components.Documents
             _outVarsDigital.Clear();
             _inVarsAnalog.Clear();
             _outVarsAnalog.Clear();
+
+
             if (_solution != null)
             {
                 //Цифровые переменные
@@ -423,7 +424,7 @@ namespace Kontel.Relkon.Components.Documents
                     this.ascInputs[i]=new Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl(2);
                     this.pInput.Controls.Add(ascInputs[i]);
                     this.ascInputs[i].BackColor = System.Drawing.SystemColors.Control;
-                    this.ascInputs[i].InverseByteOrder = _engine.Parameters.InverseByteOrder;
+                    this.ascInputs[i].InverseByteOrder = debuggerEngine.Parameters.InverseByteOrder;
                     this.ascInputs[i].Location = new System.Drawing.Point(0, 0 + i * (this.ascInputs[i].Height + 0));
                     this.ascInputs[i].ValueFieldColor = Color.FromArgb(102, 254, 51);
                     this.ascInputs[i].SensorLabel = "";
@@ -444,7 +445,7 @@ namespace Kontel.Relkon.Components.Documents
                     this.ascOutputs[i] = new Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl(2);
                     this.pOutput.Controls.Add(ascOutputs[i]);
                     this.ascOutputs[i].BackColor = System.Drawing.SystemColors.Control;
-                    this.ascOutputs[i].InverseByteOrder = _engine.Parameters.InverseByteOrder;
+                    this.ascOutputs[i].InverseByteOrder = debuggerEngine.Parameters.InverseByteOrder;
                     this.ascOutputs[i].Location = new System.Drawing.Point(0, 0 + i * (this.ascInputs[i].Height + 0));
                     this.ascOutputs[i].SensorLabel = "";
                     this.ascOutputs[i].ValueFieldColor = Color.FromArgb(255, 121, 75);
@@ -473,18 +474,18 @@ namespace Kontel.Relkon.Components.Documents
                 m_key = _inVarsDigital.Keys;
                 for (int i = 0; i < _inVarsDigital.Count; i++)
                 {
-                    if (this.cbDefault.Checked || _engine.Parameters.ProcessorType == ProcessorType.AT89C51ED2 || i > 3)
+                    if (this.cbDefault.Checked || debuggerEngine.Parameters.ProcessorType == ProcessorType.AT89C51ED2 || i > 3)
                     {
-                        try { _engine.AddReadItem(_inVarsDigital[m_key[i]].Address, _inVarsDigital[m_key[i]].Memory, _inVarsDigital[m_key[i]].Size, "DIN_" + m_key[i], null, RefreshInterfaseDigital); }
+                        try { debuggerEngine.AddReadItem(_inVarsDigital[m_key[i]].Address, _inVarsDigital[m_key[i]].Memory, _inVarsDigital[m_key[i]].Size, "DIN_" + m_key[i], null, RefreshInterfaseDigital); }
                         catch { }
                     }
                 }
                 m_key = _outVarsDigital.Keys;
                 for (int i = 0; i < _outVarsDigital.Count; i++)
                 {
-                    if (this.cbDefault.Checked || _engine.Parameters.ProcessorType == ProcessorType.AT89C51ED2 || i > 3)
+                    if (this.cbDefault.Checked || debuggerEngine.Parameters.ProcessorType == ProcessorType.AT89C51ED2 || i > 3)
                     {
-                        try { _engine.AddReadItem(_outVarsDigital[m_key[i]].Address, _outVarsDigital[m_key[i]].Memory, _outVarsDigital[m_key[i]].Size, "DOUT_" + m_key[i], null, RefreshInterfaseDigital); }
+                        try { debuggerEngine.AddReadItem(_outVarsDigital[m_key[i]].Address, _outVarsDigital[m_key[i]].Memory, _outVarsDigital[m_key[i]].Size, "DOUT_" + m_key[i], null, RefreshInterfaseDigital); }
                         catch { }
                     }
                 }
@@ -492,19 +493,19 @@ namespace Kontel.Relkon.Components.Documents
                 Kontel.Relkon.Classes.ControllerVar m_var;
                 for (int i = 0; i < this.ascInputs.Length; i++)
                 {
-                    if (this.cbDefault.Checked || _engine.Parameters.ProcessorType == ProcessorType.AT89C51ED2 || i > 7)
+                    if (this.cbDefault.Checked || debuggerEngine.Parameters.ProcessorType == ProcessorType.AT89C51ED2 || i > 7)
                     {
                         m_var = _solution.Vars.GetIOVar(this.ascInputs[i].SensorName);
-                        try { _engine.AddReadItem(m_var.Address, m_var.Memory, m_var.Size, this.ascInputs[i], null, RefreshInterfaseAnalog); }
+                        try { debuggerEngine.AddReadItem(m_var.Address, m_var.Memory, m_var.Size, this.ascInputs[i], null, RefreshInterfaseAnalog); }
                         catch { }
                     }
                 }
                 for (int i = 0; i < this.ascOutputs.Length; i++)
                 {
-                    if (this.cbDefault.Checked || _engine.Parameters.ProcessorType == ProcessorType.AT89C51ED2 || i > 1)
+                    if (this.cbDefault.Checked || debuggerEngine.Parameters.ProcessorType == ProcessorType.AT89C51ED2 || i > 1)
                     {
                         m_var = _solution.Vars.GetIOVar(this.ascOutputs[i].SensorName);
-                        try { _engine.AddReadItem(m_var.Address, m_var.Memory, m_var.Size, this.ascOutputs[i], null, RefreshInterfaseAnalog); }
+                        try { debuggerEngine.AddReadItem(m_var.Address, m_var.Memory, m_var.Size, this.ascOutputs[i], null, RefreshInterfaseAnalog); }
                         catch { }
                     }
                 }
@@ -534,26 +535,26 @@ namespace Kontel.Relkon.Components.Documents
             IList<int> m_key = _inVarsDigital.Keys;
             for (int i = 0; i < _inVarsDigital.Count; i++)
             {
-                try { _engine.RemoveReadItem(_inVarsDigital[m_key[i]].Address, _inVarsDigital[m_key[i]].Memory, "DIN_" + m_key[i]); }
+                try { debuggerEngine.RemoveReadItem(_inVarsDigital[m_key[i]].Address, _inVarsDigital[m_key[i]].Memory, "DIN_" + m_key[i]); }
                 catch { }
             }
             m_key = _outVarsDigital.Keys;
             for (int i = 0; i < _outVarsDigital.Count; i++)
             {
-                try { _engine.RemoveReadItem(_outVarsDigital[m_key[i]].Address, _outVarsDigital[m_key[i]].Memory, "DOUT_" + m_key[i]); }
+                try { debuggerEngine.RemoveReadItem(_outVarsDigital[m_key[i]].Address, _outVarsDigital[m_key[i]].Memory, "DOUT_" + m_key[i]); }
                 catch {}
             }
             //Остановка чения аналоговых датчиков
             for (int i = 0; i < this.ascInputs.Length; i++)
             {
                 Kontel.Relkon.Classes.ControllerVar m_var = _solution.Vars.GetVarByName(this.ascInputs[i].SensorName);
-                try { _engine.RemoveReadItem(m_var.Address, m_var.Memory, this.ascInputs[i]); }
+                try { debuggerEngine.RemoveReadItem(m_var.Address, m_var.Memory, this.ascInputs[i]); }
                 catch {}
             }
             for (int i = 0; i < this.ascOutputs.Length; i++)
             {
                 Kontel.Relkon.Classes.ControllerVar m_var = _solution.Vars.GetVarByName(this.ascOutputs[i].SensorName);
-                try { _engine.RemoveReadItem(m_var.Address, m_var.Memory, this.ascOutputs[i]); }
+                try { debuggerEngine.RemoveReadItem(m_var.Address, m_var.Memory, this.ascOutputs[i]); }
                 catch {}
             }
             //Остановка чтения остальных вкладок
@@ -573,10 +574,10 @@ namespace Kontel.Relkon.Components.Documents
         private void ViewIOSensorsTabbedDocument_ValueChanged(object sender, EventArgs e)
         {
             Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl Sender = (Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl)sender;
-            if (_engine.EngineStatus == DebuggerEngineStatus.Started)
+            if (debuggerEngine.EngineStatus == DebuggerEngineStatus.Started)
             {
                 Kontel.Relkon.Classes.ControllerVar m_var = _solution.Vars.GetVarByName(Sender.SensorName);
-                _engine.AddWriteItem(m_var.Address, m_var.Memory, Sender.GetData(), "Analog_W_" + m_var.Name, null, null);
+                debuggerEngine.AddWriteItem(m_var.Address, m_var.Memory, Sender.GetData(), "Analog_W_" + m_var.Name, null, null);
             }
 
         }
@@ -590,10 +591,10 @@ namespace Kontel.Relkon.Components.Documents
             Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl Sender = (Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl)sender;
             if (Sender.SensorName.Contains("ADC"))
             {
-                for (int i = 0; i < _engine.Parameters.ADCSensors.Count; i++)
-                    if (_engine.Parameters.ADCSensors[i].Name == Sender.SensorName)
+                for (int i = 0; i < debuggerEngine.Parameters.ADCSensors.Count; i++)
+                    if (debuggerEngine.Parameters.ADCSensors[i].Name == Sender.SensorName)
                     {
-                        _engine.Parameters.ADCSensors[i].DisplayOneByte = Sender.SigleByte;
+                        debuggerEngine.Parameters.ADCSensors[i].DisplayOneByte = Sender.SigleByte;
                         return;
                     }
                 //добавления метки в параметры отладчика
@@ -604,14 +605,14 @@ namespace Kontel.Relkon.Components.Documents
                 ControllerIOVar CurentValue = _solution.Vars.GetIOVar(Sender.SensorName);
                 m_s.MemoryType = CurentValue.Memory;
                 m_s.Address = CurentValue.Address;
-                _engine.Parameters.ADCSensors.Add(m_s);
+                debuggerEngine.Parameters.ADCSensors.Add(m_s);
             }
             else
             {
-                for (int i = 0; i < _engine.Parameters.DACSensors.Count; i++)
-                    if (_engine.Parameters.DACSensors[i].Name == Sender.SensorName)
+                for (int i = 0; i < debuggerEngine.Parameters.DACSensors.Count; i++)
+                    if (debuggerEngine.Parameters.DACSensors[i].Name == Sender.SensorName)
                     {
-                        _engine.Parameters.DACSensors[i].DisplayOneByte = Sender.SigleByte;
+                        debuggerEngine.Parameters.DACSensors[i].DisplayOneByte = Sender.SigleByte;
                         return;
                     }
                 //добавления метки в параметры отладчика
@@ -622,7 +623,7 @@ namespace Kontel.Relkon.Components.Documents
                 ControllerIOVar CurentValue = _solution.Vars.GetIOVar(Sender.SensorName);
                 m_s.MemoryType = CurentValue.Memory;
                 m_s.Address = CurentValue.Address;
-                _engine.Parameters.DACSensors.Add(m_s);
+                debuggerEngine.Parameters.DACSensors.Add(m_s);
             }
         }
 
@@ -636,10 +637,10 @@ namespace Kontel.Relkon.Components.Documents
             Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl Sender = (Kontel.Relkon.Components.Documents.DebuggerTabbedDocuments.ViewIOSensorsTabbedDocument.AnalogSensorControl)sender;
             if (Sender.SensorName.Contains("ADC"))
             {
-                for (int i = 0; i < _engine.Parameters.ADCSensors.Count; i++)
-                    if (_engine.Parameters.ADCSensors[i].Name == Sender.SensorName)
+                for (int i = 0; i < debuggerEngine.Parameters.ADCSensors.Count; i++)
+                    if (debuggerEngine.Parameters.ADCSensors[i].Name == Sender.SensorName)
                     {
-                        _engine.Parameters.ADCSensors[i].Caption = Sender.SensorLabel;
+                        debuggerEngine.Parameters.ADCSensors[i].Caption = Sender.SensorLabel;
                         return;
                     }
              //добавления метки в параметры отладчика
@@ -650,14 +651,14 @@ namespace Kontel.Relkon.Components.Documents
                 ControllerIOVar CurentValue = _solution.Vars.GetIOVar(Sender.SensorName);
                 m_s.MemoryType = CurentValue.Memory;
                 m_s.Address = CurentValue.Address;
-                _engine.Parameters.ADCSensors.Add(m_s);
+                debuggerEngine.Parameters.ADCSensors.Add(m_s);
             }
             else
             {
-                for (int i = 0; i < _engine.Parameters.DACSensors.Count; i++)
-                    if (_engine.Parameters.DACSensors[i].Name == Sender.SensorName)
+                for (int i = 0; i < debuggerEngine.Parameters.DACSensors.Count; i++)
+                    if (debuggerEngine.Parameters.DACSensors[i].Name == Sender.SensorName)
                     {
-                        _engine.Parameters.DACSensors[i].Caption = Sender.SensorLabel;
+                        debuggerEngine.Parameters.DACSensors[i].Caption = Sender.SensorLabel;
                         return;
                     }
                 //добавления метки в параметры отладчика
@@ -668,7 +669,7 @@ namespace Kontel.Relkon.Components.Documents
                 ControllerIOVar CurentValue = _solution.Vars.GetIOVar(Sender.SensorName);
                 m_s.MemoryType = CurentValue.Memory;
                 m_s.Address = CurentValue.Address;
-                _engine.Parameters.DACSensors.Add(m_s);
+                debuggerEngine.Parameters.DACSensors.Add(m_s);
             }
         }
 
@@ -679,16 +680,16 @@ namespace Kontel.Relkon.Components.Documents
         /// <param name="e"></param>
         private void digitalIO_StateChange(object sender, DigitalIO.StateChangeEventArgs e)
         {
-            if (_engine.EngineStatus == DebuggerEngineStatus.Started)
+            if (debuggerEngine.EngineStatus == DebuggerEngineStatus.Started)
                 try
                 {
                     if (!e.IsInput)
                     {
-                        _engine.AddWriteItem(_outVarsDigital[e.Key].Address, _outVarsDigital[e.Key].Memory, new Byte[] { e.New_value }, "DOUT_W_" + _outVarsDigital[e.Key].Name+"_"+e.Index, null, WriteFinish);
+                        debuggerEngine.AddWriteItem(_outVarsDigital[e.Key].Address, _outVarsDigital[e.Key].Memory, new Byte[] { e.New_value }, "DOUT_W_" + _outVarsDigital[e.Key].Name+"_"+e.Index, null, WriteFinish);
                     }
                     else
                     {
-                        _engine.AddWriteItem(_inVarsDigital[e.Key].Address, _inVarsDigital[e.Key].Memory, new Byte[] { e.New_value }, "DIN_W_" + _inVarsDigital[e.Key].Name+"_"+e.Index, null,WriteFinish);
+                        debuggerEngine.AddWriteItem(_inVarsDigital[e.Key].Address, _inVarsDigital[e.Key].Memory, new Byte[] { e.New_value }, "DIN_W_" + _inVarsDigital[e.Key].Name+"_"+e.Index, null,WriteFinish);
                     }
                 }
                 catch (Exception ex)
@@ -731,9 +732,9 @@ namespace Kontel.Relkon.Components.Documents
         {
             if (e.IsInput)
             {
-                for (int i = 0; i < _engine.Parameters.DINSensors.Count+1; i++)
+                for (int i = 0; i < debuggerEngine.Parameters.DINSensors.Count+1; i++)
                 {
-                    if (i == _engine.Parameters.DINSensors.Count)
+                    if (i == debuggerEngine.Parameters.DINSensors.Count)
                     {
                         Kontel.Relkon.DebuggerParameters.SensorLabels m_caption = new DebuggerParameters.SensorLabels();
                         m_caption.Number = e.Index;
@@ -741,18 +742,18 @@ namespace Kontel.Relkon.Components.Documents
                         Kontel.Relkon.DebuggerParameters.DigitalSensorDescription m_sensor = new DebuggerParameters.DigitalSensorDescription();
                         m_sensor.Labels.Add(m_caption);
                         m_sensor.Name = "DIN" + e.Key;
-                        _engine.Parameters.DINSensors.Add(m_sensor);
+                        debuggerEngine.Parameters.DINSensors.Add(m_sensor);
                         break;
                     }
-                    if (_engine.Parameters.DINSensors[i].Name == ("DIN" + e.Key))
+                    if (debuggerEngine.Parameters.DINSensors[i].Name == ("DIN" + e.Key))
                     {
                         if ((e.Text != null) && (e.Text != ""))
                         {
                             bool m_exit = false;
-                            for (int j = 0; j < _engine.Parameters.DINSensors[i].Labels.Count; j++)
-                                if (_engine.Parameters.DINSensors[i].Labels[j].Number == e.Index)
+                            for (int j = 0; j < debuggerEngine.Parameters.DINSensors[i].Labels.Count; j++)
+                                if (debuggerEngine.Parameters.DINSensors[i].Labels[j].Number == e.Index)
                                 {
-                                    _engine.Parameters.DINSensors[i].Labels[j].Caption = e.Text; m_exit = true;
+                                    debuggerEngine.Parameters.DINSensors[i].Labels[j].Caption = e.Text; m_exit = true;
                                     break;
                                 }
                             if (!m_exit)
@@ -760,28 +761,28 @@ namespace Kontel.Relkon.Components.Documents
                                 Kontel.Relkon.DebuggerParameters.SensorLabels m_caption = new DebuggerParameters.SensorLabels();
                                 m_caption.Number = e.Index;
                                 m_caption.Caption = e.Text;
-                                _engine.Parameters.DINSensors[i].Labels.Add(m_caption);
+                                debuggerEngine.Parameters.DINSensors[i].Labels.Add(m_caption);
                             }
                         }
                         else
                         {
-                            for (int j = 0; j < _engine.Parameters.DINSensors[i].Labels.Count; j++)
+                            for (int j = 0; j < debuggerEngine.Parameters.DINSensors[i].Labels.Count; j++)
                             {
-                                if (_engine.Parameters.DINSensors[i].Labels[j].Number == e.Index)
-                                { _engine.Parameters.DINSensors[i].Labels.Remove(_engine.Parameters.DINSensors[i].Labels[j]); break; }
+                                if (debuggerEngine.Parameters.DINSensors[i].Labels[j].Number == e.Index)
+                                { debuggerEngine.Parameters.DINSensors[i].Labels.Remove(debuggerEngine.Parameters.DINSensors[i].Labels[j]); break; }
                             }
                         }
-                        if (_engine.Parameters.DINSensors[i].Labels.Count == 0)
-                            _engine.Parameters.DINSensors.Remove(_engine.Parameters.DINSensors[i]);
+                        if (debuggerEngine.Parameters.DINSensors[i].Labels.Count == 0)
+                            debuggerEngine.Parameters.DINSensors.Remove(debuggerEngine.Parameters.DINSensors[i]);
                         break;
                     }
                 }
             }
             else
             {
-                for (int i = 0; i < _engine.Parameters.DOUTSensors.Count + 1; i++)
+                for (int i = 0; i < debuggerEngine.Parameters.DOUTSensors.Count + 1; i++)
                 {
-                    if (i == _engine.Parameters.DOUTSensors.Count)
+                    if (i == debuggerEngine.Parameters.DOUTSensors.Count)
                     {
                         Kontel.Relkon.DebuggerParameters.SensorLabels m_caption = new DebuggerParameters.SensorLabels();
                         m_caption.Number = e.Index;
@@ -789,18 +790,18 @@ namespace Kontel.Relkon.Components.Documents
                         Kontel.Relkon.DebuggerParameters.DigitalSensorDescription m_sensor = new DebuggerParameters.DigitalSensorDescription();
                         m_sensor.Labels.Add(m_caption);
                         m_sensor.Name = "DOUT" + e.Key;
-                        _engine.Parameters.DOUTSensors.Add(m_sensor);
+                        debuggerEngine.Parameters.DOUTSensors.Add(m_sensor);
                         break;
                     }
-                    if (_engine.Parameters.DOUTSensors[i].Name == ("DOUT" + e.Key))
+                    if (debuggerEngine.Parameters.DOUTSensors[i].Name == ("DOUT" + e.Key))
                     {
                         if ((e.Text != null) && (e.Text != ""))
                         {
                             bool m_exit = false;
-                            for (int j = 0; j < _engine.Parameters.DOUTSensors[i].Labels.Count; j++)
-                                if (_engine.Parameters.DOUTSensors[i].Labels[j].Number == e.Index)
+                            for (int j = 0; j < debuggerEngine.Parameters.DOUTSensors[i].Labels.Count; j++)
+                                if (debuggerEngine.Parameters.DOUTSensors[i].Labels[j].Number == e.Index)
                                 {
-                                    _engine.Parameters.DOUTSensors[i].Labels[j].Caption = e.Text; m_exit = true;
+                                    debuggerEngine.Parameters.DOUTSensors[i].Labels[j].Caption = e.Text; m_exit = true;
                                     break;
                                 }
                             if (!m_exit)
@@ -808,19 +809,19 @@ namespace Kontel.Relkon.Components.Documents
                                 Kontel.Relkon.DebuggerParameters.SensorLabels m_caption = new DebuggerParameters.SensorLabels();
                                 m_caption.Number = e.Index;
                                 m_caption.Caption = e.Text;
-                                _engine.Parameters.DOUTSensors[i].Labels.Add(m_caption);
+                                debuggerEngine.Parameters.DOUTSensors[i].Labels.Add(m_caption);
                             }
                         }
                         else
                         {
-                            for (int j = 0; j < _engine.Parameters.DOUTSensors[i].Labels.Count; j++)
+                            for (int j = 0; j < debuggerEngine.Parameters.DOUTSensors[i].Labels.Count; j++)
                             {
-                                if (_engine.Parameters.DOUTSensors[i].Labels[j].Number == e.Index)
-                                { _engine.Parameters.DOUTSensors[i].Labels.Remove(_engine.Parameters.DOUTSensors[i].Labels[j]); break; }
+                                if (debuggerEngine.Parameters.DOUTSensors[i].Labels[j].Number == e.Index)
+                                { debuggerEngine.Parameters.DOUTSensors[i].Labels.Remove(debuggerEngine.Parameters.DOUTSensors[i].Labels[j]); break; }
                             }
                         }
-                        if (_engine.Parameters.DOUTSensors[i].Labels.Count == 0)
-                            _engine.Parameters.DOUTSensors.Remove(_engine.Parameters.DOUTSensors[i]);
+                        if (debuggerEngine.Parameters.DOUTSensors[i].Labels.Count == 0)
+                            debuggerEngine.Parameters.DOUTSensors.Remove(debuggerEngine.Parameters.DOUTSensors[i]);
                         break;
                     }
                 }
@@ -849,10 +850,10 @@ namespace Kontel.Relkon.Components.Documents
         private void ViewIOSensorsTabbedDocument_Closing(object sender, TD.SandDock.DockControlClosingEventArgs e)
         {
             _IsOpen = false;
-            _engine.EngineStatusChanged -= new EventHandler<DebuggerEngineStatusChangedEventArgs>(DebuggerParametersList_ChangeStatusEngine);
+            debuggerEngine.EngineStatusChanged -= new EventHandler<DebuggerEngineStatusChangedEventArgs>(DebuggerParametersList_ChangeStatusEngine);
             foreach (TD.SandDock.TabPage tp in this.tpBloks.Values)
             {
-                _engine.EngineStatusChanged -= new EventHandler<DebuggerEngineStatusChangedEventArgs>(((DisplayBlock)tp.Controls.Find("displayBlock", true)[0]).DebuggerParametersList_ChangeStatusEngine);
+                debuggerEngine.EngineStatusChanged -= new EventHandler<DebuggerEngineStatusChangedEventArgs>(((DisplayBlock)tp.Controls.Find("displayBlock", true)[0]).DebuggerParametersList_ChangeStatusEngine);
             }
             this.RemoveReadItems();
         }
@@ -869,8 +870,8 @@ namespace Kontel.Relkon.Components.Documents
                 this.tabControl1.Controls.Remove(_tpDefault);
             this.RemoveReadItems();
             this.AddedReadItems();
-            _engine.Parameters.DisplayDefault = _engine.Parameters.ProcessorType == ProcessorType.STM32F107 ? this.cbDefault.Checked : _engine.Parameters.DisplayDefault;
-            if (!_engine.Parameters.DisplayDefault) _engine.EngineStatusChanged -= new EventHandler<DebuggerEngineStatusChangedEventArgs>(DebuggerParametersList_ChangeStatusEngine);
+            debuggerEngine.Parameters.DisplayDefault = debuggerEngine.Parameters.ProcessorType == ProcessorType.STM32F107 ? this.cbDefault.Checked : debuggerEngine.Parameters.DisplayDefault;
+            if (!debuggerEngine.Parameters.DisplayDefault) debuggerEngine.EngineStatusChanged -= new EventHandler<DebuggerEngineStatusChangedEventArgs>(DebuggerParametersList_ChangeStatusEngine);
         }
 
         //`////////////////////////////////////////////////////////////////
@@ -888,7 +889,7 @@ namespace Kontel.Relkon.Components.Documents
                 if (tpBloks.Keys[i] > max) max = tpBloks.Keys[i];
             max++;
             CreateTabPage(max, "Вкладка" + max.ToString(),true);
-            ((DisplayBlock)this.tpBloks[max].Controls.Find("displayBlock", true)[0]).Update_presentation(_solution, _engine);
+            ((DisplayBlock)this.tpBloks[max].Controls.Find("displayBlock", true)[0]).Update_presentation(_solution, debuggerEngine);
         }
 
         private void CreateTabPage(int Number, string Name,bool IsNew)
@@ -896,7 +897,7 @@ namespace Kontel.Relkon.Components.Documents
             //Создаение новой вкладки с заданным номером
             tpBloks.Add(Number, new TD.SandDock.TabPage());
             this.tabControl1.Controls.Add(tpBloks[Number]);
-            DisplayBlock displayBlock = new DisplayBlock(_solution, _engine,Number);
+            DisplayBlock displayBlock = new DisplayBlock(_solution, debuggerEngine,Number);
             tpBloks[Number].Controls.Add(displayBlock);
             tpBloks[Number].Name="tpBloks_"+Number;//не уверена что надо
             displayBlock.Dock = DockStyle.Fill;
@@ -911,7 +912,7 @@ namespace Kontel.Relkon.Components.Documents
                 b.Caption = "";
                 b.Number = Number;
                 b.Vars = new List<string>();
-                _engine.Parameters.ModulBlocks.Add(b);
+                debuggerEngine.Parameters.ModulBlocks.Add(b);
             }
             //Установка значения вкладки по умолчанию
             displayBlock.tbCaption.Text = Name;
@@ -921,7 +922,7 @@ namespace Kontel.Relkon.Components.Documents
         {
             TextBox tb = (TextBox)sender;
             tpBloks[(int)tb.Tag].Text = tb.Text;
-            foreach (Kontel.Relkon.DebuggerParameters.Block b in _engine.Parameters.ModulBlocks)
+            foreach (Kontel.Relkon.DebuggerParameters.Block b in debuggerEngine.Parameters.ModulBlocks)
             {
                 if (b.Number == (int)tb.Tag)
                 {
@@ -936,11 +937,11 @@ namespace Kontel.Relkon.Components.Documents
             Button b = (Button)sender;
             _deletedPage = (int)b.Tag;
             //Поиск и удаление вкладки из параметров отладчик
-            foreach (Kontel.Relkon.DebuggerParameters.Block bl in _engine.Parameters.ModulBlocks)
+            foreach (Kontel.Relkon.DebuggerParameters.Block bl in debuggerEngine.Parameters.ModulBlocks)
             {
                 if (bl.Number == (int)b.Tag)
                 {
-                    _engine.Parameters.ModulBlocks.Remove(bl);
+                    debuggerEngine.Parameters.ModulBlocks.Remove(bl);
                     break;
                 }
             }

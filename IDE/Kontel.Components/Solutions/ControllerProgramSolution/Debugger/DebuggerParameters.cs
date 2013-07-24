@@ -96,11 +96,14 @@ namespace Kontel.Relkon
             public List<string> Vars = new List<string>();
         }
 
+        [XmlAttribute]
+        public string SolutionPath = "";
+
         /// <summary>
         /// Тип процессора опрашиваемого контроллера
         /// </summary>
         [XmlAttribute]
-        public ProcessorType ProcessorType = ProcessorType.AT89C51ED2;
+        public ProcessorType ProcessorType = ProcessorType.STM32F107;
         /// <summary>
         /// Тип протокола, по которому работает опрашиваемый контроллер
         /// </summary>

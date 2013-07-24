@@ -38,8 +38,7 @@
             System.Windows.Forms.Label label14;
             System.Windows.Forms.Label label6;
             this.RefreshFormTimer = new System.Windows.Forms.Timer(this.components);
-            this.borderPanel1 = new Kontel.Relkon.BorderPanel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.borderPanel1 = new Kontel.Relkon.BorderPanel();         
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.bSyncTimeWithPC = new System.Windows.Forms.Button();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
@@ -173,8 +172,7 @@
             // 
             this.borderPanel1.AutoScroll = true;
             this.borderPanel1.AutoScrollMargin = new System.Drawing.Size(5, 5);
-            this.borderPanel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(168)))), ((int)(((byte)(168)))));
-            this.borderPanel1.Controls.Add(this.button1);
+            this.borderPanel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(168)))), ((int)(((byte)(168)))), ((int)(((byte)(168)))));           
             this.borderPanel1.Controls.Add(this.groupBox2);
             this.borderPanel1.Controls.Add(this.bLoadConfig);
             this.borderPanel1.Controls.Add(this.bSaveConfig);
@@ -186,17 +184,7 @@
             this.borderPanel1.Name = "borderPanel1";
             this.borderPanel1.Padding = new System.Windows.Forms.Padding(5);
             this.borderPanel1.Size = new System.Drawing.Size(266, 719);
-            this.borderPanel1.TabIndex = 28;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(7, 502);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(231, 21);
-            this.button1.TabIndex = 29;
-            this.button1.Text = "Загрузить значения датчиков";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.borderPanel1.TabIndex = 28;        
             // 
             // groupBox2
             // 
@@ -548,8 +536,7 @@
         private Kontel.Relkon.BorderPanel bpReadPacket;
         private Kontel.Relkon.BorderPanel bpErrorWritePacket;
         private Kontel.Relkon.BorderPanel bpWritePacket;
-        private Kontel.Relkon.BorderPanel bpState;
-        private System.Windows.Forms.Button button1;
+        private Kontel.Relkon.BorderPanel bpState;  
         private System.Windows.Forms.Button bSyncTimeWithPC;
 
     }

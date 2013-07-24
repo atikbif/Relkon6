@@ -508,7 +508,7 @@ namespace Reloader
                 {
                     fs = new FileStream(ofd.FileName, FileMode.Open);
 
-                    if (fs.Length < 100 * 1024 || fs.Length > 256 * 1024)
+                    if (fs.Length > 256 * 1024)
                         throw new Exception("Размер файла не соответствует программе контроллера!");
 
                     _progBuf = new byte[fs.Length];

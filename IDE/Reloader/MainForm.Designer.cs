@@ -103,7 +103,7 @@
             this.ssStopBtn.BackColor = System.Drawing.SystemColors.ControlText;
             this.ssStopBtn.ForeColor = System.Drawing.Color.White;
             this.ssStopBtn.Name = "ssStopBtn";
-            this.ssStopBtn.Size = new System.Drawing.Size(59, 17);
+            this.ssStopBtn.Size = new System.Drawing.Size(62, 17);
             this.ssStopBtn.Text = "Стоп (Esc)";
             this.ssStopBtn.Visible = false;
             this.ssStopBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ssStopBtn_MouseDown);
@@ -163,9 +163,9 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label3.Location = new System.Drawing.Point(113, 18);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(109, 13);
+            this.label3.Size = new System.Drawing.Size(96, 13);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Использоватьть:";
+            this.label3.Text = "Использовать:";
             // 
             // cBUseConfig
             // 
@@ -253,20 +253,20 @@
             this.toolStripSeparator1,
             this.mmiExit});
             this.mmiFile.Name = "mmiFile";
-            this.mmiFile.Size = new System.Drawing.Size(45, 20);
+            this.mmiFile.Size = new System.Drawing.Size(48, 20);
             this.mmiFile.Text = "&Файл";
             // 
             // mmiOpenProgram
             // 
             this.mmiOpenProgram.Name = "mmiOpenProgram";
-            this.mmiOpenProgram.Size = new System.Drawing.Size(252, 22);
+            this.mmiOpenProgram.Size = new System.Drawing.Size(249, 22);
             this.mmiOpenProgram.Text = "О&ткрыть программу";
             this.mmiOpenProgram.Click += new System.EventHandler(this.mmiOpenProgram_Click);
             // 
             // mmiOpenConfiguration
             // 
             this.mmiOpenConfiguration.Name = "mmiOpenConfiguration";
-            this.mmiOpenConfiguration.Size = new System.Drawing.Size(252, 22);
+            this.mmiOpenConfiguration.Size = new System.Drawing.Size(249, 22);
             this.mmiOpenConfiguration.Text = "Открыть &конфигурацию";
             this.mmiOpenConfiguration.Click += new System.EventHandler(this.mmiOpenConfiguration_Click);
             // 
@@ -274,7 +274,7 @@
             // 
             this.mmiSaveProgramAs.Enabled = false;
             this.mmiSaveProgramAs.Name = "mmiSaveProgramAs";
-            this.mmiSaveProgramAs.Size = new System.Drawing.Size(252, 22);
+            this.mmiSaveProgramAs.Size = new System.Drawing.Size(249, 22);
             this.mmiSaveProgramAs.Text = "С&охранить программу как...";
             this.mmiSaveProgramAs.Click += new System.EventHandler(this.mmiSaveProgramAs_Click);
             // 
@@ -282,19 +282,19 @@
             // 
             this.mmiSaveConfigurationAs.Enabled = false;
             this.mmiSaveConfigurationAs.Name = "mmiSaveConfigurationAs";
-            this.mmiSaveConfigurationAs.Size = new System.Drawing.Size(252, 22);
+            this.mmiSaveConfigurationAs.Size = new System.Drawing.Size(249, 22);
             this.mmiSaveConfigurationAs.Text = "Сохран&ить конфигурацию как...";
             this.mmiSaveConfigurationAs.Click += new System.EventHandler(this.mmiSaveConfigurationAs_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(249, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(246, 6);
             // 
             // mmiExit
             // 
             this.mmiExit.Name = "mmiExit";
-            this.mmiExit.Size = new System.Drawing.Size(252, 22);
+            this.mmiExit.Size = new System.Drawing.Size(249, 22);
             this.mmiExit.Text = "В&ыход";
             this.mmiExit.Click += new System.EventHandler(this.mmiExit_Click);
             // 
@@ -306,14 +306,14 @@
             this.toolStripSeparator2,
             this.mmiClearBuffer});
             this.операцииToolStripMenuItem.Name = "операцииToolStripMenuItem";
-            this.операцииToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.операцииToolStripMenuItem.Size = new System.Drawing.Size(75, 20);
             this.операцииToolStripMenuItem.Text = "&Операции";
             // 
             // mmiUpload
             // 
             this.mmiUpload.Enabled = false;
             this.mmiUpload.Name = "mmiUpload";
-            this.mmiUpload.Size = new System.Drawing.Size(169, 22);
+            this.mmiUpload.Size = new System.Drawing.Size(164, 22);
             this.mmiUpload.Text = "&Записать";
             this.mmiUpload.ToolTipText = "Записать в контроллер";
             // 
@@ -321,20 +321,20 @@
             // 
             this.mmiDownload.Enabled = false;
             this.mmiDownload.Name = "mmiDownload";
-            this.mmiDownload.Size = new System.Drawing.Size(169, 22);
+            this.mmiDownload.Size = new System.Drawing.Size(164, 22);
             this.mmiDownload.Text = "&Считать";
             this.mmiDownload.ToolTipText = "Считать с контроллера";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(166, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(161, 6);
             // 
             // mmiClearBuffer
             // 
             this.mmiClearBuffer.Enabled = false;
             this.mmiClearBuffer.Name = "mmiClearBuffer";
-            this.mmiClearBuffer.Size = new System.Drawing.Size(169, 22);
+            this.mmiClearBuffer.Size = new System.Drawing.Size(164, 22);
             this.mmiClearBuffer.Text = "&Очистить буфер";
             this.mmiClearBuffer.ToolTipText = "Очистить буфер программы";
             this.mmiClearBuffer.Click += new System.EventHandler(this.mmiClearBuffer_Click);
@@ -342,7 +342,7 @@
             // справкаToolStripMenuItem
             // 
             this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
+            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.справкаToolStripMenuItem.Text = "&Справка";
             // 
             // label4
@@ -361,9 +361,9 @@
             this.cBPortNumber.Location = new System.Drawing.Point(314, 93);
             this.cBPortNumber.Name = "cBPortNumber";
             this.cBPortNumber.Size = new System.Drawing.Size(64, 21);
-            this.cBPortNumber.TabIndex = 10;                        
-            this.cBPortNumber.MouseDown += new System.Windows.Forms.MouseEventHandler(this.cBPortNumber_MouseDown);            
+            this.cBPortNumber.TabIndex = 10;
             this.cBPortNumber.DropDownClosed += new System.EventHandler(this.cBPortNumber_DropDownClosed);
+            this.cBPortNumber.MouseDown += new System.Windows.Forms.MouseEventHandler(this.cBPortNumber_MouseDown);
             // 
             // MainForm
             // 

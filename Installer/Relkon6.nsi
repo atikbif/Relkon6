@@ -10,7 +10,7 @@ SetCompressor /SOLID lzma
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Relkon"
-!define PRODUCT_VERSION "6.3" ; To be replaced by Build.exe
+!define PRODUCT_VERSION "6.4" ; To be replaced by Build.exe
 !define PRODUCT_PUBLISHER "ŒŒŒ "" ŒÕ“›À"""
 !define PRODUCT_WEB_SITE "http://kontel.ru"
 !define PRODUCT_UNINST_KEY "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"

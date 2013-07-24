@@ -664,7 +664,7 @@ namespace Kontel.Relkon.Components.Documents
             this.tvRows.Nodes.Clear();
             for (int i = 0; i < this.pult.Rows.Count; i++)
             {
-                this.tvRows.Nodes.Add("Строка " + i);
+                this.tvRows.Nodes.Add("Строка " + (i + 1).ToString());
                 for (int j = 0; j < this.pult[i].Views.Count; j++)
                 {
                     this.tvRows.Nodes[i].Nodes.Add(this.CreateViewTreeNode(this.pult[i][j]));

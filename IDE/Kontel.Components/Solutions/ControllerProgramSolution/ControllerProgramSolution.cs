@@ -1027,22 +1027,22 @@ namespace Kontel.Relkon.Solutions
                 m = Regex.Match(map, @"\b\s+0x([0-9a-fA-F]{8})\s+_Sys\b");
                 if (m.Groups[1].Success)
                 {
-                    adr = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16) + 1024 + 256 + 5;
+                    adr = Convert.ToInt32(m.Groups[1].Value.Substring(4, 4), 16) + 1024 + 5;
                     z = Vars.SystemVars.GetVarByName("Z30");
                     z.Address = adr;
                     z = Vars.SystemVars.GetVarByName("st1");
                     z.Address = adr;
-                    adr += z.Size;
+                    adr += 4;
                     z = Vars.SystemVars.GetVarByName("Z31");
                     z.Address = adr;
                     z = Vars.SystemVars.GetVarByName("st2");
                     z.Address = adr;
-                    adr += z.Size;
+                    adr += 4;
                     z = Vars.SystemVars.GetVarByName("Z32");
                     z.Address = adr;
                     z = Vars.SystemVars.GetVarByName("st3");
                     z.Address = adr;
-                    adr += z.Size;
+                    adr += 4;
                     z = Vars.SystemVars.GetVarByName("Z33");
                     z.Address = adr;
                     z = Vars.SystemVars.GetVarByName("st4");

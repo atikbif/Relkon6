@@ -27,13 +27,12 @@ namespace Kontel.Relkon.Components
         private bool lockDateTimePeaker = false; // показывает, что значение dateTimePicker для времени контроллера обновлять не требуется
         private bool clockWrite = false; // показывает, что в данный момент идет запись времени в контроллер
         private System.Timers.Timer timer = null;
-        private string _projectPath = null;
 
         //значения входов, выходов в сохраненнмо файле
-        //private List<Kontel.Relkon.DebuggerParameters.AnalogSensorDescription> adcBuffer = new List<DebuggerParameters.AnalogSensorDescription>();
-        //private List<Kontel.Relkon.DebuggerParameters.AnalogSensorDescription> dacBuffer = new List<DebuggerParameters.AnalogSensorDescription>();
-        //private List<Kontel.Relkon.DebuggerParameters.DigitalSensorDescription> dinBuffer = new List<DebuggerParameters.DigitalSensorDescription>();
-        //private List<Kontel.Relkon.DebuggerParameters.DigitalSensorDescription> doutBuffer = new List<DebuggerParameters.DigitalSensorDescription>();
+        private List<Kontel.Relkon.DebuggerParameters.AnalogSensorDescription> adc = new List<DebuggerParameters.AnalogSensorDescription>();
+        private List<Kontel.Relkon.DebuggerParameters.AnalogSensorDescription> dac = new List<DebuggerParameters.AnalogSensorDescription>();
+        private List<Kontel.Relkon.DebuggerParameters.DigitalSensorDescription> din = new List<DebuggerParameters.DigitalSensorDescription>();
+        private List<Kontel.Relkon.DebuggerParameters.DigitalSensorDescription> dout = new List<DebuggerParameters.DigitalSensorDescription>();
 
         /// <summary>
         /// Возникает при смене типа процессора опрашиваемого контроллера
@@ -59,13 +58,11 @@ namespace Kontel.Relkon.Components
 
             //ddlProcessorType.SelectedItem = ProcessorType.STM32F107;
 
-         
+
            
             ddlProtocol.Items.Add(ProtocolType.RC51ASCII);
             ddlProtocol.Items.Add(ProtocolType.RC51BIN);
         }
-
-
         /// <summary>
         /// Движок отладчика, работой которого управляет компонент
         /// </summary>
@@ -92,12 +89,12 @@ namespace Kontel.Relkon.Components
         public void UpdateControlerParameters()
         {
             ///////////
-            //LoadValues(this.engine.Parameters);
+            LoadValues(this.engine.Parameters);
             ///////////
 
             ProcessorType p = ProcessorType.STM32F107;
-            //this.DebuggerEngine.Parameters.ProcessorType = p;
-            //ControllerProgramSolution sln = ControllerProgramSolution.Create(p);
+            this.DebuggerEngine.Parameters.ProcessorType = p;
+            ControllerProgramSolution sln = ControllerProgramSolution.Create(p);
             //this.rbInverse.Checked = sln.ProcessorParams.InverseByteOrder;
             Program.Settings.DeBugger_SettingsProcessesorType = p.ToString();
             this.RaiseProcessorChangedEvent(p);
@@ -309,12 +306,105 @@ namespace Kontel.Relkon.Components
                     break;
             }
         }
+       
+
+        /// <summary>
+        /// Запись в массивы значений из указанного класса
+        /// </summary>
+        /// <param name="curentEngine"></param>
+        private void LoadValues(DebuggerParameters curentEngine)
+        {
+            //сохранение значений датчиков
+            adc = new List<DebuggerParameters.AnalogSensorDescription>();
+            dac = new List<DebuggerParameters.AnalogSensorDescription>();
+            din = new List<DebuggerParameters.DigitalSensorDescription>();
+            dout = new List<DebuggerParameters.DigitalSensorDescription>();
+            foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription asc in curentEngine.ADCSensors)
+            {
+                Kontel.Relkon.DebuggerParameters.AnalogSensorDescription asd = new Kontel.Relkon.DebuggerParameters.AnalogSensorDescription();
+                asd.Address = asc.Address;
+                asd.Caption = asc.Caption;
+                asd.DisplayOneByte = asc.DisplayOneByte;
+                asd.HasSign = asc.HasSign;
+                asd.MemoryType = asc.MemoryType;
+                asd.Name = asc.Name;
+                asd.Size = asc.Size;
+                asd.Type = asc.Type;
+                //asd.Value = asc.Value;
+                if (asc.Value != null)
+                {
+                    asd.Value = new byte[asc.Value.Length];
+                    Array.Copy(asc.Value, asd.Value, asc.Value.Length);
+                }
+                else { asd.Value = new byte[asc.Size]; }
+                adc.Add(asd);
+            }
+            foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription asc in curentEngine.DACSensors)
+            {
+                Kontel.Relkon.DebuggerParameters.AnalogSensorDescription asd = new Kontel.Relkon.DebuggerParameters.AnalogSensorDescription();
+                asd.Address = asc.Address;
+                asd.Caption = asc.Caption;
+                asd.DisplayOneByte = asc.DisplayOneByte;
+                asd.HasSign = asc.HasSign;
+                asd.MemoryType = asc.MemoryType;
+                asd.Name = asc.Name;
+                asd.Size = asc.Size;
+                asd.Type = asc.Type;
+                //asd.Value = asc.Value;
+                if (asc.Value != null)
+                {
+                    asd.Value = new byte[asc.Value.Length];
+                    Array.Copy(asc.Value, asd.Value, asc.Value.Length);
+                }
+                else { asd.Value = new byte[asc.Size]; }
+                dac.Add(asd);
+            }
+            foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription asc in curentEngine.DINSensors)
+            {
+                Kontel.Relkon.DebuggerParameters.DigitalSensorDescription asd = new Kontel.Relkon.DebuggerParameters.DigitalSensorDescription();
+                asd.Address = asc.Address;
+                asd.HasSign = asc.HasSign;
+                asd.MemoryType = asc.MemoryType;
+                asd.Name = asc.Name;
+                asd.Size = asc.Size;
+                asd.Type = asc.Type;
+                asd.Labels = asc.Labels;
+                //asd.Value = asc.Value;
+                if (asc.Value != null)
+                {
+                    asd.Value = new byte[asc.Value.Length];
+                    Array.Copy(asc.Value, asd.Value, asc.Value.Length);
+                }
+                else { asd.Value = new byte[asc.Size]; }
+                asd.BitNumber = asc.BitNumber;
+                din.Add(asd);
+            }
+            foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription asc in curentEngine.DOUTSensors)
+            {
+                Kontel.Relkon.DebuggerParameters.DigitalSensorDescription asd = new Kontel.Relkon.DebuggerParameters.DigitalSensorDescription();
+                asd.Address = asc.Address;
+                asd.HasSign = asc.HasSign;
+                asd.MemoryType = asc.MemoryType;
+                asd.Name = asc.Name;
+                asd.Size = asc.Size;
+                asd.Type = asc.Type;
+                asd.Labels = asc.Labels;
+                //asd.Value = asc.Value;
+                if (asc.Value != null)
+                {
+                    asd.Value = new byte[asc.Value.Length];
+                    Array.Copy(asc.Value, asd.Value, asc.Value.Length);
+                }
+                else { asd.Value = new byte[asc.Size]; }
+                asd.BitNumber = asc.BitNumber;
+                dout.Add(asd);
+            }
+        }
 
         private void bLoadConfig_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            if (this.engine.Parameters.SolutionPath != "")
-                dialog.InitialDirectory = this.engine.Parameters.SolutionPath;
+            //dialog.InitialDirectory =
             dialog.Filter = "Файл параметров отладчика|*.pdb";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -332,18 +422,6 @@ namespace Kontel.Relkon.Components
                         }
                     }
                     this.engine.Parameters = dp;
-
-                    foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription adc in this.engine.Parameters.ADCSensors)
-                        this.engine.AddWriteItem(adc.Address, adc.MemoryType, adc.Value, adc.Name + "writing", null, null);
-
-                    foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription dac in this.engine.Parameters.DACSensors)
-                        this.engine.AddWriteItem(dac.Address, dac.MemoryType, dac.Value, dac.Name + "writing", null, null);
-
-                    foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription din in this.engine.Parameters.DINSensors)
-                        this.engine.AddWriteItem(din.Address, din.MemoryType, din.Value, din.Name + "writing", null, null);
-
-                    foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription dout in this.engine.Parameters.DOUTSensors)
-                        this.engine.AddWriteItem(dout.Address, dout.MemoryType, dout.Value, dout.Name + "writing", null, null);
                 }
                 catch (Exception ex)
                 {
@@ -355,110 +433,15 @@ namespace Kontel.Relkon.Components
             }
         }
 
-        /// <summary>
-        /// Запись в массивы значений из указанного класса
-        /// </summary>
-        /// <param name="curentEngine"></param>
-        //private void LoadValues(DebuggerParameters curentEngine)
-        //{
-        //    //сохранение значений датчиков
-        //    adcBuffer = new List<DebuggerParameters.AnalogSensorDescription>();
-        //    dacBuffer = new List<DebuggerParameters.AnalogSensorDescription>();
-        //    dinBuffer = new List<DebuggerParameters.DigitalSensorDescription>();
-        //    doutBuffer = new List<DebuggerParameters.DigitalSensorDescription>();
-        //    foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription asc in curentEngine.ADCSensors)
-        //    {
-        //        Kontel.Relkon.DebuggerParameters.AnalogSensorDescription asd = new Kontel.Relkon.DebuggerParameters.AnalogSensorDescription();
-        //        asd.Address = asc.Address;
-        //        asd.Caption = asc.Caption;
-        //        asd.DisplayOneByte = asc.DisplayOneByte;
-        //        asd.HasSign = asc.HasSign;
-        //        asd.MemoryType = asc.MemoryType;
-        //        asd.Name = asc.Name;
-        //        asd.Size = asc.Size;
-        //        asd.Type = asc.Type;
-        //        //asd.Value = asc.Value;
-        //        if (asc.Value != null)
-        //        {
-        //            asd.Value = new byte[asc.Value.Length];
-        //            Array.Copy(asc.Value, asd.Value, asc.Value.Length);
-        //        }
-        //        else { asd.Value = new byte[asc.Size]; }
-        //        adcBuffer.Add(asd);
-        //    }
-        //    foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription asc in curentEngine.DACSensors)
-        //    {
-        //        Kontel.Relkon.DebuggerParameters.AnalogSensorDescription asd = new Kontel.Relkon.DebuggerParameters.AnalogSensorDescription();
-        //        asd.Address = asc.Address;
-        //        asd.Caption = asc.Caption;
-        //        asd.DisplayOneByte = asc.DisplayOneByte;
-        //        asd.HasSign = asc.HasSign;
-        //        asd.MemoryType = asc.MemoryType;
-        //        asd.Name = asc.Name;
-        //        asd.Size = asc.Size;
-        //        asd.Type = asc.Type;
-        //        //asd.Value = asc.Value;
-        //        if (asc.Value != null)
-        //        {
-        //            asd.Value = new byte[asc.Value.Length];
-        //            Array.Copy(asc.Value, asd.Value, asc.Value.Length);
-        //        }
-        //        else { asd.Value = new byte[asc.Size]; }
-        //        dacBuffer.Add(asd);
-        //    }
-        //    foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription asc in curentEngine.DINSensors)
-        //    {
-        //        Kontel.Relkon.DebuggerParameters.DigitalSensorDescription asd = new Kontel.Relkon.DebuggerParameters.DigitalSensorDescription();
-        //        asd.Address = asc.Address;
-        //        asd.HasSign = asc.HasSign;
-        //        asd.MemoryType = asc.MemoryType;
-        //        asd.Name = asc.Name;
-        //        asd.Size = asc.Size;
-        //        asd.Type = asc.Type;
-        //        asd.Labels = asc.Labels;
-        //        //asd.Value = asc.Value;
-        //        if (asc.Value != null)
-        //        {
-        //            asd.Value = new byte[asc.Value.Length];
-        //            Array.Copy(asc.Value, asd.Value, asc.Value.Length);
-        //        }
-        //        else { asd.Value = new byte[asc.Size]; }
-        //        asd.BitNumber = asc.BitNumber;
-        //        dinBuffer.Add(asd);
-        //    }
-        //    foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription asc in curentEngine.DOUTSensors)
-        //    {
-        //        Kontel.Relkon.DebuggerParameters.DigitalSensorDescription asd = new Kontel.Relkon.DebuggerParameters.DigitalSensorDescription();
-        //        asd.Address = asc.Address;
-        //        asd.HasSign = asc.HasSign;
-        //        asd.MemoryType = asc.MemoryType;
-        //        asd.Name = asc.Name;
-        //        asd.Size = asc.Size;
-        //        asd.Type = asc.Type;
-        //        asd.Labels = asc.Labels;
-        //        //asd.Value = asc.Value;
-        //        if (asc.Value != null)
-        //        {
-        //            asd.Value = new byte[asc.Value.Length];
-        //            Array.Copy(asc.Value, asd.Value, asc.Value.Length);
-        //        }
-        //        else { asd.Value = new byte[asc.Size]; }
-        //        asd.BitNumber = asc.BitNumber;
-        //        doutBuffer.Add(asd);
-        //    }
-        //}
-
         private void bSaveConfig_Click(object sender, EventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filter = "Файл параметров отладчика|*.pdb";
-            if (this.engine.Parameters.SolutionPath != "")
-                dialog.InitialDirectory = this.engine.Parameters.SolutionPath;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    //LoadValues(this.engine.Parameters);
+                    LoadValues(this.engine.Parameters);
                     this.engine.Parameters.Save(dialog.FileName);
                 }
                 catch (Exception ex)
@@ -547,7 +530,33 @@ namespace Kontel.Relkon.Components
         //    if (this.rbUdp.Checked)
         //        this.engine.Parameters.InterfaceProtocol ="Udp" /*System.Net.Sockets.ProtocolType.Udp*/;
         //}
-       
+
+        /// <summary>
+        /// запись в контроллер начальных значений
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (din == null || din.Count == 0) return;
+            //Kontel.Relkon.DebuggerParameters.DigitalSensorDescription dsd = din[0];
+            foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription dsd in din)
+            {
+                this.engine.AddWriteItem(dsd.Address, dsd.MemoryType, dsd.Value, dsd.Name + "writing", null, null);
+            }
+            foreach (Kontel.Relkon.DebuggerParameters.DigitalSensorDescription dsd in dout)
+            {
+                this.engine.AddWriteItem(dsd.Address, dsd.MemoryType, dsd.Value, dsd.Name + "writing", null, null);
+            }
+            foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription dsd in adc)
+            {
+                this.engine.AddWriteItem(dsd.Address, dsd.MemoryType, dsd.Value, dsd.Name + "writing", null, null);
+            }
+            foreach (Kontel.Relkon.DebuggerParameters.AnalogSensorDescription dsd in dac)
+            {
+                this.engine.AddWriteItem(dsd.Address, dsd.MemoryType, dsd.Value, dsd.Name + "writing", null, null);
+            }
+        }
 
         private void bSyncTimeWithPC_Click(object sender, EventArgs e)
         {

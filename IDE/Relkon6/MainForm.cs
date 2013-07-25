@@ -50,7 +50,7 @@ namespace Kontel.Relkon
             if (FileName != null && File.Exists(FileName) && FileCanLoadedWOSolution(FileName))
                 this.LoadFile(FileName);
             this.DebuggerParametersList.DebuggertParametersUpdated += new EventHandler(DebuggerParametersList_DebuggertParametersUpdated);
-            
+            this.DebuggerParametersList.ProcessorChanged += new EventHandler<EventArgs<ProcessorType>>(DebuggerParametersListProcessesorChanged);
 
             this.progressForm = new ProgressForm(this);
             this.progressForm.FormClosing += new FormClosingEventHandler(progressForm_FormClosing);
@@ -538,8 +538,6 @@ namespace Kontel.Relkon
                 try
                 {
                     res = DebuggerParameters.FromFile(this.ControllerProgramSolution.DebuggerFileName);
-                    if (res.SolutionPath == "")
-                        res.SolutionPath = solution.DirectoryName;
                 }
                 catch { }
             }
@@ -661,8 +659,6 @@ namespace Kontel.Relkon
                 else
                 {
                     this.debuggerEngine.Parameters = this.GetDebuggerParametersFromSolution(this.ControllerProgramSolution);
-                    if (this.debuggerEngine.Parameters.SolutionPath == "" && ControllerProgramSolution != null)
-                        this.debuggerEngine.Parameters.SolutionPath = ControllerProgramSolution.DirectoryName;
                     this.DebuggerParametersList.UpdateControlerParameters();
                 }
             }
@@ -983,8 +979,6 @@ namespace Kontel.Relkon
             try
             {
                 this.debuggerEngine.Parameters = DebuggerParameters.FromFile(FileName);
-                if (this.debuggerEngine.Parameters.SolutionPath == "" && ControllerProgramSolution != null)
-                    this.debuggerEngine.Parameters.SolutionPath = ControllerProgramSolution.DirectoryName;
             }
             catch (Exception ex)
             {
@@ -2155,7 +2149,16 @@ namespace Kontel.Relkon
                 this.debuggerEngine.EngineStatus == DebuggerEngineStatus.Started);
         }
 
-       
+        private void DebuggerParametersListProcessesorChanged(object sender, EventArgs<ProcessorType> e)
+        {
+            foreach (RelkonTabbedDocument doc in this.Documents)
+            {
+                if (doc is DebuggerTabbedDocument)
+                {
+                    ((DebuggerTabbedDocument)doc).Update(this.solution as ControllerProgramSolution, this.debuggerEngine);
+                }
+            }
+        }
 
         private void DebuggerParametersList_DebuggertParametersUpdated(object sender, EventArgs e)
         {
@@ -2163,7 +2166,7 @@ namespace Kontel.Relkon
             {
                 if (doc is DebuggerTabbedDocument)
                 {
-                    ((DebuggerTabbedDocument)doc).Update(this.solution as ControllerProgramSolution, this.debuggerEngine);                    
+                    ((DebuggerTabbedDocument)doc).Update(this.solution as ControllerProgramSolution, this.debuggerEngine);
                 }
             }
         }

@@ -589,6 +589,7 @@ namespace Kontel.Relkon
             this.debuggerEngine.Parameters = prm;
             this.debuggerEngine.EngineStatusChanged += new EventHandler<DebuggerEngineStatusChangedEventArgs>(debuggerEngine_EngineStatusChanged);
             this.DebuggerParametersList.DebuggerEngine = this.debuggerEngine;
+            this.DebuggerParametersList.Solution = this.solution;
             this.DebuggerParametersList.UpdateControlerParameters();
         }
         /// <summary>
@@ -663,7 +664,8 @@ namespace Kontel.Relkon
                     this.debuggerEngine.Parameters = this.GetDebuggerParametersFromSolution(this.ControllerProgramSolution);
                     if (this.debuggerEngine.Parameters.SolutionPath == "" && ControllerProgramSolution != null)
                         this.debuggerEngine.Parameters.SolutionPath = ControllerProgramSolution.DirectoryName;
-                    this.DebuggerParametersList.UpdateControlerParameters();
+                    this.DebuggerParametersList.Solution = solution;
+                    this.DebuggerParametersList.UpdateControlerParameters();                    
                 }
             }
             this.SolutionExplorer.AddSolutionNode(this.solution);

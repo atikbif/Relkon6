@@ -807,9 +807,11 @@ namespace Kontel.Relkon.Solutions
                 for (int i = 0; i < 4; i++)
                 {
                     ControllerIOVar var = Vars.IOVars.GetVarByName("IN" + i);
-                    if (var != null)
+                    ControllerIOVar var2 = Vars.IOVars.GetVarByName("DIN" + i);
+                    if (var != null && var2 != null)
                     {
                         var.Address = adress;
+                        var2.Address = adress;
                         adress += var.Size;
                     }
                 }
@@ -1121,6 +1123,8 @@ namespace Kontel.Relkon.Solutions
             {
                 res.Add(new ControllerIOVar() { Name = "IN" + i, SystemName = "_Sys_IN[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
                 res.Add(new ControllerIOVar() { Name = "OUT" + i, SystemName = "_Sys_OUT[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
+
+                res.Add(new ControllerIOVar() { Name = "DIN" + i, SystemName = "_Sys_IN[" + i + "]", Memory = MemoryType.XRAM, Size = 1 });
             }
 
             for (int i = 4; i < 6; i++)

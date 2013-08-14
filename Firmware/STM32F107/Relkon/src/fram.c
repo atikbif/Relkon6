@@ -13,8 +13,10 @@ volatile unsigned char _Sys_SPI_Buzy=0;
 // запись в FRAM
 void write_fram(unsigned short adr,unsigned char size,unsigned char* ptr)
 {
+	volatile portTickType startTick,currentTick;
     if((unsigned long)ptr<0x20000000) return;
-    while(_Sys_SPI_Buzy);
+    startTick = xTaskGetTickCount();
+    while(_Sys_SPI_Buzy){currentTick = xTaskGetTickCount();if(currentTick - startTick>=10) return;};
     portDISABLE_INTERRUPTS();
     _Sys_SPI_Buzy=1;
     portENABLE_INTERRUPTS();
@@ -28,7 +30,10 @@ void write_fram(unsigned short adr,unsigned char size,unsigned char* ptr)
 // чтение из FRAM
 void read_fram(unsigned short adr,unsigned char size,unsigned char* ptr)
 {
-    while(_Sys_SPI_Buzy);
+	volatile portTickType startTick,currentTick;
+	if((unsigned long)ptr<0x20000000) return;
+	startTick = xTaskGetTickCount();
+    while(_Sys_SPI_Buzy){currentTick = xTaskGetTickCount();if(currentTick - startTick>=10) return;};
     portDISABLE_INTERRUPTS();
     _Sys_SPI_Buzy=1;
     portENABLE_INTERRUPTS();

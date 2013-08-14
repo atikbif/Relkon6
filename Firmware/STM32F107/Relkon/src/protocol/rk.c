@@ -199,16 +199,17 @@ unsigned short read_time(request* req)	//0xD1
 unsigned short read_frmem(request* req)	//0xD3
 {
 	unsigned short tmp;
+	unsigned char err_cnt=0;
 	if(req->cnt > 128){return(get_error(req));}
 	switch(req->can_name)
 	{
 //		case CAN_RF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&RFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_PC:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_PU:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PUxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_PR:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_MB:while(_Sys_SPI_Buzy) vTaskDelayUntil(&MBxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_UDP:while(_Sys_SPI_Buzy) vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_WF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&WFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
+		case CAN_PC:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_PU:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PUxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_PR:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_MB:while(_Sys_SPI_Buzy) vTaskDelayUntil(&MBxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_UDP:while(_Sys_SPI_Buzy) vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_WF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&WFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
 	}
 
 	portDISABLE_INTERRUPTS();
@@ -311,16 +312,17 @@ unsigned short write_time(request* req)	//0xE1
 unsigned short write_frmem(request* req)	//0xE3
 {
 	unsigned short tmp;
+	unsigned char err_cnt=0;
 	if(req->cnt > 128){return(get_error(req));}
 	switch(req->can_name)
 	{
 //		case CAN_RF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&RFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_PC:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_PU:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PUxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_PR:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_MB:while(_Sys_SPI_Buzy) vTaskDelayUntil(&MBxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_UDP:while(_Sys_SPI_Buzy) vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-		case CAN_WF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&WFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
+		case CAN_PC:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_PU:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PUxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_PR:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_MB:while(_Sys_SPI_Buzy) vTaskDelayUntil(&MBxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_UDP:while(_Sys_SPI_Buzy) vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
+		case CAN_WF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&WFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;break;
 	}
 	portDISABLE_INTERRUPTS();
 	_Sys_SPI_Buzy=1;

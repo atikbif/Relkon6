@@ -20,7 +20,7 @@ namespace Reloader
         private Loader _loader = null;
         private BackgroundWorker _searcher = new BackgroundWorker();
         private LoaderMode _mode = LoaderMode.None;
-        private Relkon4SerialPort _currentPort = null;
+        private AbstractChannel _currentPort = null;
         private bool _mainFormClosing = false;
 
         private string _progBinPath = null;
@@ -66,7 +66,7 @@ namespace Reloader
 
         void _searcher_DoWork(object sender, DoWorkEventArgs e)
         {
-            _currentPort = new Relkon4SerialPort((string)e.Argument, 19200, ProtocolType.RC51BIN);
+            _currentPort = new SerialportChannel((string)e.Argument, 19200, ProtocolType.RC51BIN);
 
             string pattern = "relkon";
             string bootPattern = "boot"; 
@@ -79,10 +79,10 @@ namespace Reloader
 
             for (int i = 0; i < protocols.Length && !searchingStopped; i++)
             {
-                _currentPort.Protocol = protocols[i];
+                _currentPort.RelkonProtocolType = protocols[i];
                 for (int j = 0; j < baudRates.Length && !searchingStopped; j++)
                 {
-                    _currentPort.BaudRate = baudRates[j];
+                    ((SerialportChannel)_currentPort).BaudRate = baudRates[j];
 
                     if (_searcher.CancellationPending)
                     {
@@ -93,8 +93,8 @@ namespace Reloader
                     try
                     {
                         _currentPort.Open();
-                        byte[] res = _currentPort.SendRequest(request, pattern.Length, 2);
-                        _currentPort.DiscardInBuffer();
+                        byte[] res = _currentPort.SendRequest(request, pattern.Length);
+                        ((SerialportChannel)_currentPort).DiscardInBuffer();
                         if (res != null && Encoding.ASCII.GetString(res).ToLower().Contains(pattern.ToLower())
                                         || Encoding.ASCII.GetString(res).ToLower().Contains(bootPattern.ToLower()))
                         {
@@ -268,7 +268,7 @@ namespace Reloader
                 try
                 {
                     _currentPort.Open();
-                    req = _currentPort.SendRequest(new byte[] { 0x00, 0xA0 }, 2, 2);
+                    req = _currentPort.SendRequest(new byte[] { 0x00, 0xA0 }, 2);
                 }
                 finally
                 {

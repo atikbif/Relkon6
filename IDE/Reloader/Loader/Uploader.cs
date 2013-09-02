@@ -18,8 +18,8 @@ namespace Reloader
      
         protected override void OnDoWork(DoWorkEventArgs e)
         {            
-            int oldBaudRate = _port.BaudRate;
-            ProtocolType oldProtocol = _port.Protocol;
+            int oldBaudRate = ((SerialportChannel)_port).BaudRate;
+            ProtocolType oldProtocol = _port.RelkonProtocolType;
 
             _port.Open();
             _port.ControllerAddress = 0;
@@ -32,7 +32,7 @@ namespace Reloader
                     return;
                 }
 
-                byte[] req = _port.SendRequest(new byte[] { 0x00, 0xA0 }, 2, 2);
+                byte[] req = _port.SendRequest(new byte[] { 0x00, 0xA0 }, 2);
 
                 string s = "";
 
@@ -73,14 +73,14 @@ namespace Reloader
                     return;
                 }
 
-                _port.BaudRate = 115200;
-                _port.Protocol = ProtocolType.RC51BIN;
+                ((SerialportChannel)_port).BaudRate = 115200;
+                _port.RelkonProtocolType = ProtocolType.RC51BIN;
                 _port.Open();
 
                 this.ReportProgress(100, "Перевод контроллера в режим загрузчика...");
 
-                _port.DirectPort.Write("1");                      
-                waitfor(_port.DirectPort, 'C');
+                ((SerialportChannel)_port).DirectPort.Write("1");                      
+                waitfor(((SerialportChannel)_port).DirectPort, 'C');
                              
 
                 byte[] bytes2 = new byte[_progBuffer.Length - 1];
@@ -96,10 +96,10 @@ namespace Reloader
                 initpacket.longpacket = false;               
 
                 initpacket.createPacket();
-                _port.DirectPort.Write(initpacket.packet, 0, initpacket.packet.Length);
+                ((SerialportChannel)_port).DirectPort.Write(initpacket.packet, 0, initpacket.packet.Length);
 
-                waitforack(_port.DirectPort);
-                waitfor(_port.DirectPort, 'C');
+                waitforack(((SerialportChannel)_port).DirectPort);
+                waitfor(((SerialportChannel)_port).DirectPort, 'C');
 
 
                 using (MemoryStream ms2 = new MemoryStream(bytes2))
@@ -124,18 +124,18 @@ namespace Reloader
                             sendPacket.isinit = false;
                             sendPacket.data = br2.ReadBytes(1024);
                             sendPacket.createPacket();
-                            _port.DirectPort.Write(sendPacket.packet, 0, sendPacket.packet.Length);
-                            waitforack(_port.DirectPort);
+                            ((SerialportChannel)_port).DirectPort.Write(sendPacket.packet, 0, sendPacket.packet.Length);
+                            waitforack(((SerialportChannel)_port).DirectPort);
                         }
                     }
                 }
                 this.ReportProgress(100, "Загрузка программы в контроллер...");
-                sendEndOftransmision(_port.DirectPort);
-                waitforack(_port.DirectPort);
+                sendEndOftransmision(((SerialportChannel)_port).DirectPort);
+                waitforack(((SerialportChannel)_port).DirectPort);
 
                 this.ReportProgress(100, "Перезапуск контроллера...");
                 Thread.Sleep(2000);
-                _port.DiscardInBuffer();
+                ((SerialportChannel)_port).DiscardInBuffer();
                 _port.Close();
             }
 

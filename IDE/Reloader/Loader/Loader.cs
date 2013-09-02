@@ -8,7 +8,7 @@ namespace Reloader
 {
     public class Loader : BackgroundWorker
     {
-        protected Relkon4SerialPort _port = null;
+        protected AbstractChannel _port = null;
         protected LoaderMode _mode = LoaderMode.None;
         protected byte[] _progBuffer = null;
         protected byte[] _confBuffer = null;
@@ -32,7 +32,7 @@ namespace Reloader
             this.WorkerSupportsCancellation = true;
         }
 
-        public void Start(Relkon4SerialPort port, LoaderMode mode)
+        public void Start(AbstractChannel port, LoaderMode mode)
         {
             _port = port;
             _mode = mode;
@@ -46,7 +46,7 @@ namespace Reloader
 
         protected override void OnRunWorkerCompleted(RunWorkerCompletedEventArgs e)
         {
-            if (_port != null && _port.DirectPort.IsOpen)
+            if (_port != null && _port.IsOpen())
                 _port.Close();
 
             base.OnRunWorkerCompleted(e);

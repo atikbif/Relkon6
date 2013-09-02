@@ -188,7 +188,7 @@ namespace Kontel.Relkon
                 byte[] response = this.SendRequest(this.CreateReadMemoryRequest(MemoryType, Address, i), i + 3, 2);
                 Thread.Sleep(10);
                 c += i;
-                this.RaiseProgressChangedEvent(1.0 * c / Count);
+              
                 if (response == null)
                     return response;
                 res.AddRange(Utils.GetSubArray<byte>(response, 1, i));
@@ -225,87 +225,14 @@ namespace Kontel.Relkon
                 }
                 byte[] response = this.SendRequest(this.CreateWriteMemoryRequest(MemoryType, Address, Utils.GetSubArray<byte>(Data, c, i)), 4, 2);                
                 c += i;
-                this.RaiseProgressChangedEvent(1.0 * c / Data.Length);
+               
                 if (response == null && !this.canceled)
                     throw new Exception("Сбой при обращении к контроллеру");
                 Address += i;
             }
             while (c != Data.Length && !this.canceled);
-        }
-        /// <summary>
-        /// Отсылает пароль на запись данных во Flash память
-        /// контроллра на базе MB90F347
-        /// </summary>
-        public byte[] SendWriteFlashPassword(byte[] password)
-        {
-            List<byte> l = new List<byte>();
-            l.AddRange(new byte[] { (byte)this.ControllerAddress, 0xF2, (byte)password.Length });
-            l.AddRange(password);
-            byte[] response = this.SendRequest(l.ToArray(), 4 + 16, 2);
-            return (response == null) ? response : Utils.GetSubArray<byte>(response, 2);
-        }
-        /// <summary>
-        /// Авторизация пароля на запись Flash; возвращает key3
-        /// </summary>
-        public byte[] AuthenticateWriteFlashPassword(byte[] key2)
-        {
-            List<byte> l = new List<byte>();
-            l.AddRange(new byte[] { (byte)this.ControllerAddress, 0xF3 });
-            l.AddRange(key2);
-            byte[] response = this.SendRequest(l.ToArray(), 4 + 16, 2);
-            return (response == null) ? null : Utils.GetSubArray<byte>(response, 2);
-        }
-        /// <summary>
-        /// Стиает сектор Flash-памяти контроллера на базе процессора
-        /// MB9F347, начинающийся по указанному адресу
-        /// </summary>
-        public void EraseFlashSector(int address)
-        {
-            List<byte> l = new List<byte>();
-            l.Add((byte)this.ControllerAddress);
-            l.Add((byte)0xE6);
-            l.AddRange(AppliedMath.IntToBytes(address));
-            this.minimalTimeout = 5000;
-            byte[] r = this.SendRequest(l.ToArray(), -1, 2);
-            this.minimalTimeout = 100;
-            if (r == null && !this.canceled)
-                throw new Exception("Сбой при удалении сектора");
-        }
-        /// <summary>
-        /// Читает данные с SD-карточки
-        /// </summary>
-        /// <param name="offset">Смещение от начала карточки</param>
-        /// <param name="count">Число байт</param>
-        public byte[] ReadSDCard(int offset, int count)
-        {
-            return this.ReadFromMemory(MemoryType.SDCard, offset, count);
-        }
-        /// <summary>
-        /// Запмсывает данные на SD-карточку
-        /// </summary>
-        /// <param name="offset">Смещение от начала карточки</param>
-        /// <param name="data">Записываемые данные</param>
-        public void WriteSDCard(int offset, byte[] data)
-        {
-            this.WriteToMemory(MemoryType.SDCard, offset, data);
-        }
-        /// <summary>
-        /// Передает в контроллер заданный пароль
-        /// </summary>
-        /// <param name="Password">
-        /// Передаваемый пароль; если длинна пароля больше 12 символов, то он урезается,
-        /// </param>
-        /// <param name="PasswordForWriting">Если true, то передается пароль на запись, иначе - на чтение</param>
-        protected override void SendPassword(string Password, bool PasswordForWriting)
-        {
-            List<byte> request = new List<byte>() { (byte)this.ControllerAddress, PasswordForWriting ? (byte)0xF1 : (byte)0xF0 };
-            if (Password.Length > 12)
-                Password = Password.Substring(0, 12);
-            request.Add((byte)Password.Length);
-            request.AddRange(Encoding.ASCII.GetBytes(Password));
-            if (this.SendRequest(request.ToArray(), 1, 2) == null)
-                throw new Exception("Ошибка при передачи пароля на " + (PasswordForWriting ? "запись" : "чтение"));
-        }
+        }       
+      
         /// <summary>
         /// Сбрасывает контроллер на базе процессора MB90F347
         /// </summary>

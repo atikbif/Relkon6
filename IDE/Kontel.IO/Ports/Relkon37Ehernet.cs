@@ -55,93 +55,7 @@ namespace Kontel.Relkon
             byte[] res = this.SendRequest(new byte[] { (byte)this.controllerAddress, 0x21 }, 4);
             return (res == null) ? null : Encoding.ASCII.GetString(Utils.GetSubArray<byte>(res, 2));
         }
-        ///// <summary>
-        ///// Возвращает запрос (без CRC) на чтение указанного числа байт из заданной области памяти
-        ///// </summary>
-        //private byte[] CreateReadMemoryRequest(MemoryType MemoryType, int Address)
-        //{
-        //    List<byte> l = new List<byte>();
-        //    l.Add((byte)this.controllerAddress);
-        //    byte command = 0;
-        //    int AddressLength = 0;
-        //    switch (MemoryType)
-        //    {
-        //        case MemoryType.RAM:
-        //            command = (byte)0x50;
-        //            AddressLength = 1;
-        //            break;
-        //        case MemoryType.Clock:
-        //            command = (byte)0x51;
-        //            AddressLength = 1;
-        //            break;
-        //        case MemoryType.EEPROM:
-        //            command = (byte)0x52;
-        //            AddressLength = 2;
-        //            break;
-        //        case MemoryType.FRAM:
-        //            command = (byte)0x53;
-        //            AddressLength = 2;
-        //            break;
-        //        case MemoryType.XRAM:
-        //            command = (byte)0x54;
-        //            AddressLength = 2;
-        //            break;
-        //        case MemoryType.Flash:
-        //            command = (byte)0x55;
-        //            AddressLength = 2;
-        //            break;
-        //        default:
-        //            throw new Exception("Указанный тип памяти " + MemoryType + " не поддерживается в " + this.GetType());
-        //    }
-        //    l.Add(command);
-        //    byte[] a = AppliedMath.IntToBytes(Address);
-        //    l.AddRange(Utils.GetSubArray<byte>(a, a.Length - AddressLength));
-        //    return l.ToArray();
-        //}
-        ///// <summary>
-        ///// Возвращает запрос на запись данных в память определенного типа (без CRC)
-        ///// </summary>
-        //private byte[] CreateWriteMemoryRequest(MemoryType MemoryType, int Address, byte[] Data)
-        //{
-        //    List<byte> l = new List<byte>();
-        //    l.Add((byte)this.controllerAddress);
-        //    byte command = 0;
-        //    int AddressLength = 0;
-        //    switch (MemoryType)
-        //    {
-        //        case MemoryType.RAM:
-        //            command = (byte)0x60;
-        //            AddressLength = 1;
-        //            break;
-        //        case MemoryType.Clock:
-        //            command = (byte)0x61;
-        //            AddressLength = 1;
-        //            break;
-        //        case MemoryType.EEPROM:
-        //            command = (byte)0x62;
-        //            AddressLength = 2;
-        //            break;
-        //        case MemoryType.FRAM:
-        //            command = (byte)0x63;
-        //            AddressLength = 2;
-        //            break;
-        //        case MemoryType.XRAM:
-        //            command = (byte)0x64;
-        //            AddressLength = 2;
-        //            break;
-        //        case MemoryType.Flash:
-        //            command = (byte)0x65;
-        //            AddressLength = 2;
-        //            break;
-        //        default:
-        //            throw new Exception("Указанный тип памяти " + MemoryType + " не поддерживается в " + this.GetType());
-        //    }
-        //    l.Add(command);
-        //    byte[] a = AppliedMath.IntToBytes(Address);
-        //    l.AddRange(Utils.GetSubArray<byte>(a, a.Length - AddressLength));
-        //    l.AddRange(Data);
-        //    return l.ToArray();
-        //}
+       
         /// <summary>
         /// Возвращает максимальный размер блока данных, который можно считатать / записать в контроллер
         /// </summary>
@@ -162,7 +76,7 @@ namespace Kontel.Relkon
                 int i = 8;
                 byte[] response = this.SendRequest(Relkon37Protocol.CreateReadMemoryRequest(MemoryType, this.controllerAddress, Address, this.GetType()), i + 3);
                 c += i;
-                this.RaiseProgressChangedEvent(1.0 * c / Count);
+             
                 if (response == null)
                     return response;
                 res.AddRange(Utils.GetSubArray<byte>(response, 1, i));
@@ -183,7 +97,7 @@ namespace Kontel.Relkon
                 int i = 8;
                 byte[] response = this.SendRequest(Relkon37Protocol.CreateWriteMemoryRequest(MemoryType, this.controllerAddress, Address, Utils.GetSubArray<byte>(Data, c, i), this.GetType()), 4);
                 c += i;
-                this.RaiseProgressChangedEvent(1.0 * c / Data.Length);
+               
                 if (response == null && !this.canceled)
                     throw new Exception("Сбой при обращении к контроллеру");
                 Address += i;
@@ -273,54 +187,6 @@ namespace Kontel.Relkon
         public void WriteFlash(int address, byte[] data)
         {
             this.WriteToMemory(MemoryType.Flash, address, data);
-        }
-        /// <summary>
-        /// Перелает в контроллер пароль на чтение
-        /// </summary>
-        /// <param name="Password">
-        /// Пароль на чтение данных; если длинна пароля больше допустимого числа символов символов, то он урезается,
-        /// </param>
-        public virtual void SendReadPassword(string Password)
-        {
-            this.SendPassword(Password, false);
-        }
-        /// <summary>
-        /// Перелает в контроллер пароль на запись
-        /// </summary>
-        /// <param name="Password">
-        /// Пароль на чтение данных; если длинна пароля больше допустимого числа символов символов, то он урезается,
-        /// </param>
-        public void SendWritePassword(string Password)
-        {
-            this.SendPassword(Password, true);
-        }
-        /// <summary>
-        /// Передает в контроллер заданный пароль
-        /// </summary>
-        /// <param name="Password">
-        /// Передаваемый пароль; если длинна пароля больше 6 символов, то он урезается,
-        /// если меньше 6 символов, то расширяется нулями
-        /// </param>
-        /// <param name="PasswordForWriting">Если true, то передается пароль на запись, иначе - на чтение</param>
-        protected virtual void SendPassword(string Password, bool PasswordForWriting)
-        {
-            List<byte> request = new List<byte>() { (byte)this.controllerAddress, (PasswordForWriting ? (byte)0xF1 : (byte)0xF0) };
-            if (Password.Length > 6)
-                Password = Password.Substring(0, 6);
-            else if (Password.Length < 6)
-                Password = Utils.AddCharsToEnd('\0', Password, 6);
-            request.AddRange(Encoding.ASCII.GetBytes(Password));
-            if (this.SendRequest(request.ToArray(), 1) == null)
-                throw new Exception("Ошибка при передачи пароля на " + (PasswordForWriting ? "запись" : "чтение"));
-        }
-        /// <summary>
-        /// Читает дату-время контроллера
-        /// </summary>
-        //public DateTime? ReadDateTime()
-        //{
-        //    Byte[] m_read = ReadFromMemory(MemoryType.Clock, 0x00, 8);
-        //    if (m_read != null) return Relkon37Protocol.ConvertDate(m_read);
-        //    else return null;
-        //}     
+        }        
     }
 }

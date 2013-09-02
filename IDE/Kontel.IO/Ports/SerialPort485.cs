@@ -15,26 +15,13 @@ namespace Kontel.Relkon
     /// </summary>
     public class SerialPort485
     {
-        ///// <summary>
-        ///// Перечисление ошибок связи, поддерживаемых классом SerialPort485
-        ///// </summary>
-        //public enum ErrorType
-        //{
-        //    DeviceNotAnswer = 1,
-        //    DeviceReturnError = 2,
-        //    InvalidCRC = 3,
-        //}
+        
         protected SerialPort port = null; // обеспечивает рабоу с COM-портом
         protected ProtocolType protocol = ProtocolType.None; // протокол, по которому работает порт
         protected ErrorType errorType; // хранит тип последней зафиксированной ошибки
         protected int minimalTimeout = 100; // минимальный интервал (мс.) ожидания ответа от устройства
         protected bool canceled = false; // флаг, показывающий, что нужно остановить прцесс чтения / записи
-
-        /// <summary>
-        /// Периодически генерируется после чтения/записи определенного количества байт,
-        /// доля прочитанных/записанных байт от всего их числа передается в EventArgs
-        /// </summary>
-        public event EventHandler<EventArgs<double>> ProgressChanged;
+       
 
         public SerialPort485(string PortName, int BaudRate, ProtocolType Protocol)
         {
@@ -120,67 +107,8 @@ namespace Kontel.Relkon
                 return this.port;
             }
         }
-        /// <summary>
-        /// Генерирует событие изменения процесса
-        /// </summary>
-        protected void RaiseProgressChangedEvent(double value)
-        {
-            if (this.ProgressChanged != null)
-                this.ProgressChanged(this, new EventArgs<double>(value));
-        }
-        ///// <summary>
-        ///// Вычисляет контрольную сумму указанного буфера
-        ///// </summary>
-        //public static int GetCRC(byte[] buffer)
-        //{
-        //    int Res = 0xFFFF;
-        //    for (int j = 0; j < buffer.Length; j++)
-        //    {
-        //        Res ^= buffer[j];
-
-        //        for (int i = 8; i > 0; i--)
-        //        {
-        //            if ((Res & 1) != 0)
-        //                Res = (Res >> 1) ^ 0xA001;
-        //            else
-        //                Res >>= 1;
-        //        }
-        //    }
-        //    return Res;
-        //}
-        ///// <summary>
-        ///// Добавляет в конец указанного буфера его CRC и 
-        ///// возвращает новый массив
-        ///// </summary>
-        //public static byte[] AddCRC(byte[] buffer)
-        //{
-        //    byte[] res = new byte[buffer.Length + 2];
-        //    buffer.CopyTo(res, 0);
-        //    int crc = RelkonProtocol.GetCRC(buffer);
-        //    res[res.Length - 1] = AppliedMath.Hi(crc);
-        //    res[res.Length - 2] = AppliedMath.Low(crc);
-        //    return res;
-        //}
-        ///// <summary>
-        ///// Преобразует указанный массив к формату протокола
-        ///// RC51ASCII (CRC не добавляется)
-        ///// </summary>
-        //public byte[] ConvertToRC51ASCII(byte[] buffer)
-        //{
-        //    byte[] res = new byte[buffer.Length * 2 + 2];
-        //    res[0] = 0x24;
-        //    for (int i = 0; i < buffer.Length; i++)
-        //    {
-        //        string h = Convert.ToString(buffer[i], 16).ToUpper();
-        //        if (h.Length == 1)
-        //            h = "0" + h;
-        //        byte[] code = Encoding.ASCII.GetBytes(h);
-        //        res[(i + 1) * 2 - 1] = code[0];
-        //        res[(i + 1) * 2] = code[1];
-        //    }
-        //    res[res.Length - 1] = 0x0D;
-        //    return res;
-        //}
+       
+     
         /// <summary>
         /// Преобразует указанный массив из формата RC51ASCII в бинарный формат
         /// (CRC не удаляется)
@@ -191,76 +119,17 @@ namespace Kontel.Relkon
             {
                 this.errorType = ErrorType.DeviceReturnError;
                 return null;
-            }
-        //    byte[] tmp = Utils.GetSubArray(buffer, 1, buffer.Length - 2);
-        //    byte[] res = new byte[tmp.Length / 2];
-        //    for (int i = 0; i < tmp.Length; i += 2)
-        //    {
-        //        byte[] code = { tmp[i], tmp[i + 1] };
-        //        string h = Encoding.ASCII.GetString(code);
-        //        res[i / 2] = (byte)AppliedMath.HexToDec(h);
-        //    }
+            }      
             return RelkonProtocol.ConvertFromRC51ASCII(buffer);
         }
         /// <summary>
         /// Преобразует указанный массив к формату текущего протокола
         /// </summary>
         protected byte[] ConvertToCurrentProtocolType(byte[] buffer)
-        {
-            //byte[] res = buffer;
-            //switch (this.protocol)
-            //{
-            //    case ProtocolType.RC51ASCII:
-            //        res = RelkonProtocol.ConvertToRC51ASCII(RelkonProtocol.AddCRC(buffer));
-            //        break;
-            //    case ProtocolType.RC51BIN:
-            //        res = RelkonProtocol.AddCRC(buffer);
-            //        break;
-            //    case ProtocolType.ATCommand:
-            //        res = new byte[buffer.Length + 1];
-            //        Array.Copy(buffer, res, buffer.Length);
-            //        res[res.Length - 1] = 0x0D;
-            //        break;
-            //}
+        {         
             return RelkonProtocol.ConvertToCurrentProtocolType(buffer, this.protocol);
         }
-        ///// <summary>
-        ///// Преобразует указанный массив к формату текущего протокола
-        ///// </summary>
-        //protected byte[] ConvertFromCurrentProtocolType(byte[] buffer)
-        //{
-        //    byte[] res = buffer;
-        //    switch (this.protocol)
-        //    {
-        //        case ProtocolType.RC51ASCII:
-        //        case ProtocolType.RC51BIN:
-        //            // Проверяем буфер на наличие ошибок
-        //            if ((this.protocol == ProtocolType.RC51BIN && buffer.Length == 4 && buffer[1] == 0xFF) || buffer.Length < 3 || 
-        //                (this.protocol == ProtocolType.RC51ASCII && (buffer[buffer.Length - 1] != 0x0d|| buffer[0] != '!')))
-        //            {
-        //                res = null;
-        //                this.errorType = ErrorType.DeviceReturnError;
-        //            }
-        //            if (res != null)
-        //            {
-        //                if (this.protocol == ProtocolType.RC51ASCII)
-        //                    res = this.ConvertFromRC51ASCII(buffer);
-        //                // Проверяем crc (если crc верна, то crc от буффера с crc = 0) 
-        //                if (RelkonProtocol.GetCRC(res) != 0)
-        //                {
-        //                    res = null;
-        //                    this.errorType = ErrorType.InvalidCRC;
-        //                }
-        //                else
-        //                    res = Utils.GetSubArray<byte>(res, 0, res.Length - 2);
-        //            }
-        //            break;
-        //        case ProtocolType.ATCommand:
-        //            res = Utils.GetSubArray<byte>(res, 0, res.Length - 2);
-        //            break;
-        //    }
-        //    return res;
-        //}
+     
         /// <summary>
         /// Отсылает буфер на порт и читает с него ответ
         /// </summary>
@@ -393,39 +262,8 @@ namespace Kontel.Relkon
             if (this.port.IsOpen)
                 this.port.Close();
         }
-        /// <summary>
-        /// Выполняет дозвон до указанного номера через присоедененный к порту модем
-        /// </summary>
-        /// <param name="PhoneNumber">Телефонный номер удаленного модема</param>
-        public void DialUp(string PhoneNumber)
-        {
-            int i = this.minimalTimeout;
-            this.SendRequest(Encoding.ASCII.GetBytes("ate0"), 11, 2);
-            this.minimalTimeout = 90000;
-            byte[] response = this.SendRequest(Encoding.ASCII.GetBytes("atd" + PhoneNumber), 5, 2);
-            if (response == null || !Encoding.ASCII.GetString(response).ToLower().Contains("connect"))
-                throw new Exception("Не удалось установить соединение с модемом: " + ((response != null) ? Encoding.ASCII.GetString(response) : ""));
-            this.minimalTimeout = i;
-        }
-        /// <summary>
-        /// Разрывает связь с модемом
-        /// </summary>
-        public void BreakModemConnection()
-        {
-            ProtocolType p = this.protocol;
-            this.protocol = ProtocolType.None;
-            this.minimalTimeout = 2000;
-            Thread.Sleep(1500);
-            byte[] response = this.SendRequest(Encoding.ASCII.GetBytes("+++"), 2, 2);
-            if (response == null || Encoding.ASCII.GetString(response).ToLower().Contains("error"))
-            {
-                this.protocol = p;
-                return;
-            }
-            Thread.Sleep(1500);
-            this.SendRequest(Encoding.ASCII.GetBytes("ath\r"), 2, 2);
-            this.protocol = p;
-        }
+       
+     
         /// <summary>
         /// Очищает входной буфер порта
         /// </summary>

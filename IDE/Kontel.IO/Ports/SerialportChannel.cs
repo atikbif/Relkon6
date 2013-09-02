@@ -14,7 +14,7 @@ namespace Kontel.Relkon
         public SerialportChannel(SerialportChannel channel)
         {
             _serialPort = channel.DirectPort;
-            _relkonProtocolType = RelkonProtocolType;
+            _relkonProtocolType = channel.RelkonProtocolType;
         }
 
         public SerialportChannel(string portName, int baudRate, ProtocolType relkonPotocolType)

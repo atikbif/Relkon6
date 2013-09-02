@@ -25,7 +25,7 @@ namespace Kontel.Relkon
         private SortedList<string, AsyncOperation> requestingPorts = new SortedList<string, AsyncOperation>(); // список опрашиваемых в текущий момент портов
         private double progress = 0; // доля завершения поиска
         private bool canceled = false; // флаг, показывающий, что поиск был отменен пользователем
-        private SerialPort485 devicePort = null; // порт, к которому подключено найденое устройтво
+        private SerialportChannel devicePort = null; // порт, к которому подключено найденое устройтво
         private byte[] deviceResponse = null; // ответ устройства
         private int portsCount = 0;
 
@@ -75,7 +75,7 @@ namespace Kontel.Relkon
             }
         }
 
-        public SerialPort485 DevicePort
+        public SerialportChannel DevicePort
         {
             set { devicePort = value; }
             get { return devicePort; }
@@ -139,7 +139,7 @@ namespace Kontel.Relkon
                 this.ProgressChanged(this, e);
         }
 
-        private void CompletionMethod(SerialPort485 port, byte[] response, Exception exception, bool canceled,  AsyncOperation asyncOp)
+        private void CompletionMethod(SerialportChannel port, byte[] response, Exception exception, bool canceled, AsyncOperation asyncOp)
         {
             DeviceSearchCompletedEventArgs e = new DeviceSearchCompletedEventArgs(port, response, exception, canceled);
             asyncOp.PostOperationCompleted(onCompletedDelegate, e);
@@ -155,13 +155,13 @@ namespace Kontel.Relkon
         }
 
         private void SearchDevice(string PortName, AsyncOperation asyncOp)
-        {           
-            SerialPort485 port = new SerialPort485(PortName, 19200, ProtocolType.None);
+        {
+            SerialportChannel port = new SerialportChannel(PortName, 19200, ProtocolType.None);
             port.MinimalTimeout = this.Timeout;
 
             for (int i = 0; i < this.Protocols.Length && !this.SearchingStopped; i++)
             {
-                port.Protocol = this.Protocols[i];            
+                port.RelkonProtocolType = this.Protocols[i];            
                 for (int j = 0; j < this.BaudRates.Length && !this.SearchingStopped; j++)
                 {
                     port.BaudRate = this.BaudRates[j];
@@ -169,7 +169,7 @@ namespace Kontel.Relkon
                     {
                         
                         port.Open();
-                        byte[] res = port.SendRequest(this.Request, this.Pattern.Length, 2);
+                        byte[] res = port.SendRequest(this.Request, this.Pattern.Length);
                         port.DiscardInBuffer();
                        
                         if (res != null)
@@ -226,7 +226,7 @@ namespace Kontel.Relkon
                 try
                 {
                     devicePort.Open();
-                    res = devicePort.SendRequest(this.Request, this.Pattern.Length, 2);
+                    res = devicePort.SendRequest(this.Request, this.Pattern.Length);
                     if (res != null && (Encoding.ASCII.GetString(res).ToLower().Contains(this.Pattern.ToLower())
                                     || Encoding.ASCII.GetString(res).ToLower().Contains(this.BootPattern.ToLower())))
                     {
@@ -281,7 +281,7 @@ namespace Kontel.Relkon
     public class DeviceSearchCompletedEventArgs : AsyncCompletedEventArgs
     {
         public byte[] DeviceResponse { get; private set; } // ответ устройства на запрос (при успешном завершении поиска)
-        public SerialPort485 Port { get; private set; } // описывает порт, к которому подключено устройство
+        public SerialportChannel Port { get; private set; } // описывает порт, к которому подключено устройство
 
         /// <summary>
         /// Создает новый экземпляр класса DeviceSearchCompleetedEventArgs (рекомендуется
@@ -289,7 +289,7 @@ namespace Kontel.Relkon
         /// </summary>
         /// <param name="Port">Порт, к которому подключено устройство</param>
         /// <param name="DeviceResponse">Ответ устройства</param>
-        public DeviceSearchCompletedEventArgs(SerialPort485 Port, byte[] DeviceResponse)
+        public DeviceSearchCompletedEventArgs(SerialportChannel Port, byte[] DeviceResponse)
             : base(null, false, null)
         {
             this.Port = Port;
@@ -308,7 +308,7 @@ namespace Kontel.Relkon
             
         }
 
-        public DeviceSearchCompletedEventArgs(SerialPort485 Port, byte[] DeviceResponse, Exception e, bool canceled)
+        public DeviceSearchCompletedEventArgs(SerialportChannel Port, byte[] DeviceResponse, Exception e, bool canceled)
             : base(e, canceled, null)
         {
             this.Port = Port;

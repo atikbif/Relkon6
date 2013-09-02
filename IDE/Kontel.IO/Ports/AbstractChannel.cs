@@ -73,28 +73,28 @@ namespace Kontel.Relkon
             }
         }
 
-        ///// <summary>
-        ///// Возвращает или устанавливает максимальное число байт, которое можно 
-        ///// считать с контроллера за одну операцию чтения
-        ///// </summary>
-        //public int BufferSize
-        //{
-        //    get
-        //    {
-        //        return this.bufferSize;
-        //    }
-        //    set
-        //    {
-        //        this.bufferSize = value;
-        //    }
-        //}
+        /// <summary>
+        /// Возвращает или устанавливает максимальное число байт, которое можно 
+        /// считать с контроллера за одну операцию чтения
+        /// </summary>
+        public int BufferSize
+        {
+            get
+            {
+                return _bufferSize;
+            }
+            set
+            {
+                _bufferSize = value;
+            }
+        }
 
 
         protected abstract byte[] Send(byte[] buffer, int ExpectedResponseSize);
         public abstract void Open();
         public abstract void Close();
         public abstract bool IsOpen();
-       
+      
         /// <summary>
         /// Проверяет, является ли указанный буфер сообщением текущего протокола
         /// </summary>
@@ -114,7 +114,33 @@ namespace Kontel.Relkon
             return res;
         }
 
-   
+        /// <summary>
+        /// Останавливает процесс чтения / записи, происходящий в данный момент
+        /// </summary>
+        public void Stop()
+        {
+            _canceled = true;
+        }
+       
+
+        public int GetPacketSize(MemoryType MemoryType)
+        {
+            int MaxBufferSize = 1024;
+            if (MemoryType == MemoryType.SDCard)
+                MaxBufferSize = 100;
+            else if (MemoryType == MemoryType.FRAM || MemoryType == MemoryType.EEPROM || MemoryType == MemoryType.RAM || MemoryType == MemoryType.XRAM)
+                MaxBufferSize = 97;
+            else
+                MaxBufferSize = 128;
+            int PacketSize = Math.Min(MaxBufferSize, _bufferSize);
+            if (_relkonProtocolType == ProtocolType.RC51ASCII)
+                PacketSize = PacketSize / 2 - 2;
+            PacketSize -= 8;
+            if (MemoryType == MemoryType.Flash)
+                PacketSize = (this._relkonProtocolType == ProtocolType.RC51ASCII) ? 1000 : 2000;
+            return Math.Max(PacketSize, 1); 
+        }
+
         /// <summary>
         /// Преобразует указанный массив к формату текущего протокола
         /// </summary>
@@ -122,14 +148,7 @@ namespace Kontel.Relkon
         {
             return RelkonProtocol.ConvertToCurrentProtocolType(buffer, _relkonProtocolType);
         }
-
-        /// <summary>
-        /// Останавливает процесс чтения / записи, происходящий в данный момент
-        /// </summary>
-        private void Stop()
-        {
-            _canceled = true;
-        }
+       
 
         /// <summary>
         /// Преобразует указанный массив из формата RC51ASCII в бинарный формат

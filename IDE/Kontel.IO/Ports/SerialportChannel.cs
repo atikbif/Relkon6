@@ -11,6 +11,12 @@ namespace Kontel.Relkon
         private SerialPort _serialPort = null; // обеспечивает рабоу с COM-портом    
 
 
+        public SerialportChannel(SerialportChannel channel)
+        {
+            _serialPort = channel.DirectPort;
+            _relkonProtocolType = RelkonProtocolType;
+        }
+
         public SerialportChannel(string portName, int baudRate, ProtocolType relkonPotocolType)
         {
             _serialPort = new SerialPort();
@@ -21,20 +27,20 @@ namespace Kontel.Relkon
             _relkonProtocolType = relkonPotocolType;
         }
 
-        ///// <summary>
-        ///// Возвращает или устанавливает имя рабочего порта
-        ///// </summary>
-        //public string PortName
-        //{
-        //    get
-        //    {
-        //        return _serialPort.PortName;
-        //    }
-        //    set
-        //    {
-        //        _serialPort.PortName = value;
-        //    }
-        //}
+        /// <summary>
+        /// Возвращает или устанавливает имя рабочего порта
+        /// </summary>
+        public string PortName
+        {
+            get
+            {
+                return _serialPort.PortName;
+            }
+            set
+            {
+                _serialPort.PortName = value;
+            }
+        }
 
         /// <summary>
         /// Возвращает или устанавливает скорость обмена данными с портом

@@ -14,7 +14,7 @@ namespace Kontel.Relkon.Solutions
 {
     public sealed class UploadMgr
     {
-        private delegate void WorkerEventHandler(Relkon4SerialPort port);
+        private delegate void WorkerEventHandler(AbstractChannel port);
 
         private ControllerProgramSolution solution = null;        
         private bool uploadOnlyParams = false; // если true, то будут загружены только параметры проекта (без программы)
@@ -29,7 +29,7 @@ namespace Kontel.Relkon.Solutions
         private SendOrPostCallback onProgressReportDelegate;
         private SendOrPostCallback onCompletedDelegate;
         private bool canceled = false;
-        private SerialPort485 devicePort = null;
+        private AbstractChannel devicePort = null;
 
         /// <summary>
         /// Периодически возникает в процессе загузки данных проекта в контроллер
@@ -128,7 +128,7 @@ namespace Kontel.Relkon.Solutions
                 if (Encoding.ASCII.GetString(e.DeviceResponse).ToLower().Contains(this.deviceSearcher.Pattern.ToLower()))
                     bootLoaderMode = false;
 
-                Relkon4SerialPort port = new Relkon4SerialPort(e.Port);
+                AbstractChannel port = new SerialportChannel(e.Port);
                 port.ControllerAddress = e.DeviceResponse[0];    
            
                 this.devicePort = this.solution.LastWorkedPort = port;               
@@ -150,27 +150,29 @@ namespace Kontel.Relkon.Solutions
             this.uploadOnlyParams = onlyParams;
             this.uploadOnlyProgram = onlyProgram;
             this._readEmbVars = readEmbVars;
-            this.deviceSearcher.DevicePort = this.solution.LastWorkedPort;
+            this.deviceSearcher.DevicePort = (SerialportChannel) this.solution.LastWorkedPort;
             this.deviceSearcher.Pattern = "Relkon 6";
             this.deviceSearcher.BootPattern = "boot";
             this.deviceSearcher.Request = new byte[] { (byte)solution.SearchedControllerAddress, 0xA0 };
             this.StartUploading();
         }
 
-        private void Upload(Relkon4SerialPort port)
+        private void Upload(AbstractChannel port)
         {
-            Exception error = null;                                 
+            Exception error = null;
+
+            port = (SerialportChannel)port; 
             try
             {
-                int oldBaudRate = port.BaudRate;
-                ProtocolType oldProtocol = port.Protocol;
+                int oldBaudRate = ((SerialportChannel)port).BaudRate;
+                ProtocolType oldProtocol = port.RelkonProtocolType;
                 long programSize = 0;
 
                 port.Open();
 
                 byte[] req;
 
-                req = port.SendRequest(new byte[] { 0x00, 0xA2 }, 16, 2);
+                req = port.SendRequest(new byte[] { 0x00, 0xA2 }, 16);
                 if (req != null)
                 {
                     string s = Encoding.ASCII.GetString(req);
@@ -179,7 +181,7 @@ namespace Kontel.Relkon.Solutions
                 }
 
 
-                req = port.SendRequest(this.deviceSearcher.Request, this.deviceSearcher.Pattern.Length, 2);
+                req = port.SendRequest(this.deviceSearcher.Request, this.deviceSearcher.Pattern.Length);
                 if (req != null)
                 {
                     string s = Encoding.ASCII.GetString(req);
@@ -202,14 +204,14 @@ namespace Kontel.Relkon.Solutions
                         if (this.canceled)
                             throw new StopUploadinException();
                         Thread.Sleep(1000);    
-                    }                    
+                    }
 
-                    port.BaudRate = 115200;
-                    port.Protocol = ProtocolType.RC51BIN;
+                    ((SerialportChannel)port).BaudRate = 115200;
+                    port.RelkonProtocolType = ProtocolType.RC51BIN;
                     port.Open();
 
-                    port.DirectPort.Write("1");                  
-                    waitfor(port.DirectPort, 'C');
+                    ((SerialportChannel)port).DirectPort.Write("1");
+                    waitfor(((SerialportChannel)port).DirectPort, 'C');
                 
                     Stream fs = new FileStream(solution.DirectoryName + "\\" + solution.Name + ".bin", FileMode.Open);
                     BinaryReader br = new BinaryReader(fs);
@@ -246,9 +248,9 @@ namespace Kontel.Relkon.Solutions
 
                     initpacket.createPacket();
 
-                    port.DiscardInBuffer();
-                    SendPacket(port.DirectPort, initpacket);
-                    waitfor(port.DirectPort, 'C');
+                    ((SerialportChannel)port).DiscardInBuffer();
+                    SendPacket(((SerialportChannel)port).DirectPort, initpacket);
+                    waitfor(((SerialportChannel)port).DirectPort, 'C');
                     //port.DiscardInBuffer();
 
                     MemoryStream ms2 = new MemoryStream(bytes);
@@ -277,11 +279,11 @@ namespace Kontel.Relkon.Solutions
                         sendPacket.data = temparr;
                         sendPacket.createPacket();
 
-                        SendPacket(port.DirectPort, sendPacket);   
+                        SendPacket(((SerialportChannel)port).DirectPort, sendPacket);   
                     }
 
 
-                    port.DirectPort.Write(new byte[] { (byte)0x04 }, 0, 1);
+                    ((SerialportChannel)port).DirectPort.Write(new byte[] { (byte)0x04 }, 0, 1);
                     YModemPacket endpacket = new YModemPacket();
                     endpacket.isend = true;
                     endpacket.longpacket = false;
@@ -289,18 +291,18 @@ namespace Kontel.Relkon.Solutions
                     endpacket.data = new byte[128];
                     endpacket.createPacket();
 
-                    SendPacket(port.DirectPort, endpacket);   
+                    SendPacket(((SerialportChannel)port).DirectPort, endpacket);   
 
                     Thread.Sleep(2000);
-                    port.DiscardInBuffer();                    
+                    ((SerialportChannel)port).DiscardInBuffer();                    
                 }
 
 
                
                 if (!bootLoaderMode)
                 {
-                    port.BaudRate = oldBaudRate;
-                    port.Protocol = oldProtocol;
+                    ((SerialportChannel)port).BaudRate = oldBaudRate;
+                    port.RelkonProtocolType = oldProtocol;
                 }
                 else
                 {
@@ -314,18 +316,18 @@ namespace Kontel.Relkon.Solutions
                     int totalProgress = baudRates.Length * protocols.Length;
                     for (int i = 0; i < protocols.Length && !searchingStopped; i++)
                     {
-                        port.Protocol = protocols[i];
+                        port.RelkonProtocolType = protocols[i];
                         for (int j = 0; j < baudRates.Length && !searchingStopped; j++)
                         {
-                            port.BaudRate = baudRates[j];
+                            ((SerialportChannel)port).BaudRate = baudRates[j];
                             try
                             {
                                 if (this.canceled)
                                     throw new StopUploadinException();
 
                                 port.Open();
-                                byte[] res = port.SendRequest(request, pattern.Length, 2);
-                                port.DiscardInBuffer();
+                                byte[] res = port.SendRequest(request, pattern.Length);
+                                ((SerialportChannel)port).DiscardInBuffer();
                                 if (res != null && Encoding.ASCII.GetString(res).ToLower().Contains(pattern))
                                 {
                                     searchingStopped = true;

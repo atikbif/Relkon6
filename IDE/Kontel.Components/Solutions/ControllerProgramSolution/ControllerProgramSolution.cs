@@ -214,10 +214,10 @@ namespace Kontel.Relkon.Solutions
         }
 
 
-        private SerialPort485 _lastWorkedPort = null;
+        private AbstractChannel _lastWorkedPort = null;
 
         [XmlIgnore]
-        public SerialPort485 LastWorkedPort
+        public AbstractChannel LastWorkedPort
         {
             get
             {

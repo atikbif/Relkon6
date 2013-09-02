@@ -244,7 +244,7 @@ namespace Kontel.Relkon.Components
 
                     this.ddlPortName.SelectedItem = e.Port.PortName;
                     this.ddlBaudRate.SelectedItem = e.Port.BaudRate.ToString();
-                    this.ddlProtocol.SelectedItem = e.Port.Protocol;
+                    this.ddlProtocol.SelectedItem = e.Port.RelkonProtocolType;
                 }
                 else
                 {

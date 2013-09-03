@@ -63,10 +63,8 @@
     <Compile Include="FSs\CardReader.cs" />
     <Compile Include="FSs\FileSystem.cs" />
     <Compile Include="Ports\AbstractChannel.cs" />
-    <Compile Include="Ports\Ethernet.cs" />
+    <Compile Include="Ports\EthernetChannel.cs" />
     <Compile Include="Ports\PortParameters.cs" />
-    <Compile Include="Ports\Relkon37Ehernet.cs" />
-    <Compile Include="Ports\Relkon4Ehernet.cs" />
     <Compile Include="Ports\SerialportChannel.cs" />
     <Compile Include="Ports\SerialPortDeviceSearcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

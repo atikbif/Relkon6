@@ -149,7 +149,6 @@ namespace Kontel.Relkon
             return RelkonProtocol.ConvertToCurrentProtocolType(buffer, _relkonProtocolType);
         }
        
-
         /// <summary>
         /// Преобразует указанный массив из формата RC51ASCII в бинарный формат
         /// (CRC не удаляется)
@@ -311,14 +310,7 @@ namespace Kontel.Relkon
             List<byte> res = new List<byte>(Count);
             do
             {
-                int i = Math.Min(Count - c, PacketSize);
-                if (MemoryType == MemoryType.SDCard)
-                {
-                    // c SD Card можно читать в пределах 512-байтных секторов
-                    int segmentEnd = Address / 512 * 512 + 512;
-                    if (Address + i >= segmentEnd)
-                        i = segmentEnd - Address;
-                }
+                int i = Math.Min(Count - c, PacketSize);              
                 byte[] response = this.SendRequest(this.CreateReadMemoryRequest(MemoryType, Address, i), i + 3);
                 Thread.Sleep(10);
                 c += i;
@@ -349,14 +341,7 @@ namespace Kontel.Relkon
             int c = 0;
             do
             {
-                int i = Math.Min(Data.Length - c, PacketSize);
-                if (MemoryType == MemoryType.SDCard)
-                {
-                    // на SD Card можно писать в пределах 512-байтных секторов
-                    int segmentEnd = Address / 512 * 512 + 512;
-                    if (Address + i >= segmentEnd)
-                        i = segmentEnd - Address;
-                }
+                int i = Math.Min(Data.Length - c, PacketSize);              
                 byte[] response = this.SendRequest(this.CreateWriteMemoryRequest(MemoryType, Address, Utils.GetSubArray<byte>(Data, c, i)), 4);
                 c += i;
 

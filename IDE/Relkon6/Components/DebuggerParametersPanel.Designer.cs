@@ -46,6 +46,11 @@
             this.bLoadConfig = new System.Windows.Forms.Button();
             this.bSaveConfig = new System.Windows.Forms.Button();
             this.gbSettingsConnect = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.rbEthernet = new System.Windows.Forms.RadioButton();
+            this.rbCom = new System.Windows.Forms.RadioButton();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tBIP = new System.Windows.Forms.TextBox();
             this.ddlProtocol = new System.Windows.Forms.ComboBox();
             this.ddlBaudRate = new System.Windows.Forms.ComboBox();
             this.bRefreshPortNames = new System.Windows.Forms.Button();
@@ -89,7 +94,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            label1.Location = new System.Drawing.Point(14, 76);
+            label1.Location = new System.Drawing.Point(14, 77);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(62, 13);
             label1.TabIndex = 1;
@@ -185,12 +190,12 @@
             this.borderPanel1.Location = new System.Drawing.Point(2, 2);
             this.borderPanel1.Name = "borderPanel1";
             this.borderPanel1.Padding = new System.Windows.Forms.Padding(5);
-            this.borderPanel1.Size = new System.Drawing.Size(266, 719);
+            this.borderPanel1.Size = new System.Drawing.Size(250, 681);
             this.borderPanel1.TabIndex = 28;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(7, 502);
+            this.button1.Location = new System.Drawing.Point(7, 559);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(231, 21);
             this.button1.TabIndex = 29;
@@ -202,7 +207,7 @@
             // 
             this.groupBox2.Controls.Add(this.bSyncTimeWithPC);
             this.groupBox2.Controls.Add(this.dateTimePicker1);
-            this.groupBox2.Location = new System.Drawing.Point(9, 203);
+            this.groupBox2.Location = new System.Drawing.Point(9, 260);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(228, 89);
             this.groupBox2.TabIndex = 28;
@@ -238,7 +243,7 @@
             // 
             // bLoadConfig
             // 
-            this.bLoadConfig.Location = new System.Drawing.Point(8, 461);
+            this.bLoadConfig.Location = new System.Drawing.Point(8, 518);
             this.bLoadConfig.Name = "bLoadConfig";
             this.bLoadConfig.Size = new System.Drawing.Size(117, 34);
             this.bLoadConfig.TabIndex = 22;
@@ -248,7 +253,7 @@
             // 
             // bSaveConfig
             // 
-            this.bSaveConfig.Location = new System.Drawing.Point(123, 461);
+            this.bSaveConfig.Location = new System.Drawing.Point(123, 518);
             this.bSaveConfig.Name = "bSaveConfig";
             this.bSaveConfig.Size = new System.Drawing.Size(116, 34);
             this.bSaveConfig.TabIndex = 13;
@@ -258,6 +263,11 @@
             // 
             // gbSettingsConnect
             // 
+            this.gbSettingsConnect.Controls.Add(this.label7);
+            this.gbSettingsConnect.Controls.Add(this.rbEthernet);
+            this.gbSettingsConnect.Controls.Add(this.rbCom);
+            this.gbSettingsConnect.Controls.Add(this.label3);
+            this.gbSettingsConnect.Controls.Add(this.tBIP);
             this.gbSettingsConnect.Controls.Add(label1);
             this.gbSettingsConnect.Controls.Add(this.ddlProtocol);
             this.gbSettingsConnect.Controls.Add(this.ddlBaudRate);
@@ -270,10 +280,60 @@
             this.gbSettingsConnect.Controls.Add(label2);
             this.gbSettingsConnect.Location = new System.Drawing.Point(8, 4);
             this.gbSettingsConnect.Name = "gbSettingsConnect";
-            this.gbSettingsConnect.Size = new System.Drawing.Size(230, 161);
+            this.gbSettingsConnect.Size = new System.Drawing.Size(230, 223);
             this.gbSettingsConnect.TabIndex = 26;
             this.gbSettingsConnect.TabStop = false;
             this.gbSettingsConnect.Text = "Настройки соединения";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(14, 193);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(67, 13);
+            this.label7.TabIndex = 26;
+            this.label7.Text = "Интерфейс:";
+            // 
+            // rbEthernet
+            // 
+            this.rbEthernet.AutoSize = true;
+            this.rbEthernet.Location = new System.Drawing.Point(156, 191);
+            this.rbEthernet.Name = "rbEthernet";
+            this.rbEthernet.Size = new System.Drawing.Size(65, 17);
+            this.rbEthernet.TabIndex = 25;
+            this.rbEthernet.Text = "Ethernet";
+            this.rbEthernet.UseVisualStyleBackColor = true;
+            this.rbEthernet.CheckedChanged += new System.EventHandler(this.rbEthernet_CheckedChanged);
+            // 
+            // rbCom
+            // 
+            this.rbCom.AutoSize = true;
+            this.rbCom.Checked = true;
+            this.rbCom.Location = new System.Drawing.Point(90, 191);
+            this.rbCom.Name = "rbCom";
+            this.rbCom.Size = new System.Drawing.Size(46, 17);
+            this.rbCom.TabIndex = 24;
+            this.rbCom.TabStop = true;
+            this.rbCom.Text = "Сom";
+            this.rbCom.UseVisualStyleBackColor = true;
+            this.rbCom.CheckedChanged += new System.EventHandler(this.rbCom_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 168);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "IP адрес:";
+            // 
+            // tBIP
+            // 
+            this.tBIP.Location = new System.Drawing.Point(90, 165);
+            this.tBIP.Name = "tBIP";
+            this.tBIP.Size = new System.Drawing.Size(128, 20);
+            this.tBIP.TabIndex = 22;
+            this.tBIP.TextChanged += new System.EventHandler(this.tBIP_TextChanged);
             // 
             // ddlProtocol
             // 
@@ -307,9 +367,9 @@
             // 
             // bRefreshPortNames
             // 
-            this.bRefreshPortNames.Location = new System.Drawing.Point(155, 72);
+            this.bRefreshPortNames.Location = new System.Drawing.Point(157, 73);
             this.bRefreshPortNames.Name = "bRefreshPortNames";
-            this.bRefreshPortNames.Size = new System.Drawing.Size(64, 23);
+            this.bRefreshPortNames.Size = new System.Drawing.Size(64, 21);
             this.bRefreshPortNames.TabIndex = 21;
             this.bRefreshPortNames.Text = "Обновить";
             this.bRefreshPortNames.UseVisualStyleBackColor = true;
@@ -356,7 +416,7 @@
             this.groupBox3.Controls.Add(label14);
             this.groupBox3.Controls.Add(this.lRequestTime);
             this.groupBox3.Controls.Add(label6);
-            this.groupBox3.Location = new System.Drawing.Point(8, 298);
+            this.groupBox3.Location = new System.Drawing.Point(8, 355);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(231, 157);
             this.groupBox3.TabIndex = 15;
@@ -485,7 +545,7 @@
             // 
             // bStart
             // 
-            this.bStart.Location = new System.Drawing.Point(8, 174);
+            this.bStart.Location = new System.Drawing.Point(8, 234);
             this.bStart.Name = "bStart";
             this.bStart.Size = new System.Drawing.Size(230, 23);
             this.bStart.TabIndex = 2;
@@ -496,14 +556,12 @@
             // DebuggerParametersPanel
             // 
             this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(254, 685);
             this.Controls.Add(this.borderPanel1);
             this.DoubleBuffered = true;
-            this.FloatingSize = new System.Drawing.Size(661, 50);
             this.MinimumSize = new System.Drawing.Size(255, 50);
             this.Name = "DebuggerParametersPanel";
             this.Padding = new System.Windows.Forms.Padding(2);
-            this.ShowOptions = false;
-            this.Size = new System.Drawing.Size(270, 723);
             this.Text = "Параметры отладчика";
             this.borderPanel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -551,6 +609,11 @@
         private Kontel.Relkon.BorderPanel bpState;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button bSyncTimeWithPC;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tBIP;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.RadioButton rbEthernet;
+        private System.Windows.Forms.RadioButton rbCom;
 
     }
 }

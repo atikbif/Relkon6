@@ -45,7 +45,7 @@ namespace Kontel.Relkon
         /// </summary>
         public override void Open()
         {
-            _client = new UdpClient(_ip.Port);            
+            _client = new UdpClient();            
             _client.Connect(_ip);          
             _groupEP = new IPEndPoint(System.Net.IPAddress.Any, _ip.Port);
            

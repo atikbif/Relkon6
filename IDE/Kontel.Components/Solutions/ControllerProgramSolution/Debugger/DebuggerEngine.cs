@@ -369,9 +369,9 @@ namespace Kontel.Relkon.Debugger
             AbstractChannel port = null;
 
             if (this.Parameters.ComConection)            
-                port = new SerialportChannel(this.Parameters.PortName, this.Parameters.BaudRate, this.Parameters.ProtocolType);                                                            
-            //else            
-            //    port = new Relkon4Ehernet(this.Parameters.PortIP, this.Parameters.PortNumber, this.Parameters.ProtocolType, this.Parameters.InterfaceProtocol == "Tcp" ? System.Net.Sockets.ProtocolType.Tcp : System.Net.Sockets.ProtocolType.Udp);                                                                 
+                port = new SerialportChannel(this.Parameters.PortName, this.Parameters.BaudRate, this.Parameters.ProtocolType);
+            else
+                port = new EthernetChannel(this.Parameters.PortIP, 12144, this.Parameters.ProtocolType);                                                                 
 
             port.ControllerAddress = this.Parameters.ControllerNumber;
             this.asyncOp = AsyncOperationManager.CreateOperation(port);
@@ -387,31 +387,7 @@ namespace Kontel.Relkon.Debugger
             this.EngineStatus = DebuggerEngineStatus.Stopping;
             ((AbstractChannel)this.asyncOp.UserSuppliedState).Stop();            
         }
-        /// <summary>
-        /// Читает размер буффера с контроллера на базе процессора MB90F347
-        /// </summary>
-        /// <param name="port">Порт, через который осуществляется чтение; должен быть уже открыт</param>
-        private int GetMB90F347RequestSize(AbstractChannel portCOM, Relkon37Ehernet portEthernet)
-        {
-            int[] addresses = { 340, 356 };
-            int res = int.MaxValue;
-            for (int i = 0; i < 2; i++)
-            {
-                byte[] response;
-                if (portCOM != null) response = portCOM.ReadEEPROM(addresses[i], 2);
-                else response = portEthernet.ReadEEPROM(addresses[i], 2);
-                if (this.Parameters.InverseByteOrder)
-                    Array.Reverse(response);
-                int SRX = AppliedMath.BytesToInt(response);
-                if (portCOM != null) response = portCOM.ReadEEPROM(addresses[i] + 4, 2);
-                else response = portEthernet.ReadEEPROM(addresses[i] + 4, 2);
-                if (this.Parameters.InverseByteOrder)
-                    Array.Reverse(response);
-                int NRX = AppliedMath.BytesToInt(response);
-                res = Math.Min(res, NRX - SRX + 1);
-            }
-            return res;
-        }
+        
         /// <summary>
         /// Удаляет опрашиваемый элемент из очереди запрсов отладчика
         /// </summary>

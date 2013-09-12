@@ -10,6 +10,7 @@ using System.Threading;
 using System.IO.Ports;
 using System.IO;
 using System.Xml;
+using System.Globalization;
 
 namespace Reloader
 {
@@ -652,6 +653,26 @@ namespace Reloader
             XmlNode ipAdress = doc.GetElementsByTagName("ControllerIPAdress")[0];
             bytes = Convert.FromBase64String(ipAdress.InnerText);
             Array.Copy(bytes, 0, res, byteCount, bytes.Length);
+
+            byteCount += 4;
+
+            XmlNode macAddress = doc.GetElementsByTagName("ControllerMACAdress")[0];
+            long mac = Int64.Parse(macAddress.InnerText, NumberStyles.AllowHexSpecifier);
+            byte[] macBytes = BitConverter.GetBytes(mac);
+            Array.Resize<byte>(ref macBytes, 6);
+            Array.Reverse(macBytes);
+
+            Array.Copy(macBytes, 0, res, byteCount, macBytes.Length);
+
+            byteCount += 6;
+
+            res[byteCount++] = (byte)(DateTime.Now.Year - 2000); //0x7F56 – год (от 0 до 99)
+
+
+            XmlNode pult = doc.GetElementsByTagName("PultEnable")[0];
+            //0x7F57 – разрешение коммуникационного канала вместо пульта
+            //(0x31 – канал, любое другое значение - пульт)
+            res[byteCount++] = bool.Parse(pult.InnerText) ? (byte)0 : (byte)0x31;           
 
             bytes = Encoding.ASCII.GetBytes("Relkon 001");              
             Array.Copy(bytes, 0, res, 0x7FF5 - 0x7B00, bytes.Length);

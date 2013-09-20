@@ -121,8 +121,8 @@ namespace Kontel.Relkon.Components
             //this.tbReadPassword.Text = this.engine.Parameters.ReadPassword;
             //this.tbWritePassword.Text = this.engine.Parameters.WritePassword;
             //this.nudPort.Value = this.engine.Parameters.PortNumber;
-            //this.tbIP.Text = this.engine.Parameters.PortIP;
-            //this.tabControl1.SelectedTab = this.engine.Parameters.ComConection ? this.tabCom : this.tabEthernet;
+            this.tBIP.Text = this.engine.Parameters.PortIP;           
+            rbCom.Checked = this.engine.Parameters.ComConection;            
         }
         /// <summary>
         /// Функция, вызывающаяся после считывания времени с контролера
@@ -165,7 +165,20 @@ namespace Kontel.Relkon.Components
 
         }
 
-        
+        private void tBIP_TextChanged(object sender, EventArgs e)
+        {
+            DebuggerEngine.Parameters.PortIP = tBIP.Text;
+        }
+
+        private void rbEthernet_CheckedChanged(object sender, EventArgs e)
+        {
+            DebuggerEngine.Parameters.ComConection = false;
+        }
+
+        private void rbCom_CheckedChanged(object sender, EventArgs e)
+        {
+            DebuggerEngine.Parameters.ComConection = true;
+        }
 
         private void ddPortName_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -244,7 +257,7 @@ namespace Kontel.Relkon.Components
 
                     this.ddlPortName.SelectedItem = e.Port.PortName;
                     this.ddlBaudRate.SelectedItem = e.Port.BaudRate.ToString();
-                    this.ddlProtocol.SelectedItem = e.Port.Protocol;
+                    this.ddlProtocol.SelectedItem = e.Port.RelkonProtocolType;
                 }
                 else
                 {
@@ -269,6 +282,12 @@ namespace Kontel.Relkon.Components
             }
             else if (this.DebuggerEngine.EngineStatus == DebuggerEngineStatus.Stopped)
             {
+                if (!DebuggerEngine.Parameters.ComConection)
+                {
+                    System.Net.IPAddress ip;
+                    if (!System.Net.IPAddress.TryParse(DebuggerEngine.Parameters.PortIP, out ip))
+                        return;
+                }
                 //установка недоступности полей на время соединения
                 this.gbSettingsConnect.Enabled = false;
                 //попытка запуска отладчика
@@ -537,6 +556,6 @@ namespace Kontel.Relkon.Components
             this.clockWrite = true;
             this.engine.AddWriteItem(0, MemoryType.Clock, Relkon4Protocol.ConvertDate(DateTime.Now), "clock_writing", null, new ProceedingCompleetedDelegate(this.ClockWrited));
             dateTimePicker1_Leave(null, null);
-        }     
+        }          
    }
 }

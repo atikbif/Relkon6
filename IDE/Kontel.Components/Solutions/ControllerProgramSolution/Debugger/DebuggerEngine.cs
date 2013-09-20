@@ -229,13 +229,10 @@ namespace Kontel.Relkon.Debugger
 
 
         /// <summary>
-        /// Описывает основной метод отладчика - опрос контроллера через CON
+        /// Описывает основной метод отладчика - опрос контроллера
         /// </summary>
-        private delegate void WorkingDelegateCOM(Relkon37SerialPort port);
-        /// <summary>
-        /// Описывает основной метод отладчика - опрос контроллера через Ethernet
-        /// </summary>
-        private delegate void WorkingDelegateEthernet(Relkon37Ehernet port);
+        private delegate void WorkingDelegateCOM(AbstractChannel port);
+   
 
         #region Events declarations
         /// <summary>
@@ -301,44 +298,10 @@ namespace Kontel.Relkon.Debugger
         /// </summary>
         private int GetRequestMaxBytesToRead(MemoryType MemoryType)
         {
-            if (this.Parameters.ProcessorType == ProcessorType.AT89C51ED2)
-                return 8;
-            else if (this.Parameters.ProcessorType == ProcessorType.MB90F347)
-            {
-                if (this.Parameters.ComConection)
-                {
-                    if (this.asyncOp != null && (this.asyncOp.UserSuppliedState is Relkon4SerialPort))
-                        return ((Relkon4SerialPort)this.asyncOp.UserSuppliedState).GetPacketSize(MemoryType);
-                    else
-                        return 0x40;
-                }
-                else
-                {
-                    if (this.asyncOp != null && (this.asyncOp.UserSuppliedState is Relkon4Ehernet))
-                        return ((Relkon4Ehernet)this.asyncOp.UserSuppliedState).GetPacketSize(MemoryType);
-                    else
-                        return 0x40;
-                }
-            }
-            else if (this.Parameters.ProcessorType == ProcessorType.STM32F107)
-            {
-                if (this.Parameters.ComConection)
-                {
-                    if (this.asyncOp != null && (this.asyncOp.UserSuppliedState is Relkon4SerialPort))
-                        return ((Relkon4SerialPort)this.asyncOp.UserSuppliedState).GetPacketSize(MemoryType);
-                    else
-                        return 0x40;
-                }
-                else
-                {
-                    if (this.asyncOp != null && (this.asyncOp.UserSuppliedState is Relkon4Ehernet))
-                        return ((Relkon4Ehernet)this.asyncOp.UserSuppliedState).GetPacketSize(MemoryType);
-                    else
-                        return 0x40;
-                }
-            }
+            if (this.asyncOp != null && (this.asyncOp.UserSuppliedState is AbstractChannel))
+                return ((AbstractChannel)this.asyncOp.UserSuppliedState).GetPacketSize(MemoryType);
             else
-                throw new Exception("Процессор " + this.Parameters.ProcessorType + " не поддерживается");
+                return 0x40;
         }
         /// <summary>
         /// Генерирует событие EngineStatusChanged
@@ -403,26 +366,17 @@ namespace Kontel.Relkon.Debugger
             if (this.EngineStatus != DebuggerEngineStatus.Stopped)
                 throw new Exception("Отладчик уже запущен");
 
-            if (this.Parameters.ComConection)
-            {
-                Relkon37SerialPort port = this.Parameters.ProcessorType == ProcessorType.AT89C51ED2 ?
-                    new Relkon37SerialPort(this.Parameters.PortName, this.Parameters.BaudRate, this.Parameters.ProtocolType) :
-                    new Relkon4SerialPort(this.Parameters.PortName, this.Parameters.BaudRate, this.Parameters.ProtocolType);
-                port.ControllerAddress = this.Parameters.ControllerNumber;
-                this.asyncOp = AsyncOperationManager.CreateOperation(port);
-                WorkingDelegateCOM worker = new WorkingDelegateCOM(this.ProceedRequests);
-                worker.BeginInvoke(port, null, null);
-            }
+            AbstractChannel port = null;
+
+            if (this.Parameters.ComConection)            
+                port = new SerialportChannel(this.Parameters.PortName, this.Parameters.BaudRate, this.Parameters.ProtocolType);
             else
-            {
-                Relkon37Ehernet port = this.Parameters.ProcessorType == ProcessorType.AT89C51ED2 ?
-                    new Relkon37Ehernet(this.Parameters.PortIP, this.Parameters.PortNumber, this.Parameters.ProtocolType, this.Parameters.InterfaceProtocol == "Tcp" ? System.Net.Sockets.ProtocolType.Tcp : System.Net.Sockets.ProtocolType.Udp) :
-                    new Relkon4Ehernet(this.Parameters.PortIP, this.Parameters.PortNumber, this.Parameters.ProtocolType, this.Parameters.InterfaceProtocol == "Tcp" ? System.Net.Sockets.ProtocolType.Tcp : System.Net.Sockets.ProtocolType.Udp);
-                port.ControllerAddress = this.Parameters.ControllerNumber;
-                this.asyncOp = AsyncOperationManager.CreateOperation(port);
-                WorkingDelegateEthernet worker = new WorkingDelegateEthernet(this.ProceedRequests);
-                worker.BeginInvoke(port, null, null);
-            }
+                port = new EthernetChannel(this.Parameters.PortIP, 12144, this.Parameters.ProtocolType);                                                                 
+
+            port.ControllerAddress = this.Parameters.ControllerNumber;
+            this.asyncOp = AsyncOperationManager.CreateOperation(port);
+            WorkingDelegateCOM worker = new WorkingDelegateCOM(this.ProceedRequests);
+            worker.BeginInvoke(port, null, null);
         }
         /// <summary>
         /// Остановка отладчика
@@ -431,34 +385,9 @@ namespace Kontel.Relkon.Debugger
         {
             Trace.WriteLine("Остановка движка", "DebuggerEngine");
             this.EngineStatus = DebuggerEngineStatus.Stopping;
-            if (this.Parameters.ComConection) ((SerialPort485)this.asyncOp.UserSuppliedState).Stop();
-            else ((Ethernet)this.asyncOp.UserSuppliedState).Stop();
+            ((AbstractChannel)this.asyncOp.UserSuppliedState).Stop();            
         }
-        /// <summary>
-        /// Читает размер буффера с контроллера на базе процессора MB90F347
-        /// </summary>
-        /// <param name="port">Порт, через который осуществляется чтение; должен быть уже открыт</param>
-        private int GetMB90F347RequestSize(Relkon37SerialPort portCOM, Relkon37Ehernet portEthernet)
-        {
-            int[] addresses = { 340, 356 };
-            int res = int.MaxValue;
-            for (int i = 0; i < 2; i++)
-            {
-                byte[] response;
-                if (portCOM != null) response = portCOM.ReadEEPROM(addresses[i], 2);
-                else response = portEthernet.ReadEEPROM(addresses[i], 2);
-                if (this.Parameters.InverseByteOrder)
-                    Array.Reverse(response);
-                int SRX = AppliedMath.BytesToInt(response);
-                if (portCOM != null) response = portCOM.ReadEEPROM(addresses[i] + 4, 2);
-                else response = portEthernet.ReadEEPROM(addresses[i] + 4, 2);
-                if (this.Parameters.InverseByteOrder)
-                    Array.Reverse(response);
-                int NRX = AppliedMath.BytesToInt(response);
-                res = Math.Min(res, NRX - SRX + 1);
-            }
-            return res;
-        }
+        
         /// <summary>
         /// Удаляет опрашиваемый элемент из очереди запрсов отладчика
         /// </summary>
@@ -685,15 +614,15 @@ namespace Kontel.Relkon.Debugger
         /// <summary>
         /// Обработка запросов на запись
         /// </summary>
-        private void ProceedWriteItems(Relkon37SerialPort portCOM, Relkon37Ehernet portEthernet)
+        private void ProceedWriteItems(AbstractChannel channel)
         {
             for (int i = 0; i < this.writeItems.Count; i++)
             {
                 RequestItem item = this.writeItems[i];
                 // Определяем, сколько можно записать за один запрос
-                int packetSize;
-                if (portCOM != null) packetSize = portCOM.GetPacketSize(item.MemoryType);
-                else packetSize = portEthernet.GetPacketSize(item.MemoryType);
+                int packetSize = channel.GetPacketSize(item.MemoryType);
+              
+                
                 // Разбиваем буфер по запросам и записываем их в контроллер
                 for (int j = 0; j < item.Data.Length; j += packetSize)
                 {
@@ -702,8 +631,7 @@ namespace Kontel.Relkon.Debugger
                     Array.Copy(item.Data, j, buffer, 0, c);
                     try
                     {
-                        if (portCOM != null) portCOM.WriteToMemory(item.MemoryType, item.Address + j, buffer);
-                        else portEthernet.WriteToMemory(item.MemoryType, item.Address + j, buffer);
+                        channel.WriteToMemory(item.MemoryType, item.Address + j, buffer);
                         this.WritedRequestsCount++;
                     }
                     catch
@@ -780,48 +708,30 @@ namespace Kontel.Relkon.Debugger
                 this.AddReadItem(this.readItems[0]);
                 this.readItems.RemoveAt(0);
             }
-        }
+        }       
         /// <summary>
         /// Основной метод движка; выполняет обработку запросов пользователя
         /// </summary>
         /// <param name="port">Порт, через который происходит отсылка запросов</param>
-        private void ProceedRequests(Relkon37SerialPort port)
-        {
-            ProceedRequests(port, null);
-        }
-        private void ProceedRequests(Relkon37Ehernet port)
-        {
-            ProceedRequests(null, port);
-        }
-        /// <summary>
-        /// Основной метод движка; выполняет обработку запросов пользователя
-        /// </summary>
-        /// <param name="port">Порт, через который происходит отсылка запросов</param>
-        private void ProceedRequests(Relkon37SerialPort portCOM, Relkon37Ehernet portEthernet)
+        private void ProceedRequests(AbstractChannel channel)
         {
             Exception error = null; // используется в событии DebuggerEngineStatusChanged при остановке отладчика
             // Открытие порта
             try
             {
-                if (portCOM != null) portCOM.Open();
-                else portEthernet.Open();
+                channel.Open();
             }
             catch (Exception ex)
             {
-                error = new Exception("Ошибка окрытия порта: " + ex.Message);
+                error = new Exception("Ошибка окрытия канала: " + ex.Message);
                 goto end;
             }
+
             this.EngineStatus = DebuggerEngineStatus.Started;
             this.RaiseEngineStatusChangedEvent(new DebuggerEngineStatusChangedEventArgs(DebuggerEngineStatus.Started, null));
             // Получение типа подключенного контроллера
-            string ControllerType = null;
-            if (portCOM != null) ControllerType = portCOM.ReadControllerType();
-            else
-            {
-                int i = 5;
-                while (i-- >= 0 && ControllerType == null)
-                    ControllerType = portEthernet.ReadControllerType();
-            }
+            string ControllerType = channel.ReadControllerType();;
+           
             if (ControllerType == null)
             {
                 // Контроллер либо вообще не найден, либо не соответствует настройкам отладчика
@@ -830,10 +740,7 @@ namespace Kontel.Relkon.Debugger
             }         
 
             this.maxRequestSize = 128;
-            if (portCOM != null)
-                ((Relkon4SerialPort)portCOM).BufferSize = this.maxRequestSize;
-            else
-                ((Relkon4Ehernet)portEthernet).BufferSize = this.maxRequestSize;
+            channel.BufferSize = this.maxRequestSize;            
 
             this.RebuildRequests();
             // Выполнение запросов
@@ -849,7 +756,7 @@ namespace Kontel.Relkon.Debugger
                         goto end;
                     // Если есть запросы на запись, то обрабатываем их
                     if (this.writeItems.Count != 0)
-                        this.ProceedWriteItems(portCOM,portEthernet);
+                        this.ProceedWriteItems(channel);
                     // Цикл по всем типам памяти, которые присутствуют в очереди
                     foreach (List<ReadRequest> requests in this.requestsByMemory.Values)
                     {
@@ -862,7 +769,7 @@ namespace Kontel.Relkon.Debugger
                             //Console.WriteLine("/---------------" + DateTime.Now.Millisecond.ToString());
                             // Если есть запросы на запись, то обрабатываем их
                             if (this.writeItems.Count != 0)
-                                this.ProceedWriteItems(portCOM,portEthernet);
+                                this.ProceedWriteItems(channel);
                             // Обрабатываем запрос на чтение
                             ReadRequest request = requests[i];
                             if (this.lockingActive && request.MemoryType == this.lockingMemoryType &&
@@ -873,9 +780,7 @@ namespace Kontel.Relkon.Debugger
                             // Если требуется остановить отладчик, то выходим из цикла
                             if (this.EngineStatus == DebuggerEngineStatus.Stopping)
                                 goto end;
-                            byte[] response;
-                            if (portCOM != null) response = portCOM.ReadFromMemory(request.MemoryType, request.Address, request.BytesToRead);
-                            else response = portEthernet.ReadFromMemory(request.MemoryType, request.Address, request.BytesToRead);
+                            byte[] response = channel.ReadFromMemory(request.MemoryType, request.Address, request.BytesToRead);;                           
                             // Учтснавливаем число прочитанных пакетов
                             if (response == null)
                             {
@@ -962,8 +867,7 @@ namespace Kontel.Relkon.Debugger
         end:
             // Завершение работы отладчика
             this.RaiseRequestTimeChangedEvent(new EventArgs<int>(0));
-            if (portCOM != null) portCOM.Close();
-            else portEthernet.Close();
+            channel.Close();
             this.EngineStatus = DebuggerEngineStatus.Stopped;
             this.RaiseEngineStatusChangedEvent(new DebuggerEngineStatusChangedEventArgs(DebuggerEngineStatus.Stopped, error));
             this.asyncOp.OperationCompleted();

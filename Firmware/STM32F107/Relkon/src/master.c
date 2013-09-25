@@ -211,6 +211,58 @@ void can_cmd(request* r)
 			}
 
 			break;
+		case WR_HLD:
+			if((r->amount >= 128)||(r->amount == 0)) break;
+			tx_buf[0]=r->plc_addr;
+			tx_buf[1]=0x10;
+			tx_buf[2]=r->mem_addr >> 8;
+			tx_buf[3]=r->mem_addr & 0xFF;
+			tx_buf[4]=0;
+			tx_buf[5]=r->amount;
+			tx_buf[6]=r->amount*2;
+			for(tmp=0;tmp<r->amount;tmp++)
+			{
+				tx_buf[7+tmp*2]=r->tx[tmp*2+1];
+				tx_buf[8+tmp*2]=r->tx[tmp*2];
+			}
+			crc_val=GetCRC16(tx_buf,7+r->amount*2);
+			tx_buf[7+r->amount*2]=crc_val>>8;
+			tx_buf[8+r->amount*2]=crc_val&0xFF;
+			clear_rx_cnt(r->canal);
+			switch(r->canal)
+			{
+				case 1:write_canal2(9+r->amount*2);break;
+				case 2:write_canal(9+r->amount*2);break;
+				case 3:write_module(9+r->amount*2);break;
+			}
+			break;
+		case WR_COIL:
+			tx_buf[0]=r->plc_addr;
+			tx_buf[1]=0x05;
+			tx_buf[2]=r->mem_addr >> 8;
+			tx_buf[3]=r->mem_addr & 0xFF;
+			if(r->tx[0])
+			{
+				tx_buf[4]=0xFF;
+				tx_buf[5]=0;
+			}
+			else
+			{
+				tx_buf[4]=0;
+				tx_buf[5]=0;
+			}
+
+			crc_val=GetCRC16(tx_buf,6);
+			tx_buf[6]=crc_val>>8;
+			tx_buf[7]=crc_val&0xFF;
+			clear_rx_cnt(r->canal);
+			switch(r->canal)
+			{
+				case 1:write_canal2(8);break;
+				case 2:write_canal(8);break;
+				case 3:write_module(8);break;
+			}
+			break;
 		case RD_RAM:
 			tx_buf[0]=r->plc_addr;
 			tx_buf[1]=0xD4;
@@ -259,6 +311,78 @@ void can_cmd(request* r)
 				case 1:write_canal2(6);break;
 				case 2:write_canal(6);break;
 				case 3:write_module(6);break;
+			}
+			break;
+		case RD_HLD:
+			tx_buf[0]=r->plc_addr;
+			tx_buf[1]=0x03;
+			tx_buf[2]=r->mem_addr >> 8;
+			tx_buf[3]=r->mem_addr & 0xFF;
+			tx_buf[4]=r->amount >> 8;
+			tx_buf[5]=r->amount & 0xFF;
+			crc_val=GetCRC16(tx_buf,6);
+			tx_buf[6]=crc_val>>8;
+			tx_buf[7]=crc_val&0xFF;
+			clear_rx_cnt(r->canal);
+			switch(r->canal)
+			{
+				case 1:write_canal2(8);break;
+				case 2:write_canal(8);break;
+				case 3:write_module(8);break;
+			}
+			break;
+		case RD_INP:
+			tx_buf[0]=r->plc_addr;
+			tx_buf[1]=0x04;
+			tx_buf[2]=r->mem_addr >> 8;
+			tx_buf[3]=r->mem_addr & 0xFF;
+			tx_buf[4]=r->amount >> 8;
+			tx_buf[5]=r->amount & 0xFF;
+			crc_val=GetCRC16(tx_buf,6);
+			tx_buf[6]=crc_val>>8;
+			tx_buf[7]=crc_val&0xFF;
+			clear_rx_cnt(r->canal);
+			switch(r->canal)
+			{
+				case 1:write_canal2(8);break;
+				case 2:write_canal(8);break;
+				case 3:write_module(8);break;
+			}
+			break;
+		case RD_DINP:
+			tx_buf[0]=r->plc_addr;
+			tx_buf[1]=0x02;
+			tx_buf[2]=r->mem_addr >> 8;
+			tx_buf[3]=r->mem_addr & 0xFF;
+			tx_buf[4]=r->amount >> 8;
+			tx_buf[5]=r->amount & 0xFF;
+			crc_val=GetCRC16(tx_buf,6);
+			tx_buf[6]=crc_val>>8;
+			tx_buf[7]=crc_val&0xFF;
+			clear_rx_cnt(r->canal);
+			switch(r->canal)
+			{
+				case 1:write_canal2(8);break;
+				case 2:write_canal(8);break;
+				case 3:write_module(8);break;
+			}
+			break;
+		case RD_COILS:
+			tx_buf[0]=r->plc_addr;
+			tx_buf[1]=0x01;
+			tx_buf[2]=r->mem_addr >> 8;
+			tx_buf[3]=r->mem_addr & 0xFF;
+			tx_buf[4]=r->amount >> 8;
+			tx_buf[5]=r->amount & 0xFF;
+			crc_val=GetCRC16(tx_buf,6);
+			tx_buf[6]=crc_val>>8;
+			tx_buf[7]=crc_val&0xFF;
+			clear_rx_cnt(r->canal);
+			switch(r->canal)
+			{
+				case 1:write_canal2(8);break;
+				case 2:write_canal(8);break;
+				case 3:write_module(8);break;
 			}
 			break;
 		case RD_IO:
@@ -311,6 +435,30 @@ char can_check(request* r)
 			if(get_rx_cnt(r->canal)==1+r->amount+2)
 			{
 				if(GetCRC16(rx_buf,3+r->amount)==0)	{r->rx = &rx_buf[1];return 1;}
+			}
+			break;
+		case RD_HLD:
+			if(get_rx_cnt(r->canal)==3+r->amount*2+2)
+			{
+				if(GetCRC16(rx_buf,3+r->amount*2+2)==0)	{r->rx = &rx_buf[3];return 1;}
+			}
+			break;
+		case RD_INP:
+			if(get_rx_cnt(r->canal)==3+r->amount*2+2)
+			{
+				if(GetCRC16(rx_buf,3+r->amount*2+2)==0)	{r->rx = &rx_buf[3];return 1;}
+			}
+			break;
+		case RD_DINP:
+			if(get_rx_cnt(r->canal)>=3+(r->amount>>3)+2)
+			{
+				if(GetCRC16(rx_buf,get_rx_cnt(r->canal))==0)	{r->rx = &rx_buf[3];return 1;}
+			}
+			break;
+		case RD_COILS:
+			if(get_rx_cnt(r->canal)>=3+(r->amount>>3)+2)
+			{
+				if(GetCRC16(rx_buf,get_rx_cnt(r->canal))==0)	{r->rx = &rx_buf[3];return 1;}
 			}
 			break;
 	}

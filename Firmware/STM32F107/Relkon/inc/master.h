@@ -13,6 +13,12 @@
 #define WR_US		5
 #define WR_XRAM		6
 #define WR_REG		7
+#define RD_HLD		8
+#define WR_HLD		9
+#define RD_INP		10
+#define RD_DINP		11
+#define RD_COILS	12
+#define WR_COIL		13
 
 typedef struct
 {

@@ -48,6 +48,8 @@ namespace Kontel.Relkon.Components
         {
             InitializeComponent();
 
+            this.nudControllerAddress.Maximum = 255;
+
             this.timer = new System.Timers.Timer(100);
             this.timer.AutoReset = false;
             this.timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);         

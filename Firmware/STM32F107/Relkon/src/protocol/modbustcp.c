@@ -123,8 +123,9 @@ unsigned short tcpread_holdregs(request* req)
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
 		portENABLE_INTERRUPTS();
-
-		read_data((req->addr-0x8000)>>8,(req->addr-0x8000)&0xFF,req->cnt<<1,&req->tx_buf[7+2]);
+		req->addr-=0x8000;
+		req->addr *= 2;
+		read_data((req->addr)>>8,(req->addr)&0xFF,req->cnt<<1,&req->tx_buf[7+2]);
 		for(tmp=0;tmp<req->cnt;tmp++) {byte_count=req->tx_buf[7+2+tmp*2];req->tx_buf[7+2+tmp*2]=req->tx_buf[7+3+tmp*2];req->tx_buf[7+3+tmp*2]=byte_count;}
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
@@ -189,6 +190,7 @@ unsigned short tcpwrite_single_coil(request* req)
 unsigned short tcpwrite_single_reg(request* req)
 {
 	unsigned short byte_count,len;
+	unsigned short tmp_addr;
 	if((req->addr >= 128)&&(req->addr < 0x8000)) return(get_error(req,0x02));
 
 	req->tx_buf[0] = req->rx_buf[0];
@@ -199,13 +201,21 @@ unsigned short tcpwrite_single_reg(request* req)
 	if(req->addr < 0x8000) _Sys.Mem.b2[req->addr]=req->cnt;
 	else
 	{
+		tmp_addr = req->addr - 0x8000;
+		tmp_addr *= 2;
+
 		byte_count=req->rx_buf[7+3];req->rx_buf[7+3]=req->rx_buf[7+4];req->rx_buf[7+4]=byte_count;
 		while(_Sys_SPI_Buzy) vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
 		portENABLE_INTERRUPTS();
 		write_enable();
-		write_data((req->addr-0x8000)>>8,(req->addr-0x8000)&0xFF,2,&req->rx_buf[7+3]);
+		write_data(tmp_addr>>8,tmp_addr&0xFF,2,&req->rx_buf[7+3]);
+		if((tmp_addr >= 0x7B00)&&(tmp_addr < 0x7EFF)) // write EE in RAM
+		{
+			_Sys.FR.b1[tmp_addr - 0x7B00]=req->rx_buf[7+3];
+			_Sys.FR.b1[tmp_addr - 0x7B00 + 1]=req->rx_buf[7+4];
+		}
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
 		portENABLE_INTERRUPTS();
@@ -223,6 +233,7 @@ unsigned short tcpwrite_single_reg(request* req)
 unsigned short tcpwrite_multi_regs(request* req)
 {
 	unsigned short tmp,byte_count,len;
+	unsigned short tmp_addr;
 	if((req->cnt >= 129)||(req->cnt == 0)||((req->cnt == 128)&&(req->addr >= 0x8000))) return(get_error(req,0x03));
 	if((req->addr+req->cnt>=129)&&(req->addr<0x8000)) return(get_error(req,0x02));
 
@@ -238,11 +249,19 @@ unsigned short tcpwrite_multi_regs(request* req)
 	}
 	else
 	{
+		tmp_addr = req->addr - 0x8000;
+		tmp_addr *= 2;
+
 		for(tmp=0;tmp<req->cnt;tmp++)
 		{
 			byte_count=req->rx_buf[7+6+tmp*2];
 			req->rx_buf[7+6+tmp*2]=req->rx_buf[7+7+tmp*2];
 			req->rx_buf[7+7+tmp*2]=byte_count;
+			if((tmp_addr>=0x7B00)&&(tmp_addr<0x7EFF))
+			{
+				_Sys.FR.b1[tmp_addr -0x7B00 + tmp*2] = req->rx_buf[7+6+tmp*2];
+				_Sys.FR.b1[tmp_addr -0x7B00 +tmp*2 + 1] = req->rx_buf[7+7+tmp*2];
+			}
 		}
 		while(_Sys_SPI_Buzy) vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);
 
@@ -250,7 +269,7 @@ unsigned short tcpwrite_multi_regs(request* req)
 		_Sys_SPI_Buzy=1;
 		portENABLE_INTERRUPTS();
 		write_enable();
-		write_data((req->addr-0x8000)>>8,(req->addr-0x8000)&0xFF,req->cnt*2,&req->rx_buf[7+6]);
+		write_data(tmp_addr>>8,tmp_addr&0xFF,req->cnt*2,&req->rx_buf[7+6]);
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
 		portENABLE_INTERRUPTS();

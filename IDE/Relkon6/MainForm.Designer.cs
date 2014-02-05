@@ -212,9 +212,9 @@ namespace Kontel.Relkon
             // 
             // OpenFileDialog
             // 
-            this.OpenFileDialog.Filter = "Файлы проектов (*.rp6)|*.rp6|Файлы программ (*.kon, *.c, *.asm)|*.kon;*.c;*.asm|К" +
-    "арты памяти (*.map)|*.map|Файлы пульта (*.fpr, *.plt)|*.fpr;*.plt|Файлы параметр" +
-    "ов отладчика (*.dbg)|*.dbg";
+            this.OpenFileDialog.Filter = "Файлы проектов (*.rp6)|*.rp6|Файлы программ (*.kon, *.c, *.asm, *.h)|*.kon;*.c;*." +
+    "asm;*.h|Карты памяти (*.map)|*.map|Файлы пульта (*.fpr, *.plt)|*.fpr;*.plt|Файлы" +
+    " параметров отладчика (*.dbg)|*.dbg";
             // 
             // documentContainer1
             // 

@@ -154,6 +154,7 @@ unsigned short read_dinputs(request* req)
 unsigned short read_holdregs(request* req)
 {
 	unsigned short tmp,byte_count;
+	unsigned char err_cnt=0;
 	if((req->cnt >= 129)||(req->cnt == 0)||((req->cnt == 128)&&(req->addr >= 0x8000))) return(get_error(req,0x03));
 	if((req->addr + req->cnt >= 129)&&(req->addr < 0x8000)) return(get_error(req,0x02));
 	if(req->addr<0x8000)
@@ -165,9 +166,9 @@ unsigned short read_holdregs(request* req)
 	{
 		switch(req->can_name)
 		{
-			case CAN_PC:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);
+			case CAN_PC:while(_Sys_SPI_Buzy) {vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;}break;
 			//case CAN_RF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&RFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);
-			case CAN_PR:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);
+			case CAN_PR:while(_Sys_SPI_Buzy) {vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;}break;
 		}
 
 		portDISABLE_INTERRUPTS();
@@ -258,6 +259,7 @@ unsigned short write_single_coil(request* req)
 unsigned short write_single_reg(request* req)
 {
 	unsigned short tmp,byte_count;
+	unsigned char err_cnt=0;
 	if((req->addr >= 128)&&(req->addr < 0x8000)) return(get_error(req,0x02));
 	if(req->addr < 0x8000) _Sys.Mem.b2[req->addr]=req->cnt;
 	else
@@ -267,9 +269,9 @@ unsigned short write_single_reg(request* req)
 		byte_count=req->rx_buf[4];req->rx_buf[4]=req->rx_buf[5];req->rx_buf[5]=byte_count;
 		switch(req->can_name)
 		{
-			case CAN_PC:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
+			case CAN_PC:while(_Sys_SPI_Buzy) {vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;}break;
 //			case CAN_RF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&RFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-			case CAN_PR:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
+			case CAN_PR:while(_Sys_SPI_Buzy) {vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;}break;
 		}
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
@@ -331,9 +333,9 @@ unsigned short write_multi_regs(request* req)
 		}
 		switch(req->can_name)
 		{
-			case CAN_PC:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
+			case CAN_PC:while(_Sys_SPI_Buzy) {vTaskDelayUntil(&PCxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;}break;
 //			case CAN_RF:while(_Sys_SPI_Buzy) vTaskDelayUntil(&RFxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
-			case CAN_PR:while(_Sys_SPI_Buzy) vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);break;
+			case CAN_PR:while(_Sys_SPI_Buzy) {vTaskDelayUntil(&PRxLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;}break;
 		}
 
 		portDISABLE_INTERRUPTS();

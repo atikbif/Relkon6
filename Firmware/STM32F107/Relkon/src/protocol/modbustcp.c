@@ -121,15 +121,14 @@ unsigned short tcpread_holdregs(request* req)
 	else
 	{
 		while(_Sys_SPI_Buzy) {vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;}
-		//while(_Sys_SPI_Buzy) vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
-		portENABLE_INTERRUPTS();
+		//portENABLE_INTERRUPTS();
 		req->addr-=0x8000;
 		req->addr *= 2;
 		read_data((req->addr)>>8,(req->addr)&0xFF,req->cnt<<1,&req->tx_buf[7+2]);
 		for(tmp=0;tmp<req->cnt;tmp++) {byte_count=req->tx_buf[7+2+tmp*2];req->tx_buf[7+2+tmp*2]=req->tx_buf[7+3+tmp*2];req->tx_buf[7+3+tmp*2]=byte_count;}
-		portDISABLE_INTERRUPTS();
+		//portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
 		portENABLE_INTERRUPTS();
 	}
@@ -212,7 +211,7 @@ unsigned short tcpwrite_single_reg(request* req)
 		while(_Sys_SPI_Buzy) {vTaskDelayUntil(&ExLastExecutionTime,(portTickType)1/portTICK_RATE_MS);err_cnt++;if(err_cnt>=10) return 0;}
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
-		portENABLE_INTERRUPTS();
+		//portENABLE_INTERRUPTS();
 		write_enable();
 		write_data(tmp_addr>>8,tmp_addr&0xFF,2,&req->rx_buf[7+3]);
 		if((tmp_addr >= 0x7B00)&&(tmp_addr < 0x7EFF)) // write EE in RAM
@@ -220,7 +219,7 @@ unsigned short tcpwrite_single_reg(request* req)
 			_Sys.FR.b1[tmp_addr - 0x7B00]=req->rx_buf[7+3];
 			_Sys.FR.b1[tmp_addr - 0x7B00 + 1]=req->rx_buf[7+4];
 		}
-		portDISABLE_INTERRUPTS();
+		//portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
 		portENABLE_INTERRUPTS();
 	}
@@ -273,10 +272,10 @@ unsigned short tcpwrite_multi_regs(request* req)
 
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
-		portENABLE_INTERRUPTS();
+		//portENABLE_INTERRUPTS();
 		write_enable();
 		write_data(tmp_addr>>8,tmp_addr&0xFF,req->cnt*2,&req->rx_buf[7+6]);
-		portDISABLE_INTERRUPTS();
+		//portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
 		portENABLE_INTERRUPTS();
 	}

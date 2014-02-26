@@ -214,9 +214,9 @@ unsigned short read_frmem(request* req)	//0xD3
 
 	portDISABLE_INTERRUPTS();
 	_Sys_SPI_Buzy=1;
-	portENABLE_INTERRUPTS();
+	//portENABLE_INTERRUPTS();
 	read_data(req->addr>>8,req->addr&0xFF,req->cnt,&req->tx_buf[1]);
-	portDISABLE_INTERRUPTS();
+	//portDISABLE_INTERRUPTS();
 	_Sys_SPI_Buzy=0;
 	portENABLE_INTERRUPTS();
 	req->tx_buf[0]=_Sys.Adr;
@@ -326,10 +326,10 @@ unsigned short write_frmem(request* req)	//0xE3
 	}
 	portDISABLE_INTERRUPTS();
 	_Sys_SPI_Buzy=1;
-	portENABLE_INTERRUPTS();
+	//portENABLE_INTERRUPTS();
 	write_enable();
 	write_data(req->addr >> 8,req->addr & 0xFF,req->cnt,&req->rx_buf[6]);
-	portDISABLE_INTERRUPTS();
+	//portDISABLE_INTERRUPTS();
 	_Sys_SPI_Buzy=0;
 	portENABLE_INTERRUPTS();
 	req->tx_buf[0]=_Sys.Adr;
@@ -371,12 +371,12 @@ unsigned short write_preset(request* req)	//0xE6
 	}
 	portDISABLE_INTERRUPTS();
 	_Sys_SPI_Buzy=1;
-	portENABLE_INTERRUPTS();
+	//portENABLE_INTERRUPTS();
 	write_enable();
 	req->addr+=0x7B00;
 	write_data(req->addr>>8,req->addr&0xFF,req->cnt,&req->rx_buf[6]);
 	for(tmp=0;tmp<req->cnt;tmp++) _Sys.FR.b1[tmp+(req->addr-0x7B00)]=req->rx_buf[6+tmp];
-	portDISABLE_INTERRUPTS();
+	//portDISABLE_INTERRUPTS();
 	_Sys_SPI_Buzy=0;
 	portENABLE_INTERRUPTS();
 	req->tx_buf[0]=_Sys.Adr;

@@ -172,12 +172,12 @@ unsigned short read_holdregs(request* req)
 
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
-		portENABLE_INTERRUPTS();
+		//portENABLE_INTERRUPTS();
 		req->addr-=0x8000;
 		req->addr *= 2;
 		read_data((req->addr)>>8,(req->addr)&0xFF,req->cnt<<1,&req->tx_buf[3]);
 		for(tmp=0;tmp<req->cnt;tmp++) {byte_count=req->tx_buf[3+tmp*2];req->tx_buf[3+tmp*2]=req->tx_buf[4+tmp*2];req->tx_buf[4+tmp*2]=byte_count;}
-		portDISABLE_INTERRUPTS();
+		//portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
 		portENABLE_INTERRUPTS();
 	}
@@ -273,7 +273,7 @@ unsigned short write_single_reg(request* req)
 		}
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
-		portENABLE_INTERRUPTS();
+		//portENABLE_INTERRUPTS();
 		write_enable();
 		write_data((req->addr)>>8,(req->addr)&0xFF,2,&req->rx_buf[4]);
 		if((req->addr>=0x7B00)&&(req->addr<0x7EFF)) // write EE in RAM
@@ -281,7 +281,7 @@ unsigned short write_single_reg(request* req)
 			_Sys.FR.b1[req->addr - 0x7B00]=req->rx_buf[4];
 			_Sys.FR.b1[req->addr - 0x7B00 + 1]=req->rx_buf[5];
 		}
-		portDISABLE_INTERRUPTS();
+		//portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
 		portENABLE_INTERRUPTS();
 	}
@@ -338,10 +338,10 @@ unsigned short write_multi_regs(request* req)
 
 		portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=1;
-		portENABLE_INTERRUPTS();
+		//portENABLE_INTERRUPTS();
 		write_enable();
 		write_data((req->addr)>>8,(req->addr)&0xFF,req->cnt*2,&req->rx_buf[7]);
-		portDISABLE_INTERRUPTS();
+		//portDISABLE_INTERRUPTS();
 		_Sys_SPI_Buzy=0;
 		portENABLE_INTERRUPTS();
 	}

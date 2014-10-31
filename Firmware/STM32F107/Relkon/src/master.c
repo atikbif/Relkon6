@@ -405,7 +405,7 @@ void can_cmd(request* r)
 			break;
         case RD_XRAM51:
             tx_buf[0]=r->plc_addr;
-            tx_buf[1]=0xD4;
+            tx_buf[1]=0x54;
             tx_buf[2]=r->mem_addr >> 8;
             tx_buf[3]=r->mem_addr & 0xFF;
             crc_val=GetCRC16(tx_buf,4);
@@ -421,7 +421,7 @@ void can_cmd(request* r)
             break;
         case RD_RAM51:
             tx_buf[0]=r->plc_addr;
-            tx_buf[1]=0xD0;
+            tx_buf[1]=0x50;
             tx_buf[2]=r->mem_addr;
             crc_val=GetCRC16(tx_buf,3);
             tx_buf[3]=crc_val>>8;

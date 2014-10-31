@@ -403,6 +403,37 @@ void can_cmd(request* r)
 				case 3:write_module(8);break;
 			}
 			break;
+        case RD_XRAM51:
+            tx_buf[0]=r->plc_addr;
+            tx_buf[1]=0xD4;
+            tx_buf[2]=r->mem_addr >> 8;
+            tx_buf[3]=r->mem_addr & 0xFF;
+            crc_val=GetCRC16(tx_buf,4);
+            tx_buf[4]=crc_val>>8;
+            tx_buf[5]=crc_val&0xFF;
+            clear_rx_cnt(r->canal);
+            switch(r->canal)
+			{
+				case 1:write_canal2(6);break;
+				case 2:write_canal(6);break;
+				case 3:write_module(6);break;
+			}
+            break;
+        case RD_RAM51:
+            tx_buf[0]=r->plc_addr;
+            tx_buf[1]=0xD0;
+            tx_buf[2]=r->mem_addr;
+            crc_val=GetCRC16(tx_buf,3);
+            tx_buf[3]=crc_val>>8;
+            tx_buf[4]=crc_val&0xFF;
+            clear_rx_cnt(r->canal);
+            switch(r->canal)
+			{
+				case 1:write_canal2(5);break;
+				case 2:write_canal(5);break;
+				case 3:write_module(5);break;
+			}
+            break;
 	}
 }
 
@@ -461,6 +492,18 @@ char can_check(request* r)
 				if(GetCRC16(rx_buf,get_rx_cnt(r->canal))==0)	{r->rx = &rx_buf[3];return 1;}
 			}
 			break;
+        case RD_XRAM51:
+            if(get_rx_cnt(r->canal)==1+8+2)
+			{
+				if(GetCRC16(rx_buf,get_rx_cnt(r->canal))==0)	{r->rx = &rx_buf[1];return 1;}
+			}
+            break;
+        case RD_RAM51:
+            if(get_rx_cnt(r->canal)==1+8+2)
+			{
+				if(GetCRC16(rx_buf,get_rx_cnt(r->canal))==0)	{r->rx = &rx_buf[1];return 1;}
+			}
+            break;
 	}
 	return 0;
 }

@@ -19,6 +19,8 @@
 #define RD_DINP		11
 #define RD_COILS	12
 #define WR_COIL		13
+#define RD_RAM51    14
+#define RD_XRAM51   15
 
 typedef struct
 {
